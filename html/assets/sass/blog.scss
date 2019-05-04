@@ -1,0 +1,85 @@
+@import "variables";
+.blog-card {
+  margin: $grid-size*2 0;
+  cursor: pointer;
+  .post-img{
+    $height: 200px;
+    width: 100%;
+    height: $height;
+    img{
+      width: 100%;
+      height: $height;
+      object-fit: cover;
+      object-position: center;
+    }
+    margin-bottom: $grid-size*2;
+  }
+
+  .post-title{
+
+    margin-bottom: $grid-size;
+  }
+  .post-info{
+
+    display: flex;
+    align-items: center;
+    font-size: $typography-paragraph-xxsmall-size;
+
+
+
+    .post-date{
+      flex: .5
+    }
+    .post-number-of-comments{
+      flex: .5;
+
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      .comment-icon{
+        width: 14px;
+        height: 14px;
+        opacity: .7;
+        background: url(../icons/comments.svg) no-repeat center;
+        background-size: contain;
+        margin-right: 8px;
+      }
+    }
+  }
+}
+
+.blog-comments-list{
+  .blog-comment{
+
+    border: 1px solid $line-color;
+    border-radius: 0 20px 20px;
+    margin: $grid-size 0;
+    padding: $grid-size * 2;
+
+    .media-body .blog-comment{
+      background: $line-color;
+    }
+    h5{
+      font-size: $typography-paragraph-small-size;
+    }
+    .comment-author{
+      width: $grid-size *5;
+      height: $grid-size *5;
+      border-radius: 50%;
+      object-fit: cover;
+      object-position: center;
+    }
+
+    .blog-comment-content{
+      font-size: $typography-paragraph-small-size;
+    }
+
+    .comment-like-btn{
+      color: $primary-color-three;
+    }
+  }
+}
+
+.list-category{
+
+}

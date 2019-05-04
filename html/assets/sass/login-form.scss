@@ -1,0 +1,10 @@
+@import "variables";
+.login-form,.register-form, .reset-password-form{
+  padding: $grid-size * 4;
+  .title{
+    margin-bottom: $grid-size * 4;
+  }
+  .icon{
+    height: 20px;
+  }
+}

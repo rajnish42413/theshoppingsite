@@ -1,0 +1,27 @@
+@charset "UTF-8";
+
+/*
+* Stickish V1.0
+* Instagram sticky header for Web.
+* Copyright 2013, Randell Quitain
+* 12/18/2013
+*/
+
+/* #Defaults
+================================================== */
+
+/* Sticky */
+
+.stickish-item {
+  position: relative;
+}
+
+.stickish-item.fixed {
+  position: fixed;
+  z-index: 0;
+  top: 0px;
+}
+
+.stickish-item.fixed.absolute { position: absolute; }
+
+/* END */

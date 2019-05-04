@@ -1,0 +1,92 @@
+@import "variables";
+
+.booking-history {
+  width: 100%;
+  padding-left: $grid-size *3;
+  margin-bottom: $grid-size * 3;
+  border-left: 2px solid $line-color;
+  position: relative;
+  .booking-history-list-card {
+    position: relative;
+
+    padding: $grid-size * 2;
+    border-radius: 4px;
+    margin: $grid-size 0;
+    display: flex;
+    align-items: start;
+
+    transition: all ease 250ms;
+    cursor: pointer;
+    .details-info {
+      flex: 1;
+
+      .cost {
+        font-size: 30px;
+        .small {
+          font-size: $typography-paragraph-xxsmall-size;
+        }
+      }
+      .location {
+        font-size: $typography-paragraph-xxsmall-size;
+      }
+      .title {
+        font-size: $typography-headline-h5-size;
+      }
+    }
+    .type-text{
+      text-transform: uppercase;
+
+      font-size: 10px;
+      font-weight: 600;
+    }
+    &:before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      background: $primary-color-one;
+      border-radius: 50%;
+      display: block;
+      position: absolute;
+      left: -($grid-size *4)+1;
+      top: 50%;
+      margin-top: -5px;
+
+    }
+    &.hotel {
+      &:before {
+        background: $primary-color-one;
+      }
+      .type-text{
+        color:  $primary-color-one;
+      }
+      &:hover {
+        background: rgba($primary-color-one,.2);
+      }
+
+    }
+
+    &.flight {
+      &:before {
+        background: $primary-color-tow;
+      }
+      .type-text{
+        color: $primary-color-tow;
+      }
+      &:hover {
+        background: rgba($primary-color-tow,.2);
+      }
+    }
+    &.experince {
+      &:before {
+        background: $primary-color-three;
+      }
+      .type-text{
+        color:$primary-color-three;
+      }
+      &:hover {
+        background: rgba($primary-color-three,.2);
+      }
+    }
+
+  }
+}

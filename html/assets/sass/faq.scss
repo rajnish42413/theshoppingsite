@@ -1,0 +1,19 @@
+@import "variables";
+.faq-list{
+  .faq-section-title{
+    font-size: $typography-headline-h4-size;
+    margin: $grid-size *2 0;
+    text-transform: capitalize;
+    font-weight: 600;
+  }
+  .card{
+    border-radius: 0;
+    border: 1px solid $line-color;
+    margin: $grid-size 0;
+    .card-header{
+      background: #f4f4f4;
+      border-radius: 0;
+      border: 0;
+    }
+  }
+}

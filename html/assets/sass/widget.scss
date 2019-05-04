@@ -1,0 +1,70 @@
+@import "variables";
+
+.widget {
+  margin: ($grid-size * 4) 0;
+  border: 1px solid $line-color;
+  border-radius: 4px;
+  background: #fff;
+  &.w600{
+    max-width: 600px;
+  }
+  &.sm{
+    .header{
+      padding: ($grid-size * 2) ($grid-size *2);
+    }
+    .body{
+      padding: ($grid-size * 2) ($grid-size *2);
+    }
+  }
+  .header{
+    padding: ($grid-size * 2) ($grid-size *4);
+    .title{
+      font-size: $typography-headline-h5-size;
+      font-weight: 600;
+    }
+  }
+  .body{
+    padding: ($grid-size * 2) ($grid-size *4);
+  }
+}
+
+.sidebar-widget{
+  margin: $grid-size 0;
+  .title{
+    font-size: $typography-paragraph-size;
+    color: $primary-color-four;
+    font-weight: 500;
+    margin-bottom: $grid-size;
+    margin-top: $grid-size*2 ;
+    text-transform: capitalize;
+  }
+
+  .list-items{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    .list-items-item{
+      display: flex;
+      align-items: center;
+      .info{
+        display: flex;
+        flex-direction: column;
+        .title{
+          font-size: $typography-paragraph-xxsmall-size;
+          max-width: 130px;
+          margin: 0;
+        }
+
+      }
+      img{
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+        object-position: center;
+      }
+      i{
+        margin-right: $grid-size;
+      }
+    }
+  }
+}

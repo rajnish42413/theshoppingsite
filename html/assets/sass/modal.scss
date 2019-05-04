@@ -1,0 +1,10 @@
+@import "variables";
+.modal-backdrop.show{
+  opacity:.7;
+}
+.modal{
+  .modal-content{
+    border: 0;
+    border-radius: 0;
+  }
+}

@@ -1,0 +1,42 @@
+@import "variables";
+
+header {
+
+  /*** Navbar **/
+  .navbar {
+    background: $header-nav-bar-bg-color;
+    min-height: $header-nav-bar-height;
+    color: $typography-paragraph-color;
+    transition: all  300ms linear;
+    border-bottom: 1px solid $line-color;
+
+    &.sticky{
+      box-shadow: 0 20px 40px rgba(0, 0, 0, .08);
+    }
+    .user-profile-img{
+      width: $grid-size * 4;
+      height:  $grid-size * 4;
+      position: absolute;
+      object-position: center;
+      object-fit: cover;
+      border-radius: 50%;
+      transform: translateY(-7px);
+    }
+    .nav-item {
+      .nav-link {
+        color: $typography-headline-color;
+
+      }
+
+
+      .dropdown-menu {
+        border: none;
+        box-shadow: 0 5px 5px rgba(0,0,0,.1);
+        border-radius: $border-radius;
+        .dropdown-item {
+          font-size: $typography-paragraph-small-size;
+        }
+      }
+    }
+  }
+}

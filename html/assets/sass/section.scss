@@ -1,0 +1,41 @@
+@import "variables";
+
+.section {
+  padding: (8*$grid-size) 0;
+
+  &.grey{
+    background: #F8F8F8;
+  }
+
+  &.img{
+    background: fixed center;
+    background-size: cover;
+    position: relative;
+
+    .container{
+      z-index: 20;
+      position: relative;
+    }
+    &:after{
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(#fff, .5);
+      z-index: 1;
+    }
+  }
+
+  &.md{
+    padding: ($grid-size*5) 0;
+  }
+  &.sm{
+    padding: ($grid-size*2) 0;
+  }
+  &.page-top-bar{
+    padding: ($grid-size*2) 0;
+    border-bottom: 1px solid $line-color;
+  }
+}

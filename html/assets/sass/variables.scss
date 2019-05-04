@@ -1,0 +1,46 @@
+// COLORS Variables ****************************************************
+// Primary Colors.
+
+$primary-color-one: #00A1F3;
+$primary-color-tow: #FFBB00;
+$primary-color-three: #DB2630;
+$primary-color-four: #35454D;
+
+// Background Colors.
+$body-bg-color: #fff;
+$footer-bg-color: #fff;
+$header-nav-bar-bg-color: $body-bg-color;
+$img-placeholder-bg-color: #D8D8D8;
+
+// Typography Colors.
+$typography-headline-color: #484848;
+$typography-paragraph-color: #70707a;
+$typography-hint-color: #999;
+$typography-muted-color: #888;
+
+// Line Colors.
+$line-color: #EBEDED;
+
+
+// DIMENSIONS Variables ************************************************
+$container-max-width: 1190px;
+$grid-size: 8px;
+
+
+// SIZES Variables *****************************************************
+// Header Navbar size.
+$header-nav-bar-height: 64px;
+
+// Typography Size.
+$typography-headline-h1-size: 48px;
+$typography-headline-h2-size: 40px;
+$typography-headline-h3-size: 32px;
+$typography-headline-h4-size: 24px;
+$typography-headline-h5-size: 18px;
+$typography-paragraph-size: 16px;
+$typography-paragraph-small-size: 14px;
+$typography-paragraph-xsmall-size: 12px;
+$typography-paragraph-xxsmall-size: 11px;
+
+// Radius Variables.
+$border-radius: 0px;

@@ -1,0 +1,28 @@
+@import "variables";
+.edit-profile-img {
+  $size: $grid-size *20;
+  width: $size;
+  height: $size;
+  border-radius: 50%;
+  overflow: hidden;
+  .profile-img {
+    width: $size;
+    height: $size;
+    object-fit: cover;
+    object-position: center;
+  }
+}
+
+.profile-user-profile-img{
+  $size: $grid-size *20;
+  width: $size;
+  height: $size;
+  border-radius: 50%;
+  overflow: hidden;
+  img {
+    width: $size;
+    height: $size;
+    object-fit: cover;
+    object-position: center;
+  }
+}

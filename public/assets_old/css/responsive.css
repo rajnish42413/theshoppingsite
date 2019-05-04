@@ -1,0 +1,241 @@
+/*------------   Responsive CSS ------------*/
+@media (min-width: 768px){
+	button.sh_menu_btn {
+		display: none;
+	}
+}
+@media (min-width: 767px){
+	.sh_main_menu ul li a:hover,
+	.sh_main_menu ul li a.active {
+		color: #015249;
+	}
+	.sh_main_menu ul li a:before,
+	.sh_main_menu ul li a.active:before {
+		content: "";
+		position: absolute;
+		height: 1px;
+		width: 0%;
+		margin: auto;
+		background: #015249;
+		bottom: 18px;
+		left: 0;
+		right: 0;
+	}
+	.sh_main_menu ul li a:hover:before,
+	.sh_main_menu ul li a.active:before {
+		width: 100%;
+	}
+	.sh_main_menu ul li a.active:before,
+	.sh_main_menu ul li a:before,
+	.sh_main_menu ul li a.active:hover:before,
+	.sh_main_menu ul li a:hover:before {
+		-webkit-transition: all 0.5s;
+		-moz-transition: all 0.5s;
+		-ms-transition: all 0.5s;
+		-o-transition: all 0.5s;
+		transition: all 0.5s;
+	}
+}
+
+@media (max-width:991px){
+	.sh_top_category_section img {
+		width: 100%;
+	}
+	.menu ul li a {
+		padding: 8px;
+	}
+	.owlExample .item {
+		height: auto;
+	}
+	.bookmarks ul li {
+		font-size: 12px;
+		height: 110px;
+	}
+	.nav_text h4 {
+		font-size: 14px;
+	}
+	.sh_search_filter li select {
+		margin-top: 15px;
+	}
+	.sh_sidecat_heading {
+		font-size: 16px;
+	}
+	.sh_side_widget {
+		font-size: 12px;
+	}
+	.sh_product_features li {
+		font-size: 11px;
+	}
+	.sh_rated_product_sec {
+		margin-bottom: 30px;
+	}
+}
+@media (min-width:992px) and (max-width:1199PX){
+	
+}
+
+@media (min-width:768px) and (max-width:991px){
+	.sh_main_menu ul li {
+		margin-right: 12px;
+		font-size: 12px;
+	}
+	.sh_list_product_price_wrap .sh_btn {
+		padding: 10px 15px;
+		font-size: 12px;
+	}
+}
+
+@media (max-width:767px){
+	body {
+		font-size: 14px;
+	}
+	.sh_menu_btn {
+		float: none;
+		border: none;
+		width: 32px;
+		height: 32px;
+		color: #ffffff;
+		background-color: #015249;
+		cursor: pointer;
+		text-align: center;
+		margin-top: 20px;
+	}
+	.sh_main_menu_wrapper {
+		z-index: 9999999;
+		overflow-y: scroll;
+		position: fixed;
+		left: 0px;
+		top: 0px;
+		bottom: 0px;
+		background-color: #015249;
+		-webkit-transform: translateX(-100%);
+		-moz-transform: translateX(-100%);
+		-ms-transform: translateX(-100%);
+		-o-transform: translateX(-100%);
+		transform: translateX(-100%);
+		-webkit-transition: all 0.3s;
+		-moz-transition: all 0.3s;
+		-ms-transition: all 0.3s;
+		-o-transition: all 0.3s;
+		transition: all 0.3s;
+	}
+	.sh_main_menu_wrapper {
+		width: 180px;
+	}
+	.sh_main_menu_wrapper.sh_main_menu_hide {
+		-webkit-transform: translateX(0%);
+		-moz-transform: translateX(0%);
+		-ms-transform: translateX(0%);
+		-o-transform: translateX(0%);
+		transform: translateX(0%);
+		-webkit-transition: all 0.3s;
+		-moz-transition: all 0.3s;
+		-ms-transition: all 0.3s;
+		-o-transition: all 0.3s;
+		transition: all 0.3s;
+	}
+	.sh_main_menu ul {
+		width: 100%;
+	}
+	.sh_main_menu ul li {
+		width: 100%;
+	}
+	.sh_main_menu ul li a {
+		padding: 10px;
+		border-bottom: 1px solid #ffffff;
+		color: #ffffff;
+		width: 100%;
+	}
+	.sh_header_social_links {
+		text-align: left;
+	}
+	.sh_header_social_links > ul {
+		display: inline-block;
+	}
+	.menu_icon {
+		float: right;
+	}
+	.sh_Search_bar input {
+		width: 100%;
+	}
+	.sh_copyright_section {
+		text-align: center;
+	}
+	.sh_copyright_section p {
+		padding-top: 16px;
+		font-size: 10px;
+	}
+	.nav_text h4 {
+		font-size: 12px;
+		margin-bottom: 0;
+	}
+	.bookmarks ul li {
+		font-size: 10px;
+		height: auto;
+		padding: 4% 5%;
+		width: 100%;
+	}
+	.nav_text h6 {
+		margin-bottom: 0;
+		font-size: 8px;
+	}
+	.sh_search_filter {
+		text-align: left;
+		margin-top: 20px;
+	}
+	.sh_search_filter span {
+		vertical-align: middle;
+	}
+	.sh_list_product_price_wrap {
+		border-left: 0;
+		padding-left: 0;
+	}
+	.sh_product_list_product .sh_list_product_img {
+		margin-bottom: 30px;
+	}
+	.sh_product_view_store {
+		margin-top: 30px;
+	}
+}
+@media (min-width:480px) and (max-width:767px){
+	.sh_top_category_section {
+		float: none;
+		width: 65%;
+		margin: auto;
+		margin-bottom: 30px;
+	}
+}
+
+@media (max-width: 479px){
+	.sh_Search_bar input {
+		padding: 6px 70px 6px 15px;
+		height: 30px;
+	}
+	.sh_Search_bar button {
+		width: 55px;
+	}
+	.sh_Search_bar {
+		font-size: 10px;
+	}
+	.sh_heading h2 {
+		font-size: 24px;
+		line-height: 1.2;
+	}
+	.col-xs-4.padder_right {
+		padding: 0 15px;
+		width: 100%;
+		margin-bottom: 30px;
+	}
+	.col-xs-8.padder_left {
+		padding: 0 15px;
+		width: 100%;
+		margin-bottom: 30px;
+	}
+}
+@media (max-width:449px){
+	
+}
+
+@media (max-width:359px){
+	
+}

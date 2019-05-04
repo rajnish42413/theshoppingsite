@@ -1,0 +1,72 @@
+@import "variables";
+footer{
+  padding: 80px 0 30px 0;
+  background: $footer-bg-color;
+  color: $typography-headline-color;
+  border-top: 1px solid $line-color;
+  .footer-title{
+    font-weight: 500;
+    font-size: $typography-paragraph-size;
+    margin-bottom: $grid-size;
+  }
+  .footer-nav{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    .footer-nav-item{
+      padding: 0;
+      margin-bottom: $grid-size;
+      a.footer-link{
+        color: $typography-headline-color;
+      }
+    }
+  }
+
+  .footer-download-app{
+    .title{
+      font-size: $typography-paragraph-small-size;
+      text-transform: capitalize;
+    }
+    .stores{
+      display: flex;
+      .store{
+        margin: $grid-size;
+        &:nth-child(1){
+          margin-left: 0;
+        }
+      }
+    }
+  }
+
+  .footer-payment-methods{
+    .title{
+      font-size:  $typography-paragraph-small-size;
+      text-transform: capitalize;
+    }
+    .payments{
+      display: flex;
+      .payment{
+        margin: $grid-size;
+        &:nth-child(1){
+          margin-left: 0;
+        }
+      }
+    }
+  }
+
+  .social-network{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    li{
+      padding: $grid-size/2;
+      a{
+        color: rgba($typography-headline-color,.6);
+        i{
+          font-size: 23px;
+        }
+      }
+    }
+  }
+}

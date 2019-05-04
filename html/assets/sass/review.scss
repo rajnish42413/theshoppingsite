@@ -1,0 +1,28 @@
+@import "variables";
+.review-star-rate{
+  display: flex;
+
+  color: rgba(#000, .1);
+  .rate{
+    &.full{
+      i{
+        color: $primary-color-tow
+      }
+    }
+  }
+
+  &.md{
+    .rate{
+      i{
+        font-size: 16px;
+      }
+    }
+  }
+  &.small{
+    .rate{
+      i{
+        font-size: 12px;
+      }
+    }
+  }
+}

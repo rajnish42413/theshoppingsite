@@ -1,0 +1,367 @@
+@import "variables";
+// Import google fonts.
+@import url('https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900');
+
+body {
+  background: $body-bg-color;
+  padding-top: $header-nav-bar-height;
+  font-family: 'Poppins', sans-serif;
+  font-size: $typography-paragraph-small-size;
+}
+
+.brand-logo {
+  height: 35px;
+}
+
+a {
+  color: $primary-color-one;
+}
+
+.flag-icon {
+  border-radius: 50%;
+
+}
+
+/*** pagination ***/
+.pagination {
+  border: none;
+  .page-item {
+    margin: 2px;
+    border-radius: 30px;
+
+    a {
+      outline: none;
+      color: $primary-color-three;
+      border-radius: 30px;
+      min-width: 30px;
+      height: 30px;
+      &:nth-child(1) {
+        border-radius: 30px;
+        border: none;
+      }
+      &:hover {
+        background: $primary-color-three;
+        color: #fff;
+      }
+    }
+
+    &.active {
+      a {
+        background: $primary-color-three;
+      }
+    }
+
+  }
+}
+
+/*** Typography ***/
+p {
+  font-size: $typography-paragraph-size;
+  color: $typography-paragraph-color;
+}
+
+h1, h2, h3, h4 {
+  color: $typography-headline-color;
+  margin: 0;
+  padding: 0;
+  font-weight: 600;
+}
+
+h1 {
+  font-size: $typography-headline-h1-size;
+  font-weight: 700;
+}
+
+h2 {
+  font-size: $typography-headline-h2-size;
+  font-weight: 700;
+}
+
+h3 {
+  font-size: $typography-headline-h3-size;
+}
+
+h4 {
+  font-size: $typography-headline-h4-size;
+}
+
+.hint-text {
+  font-size: $typography-paragraph-xsmall-size;
+  color: $typography-hint-color
+}
+
+.flex-1{
+  flex: 1;
+}
+/*** Container ***/
+.container {
+  max-width: $container-max-width;
+  &.md {
+    max-width: 1150px;
+  }
+}
+
+main {
+  position: relative;
+  min-height: 300px;
+}
+
+.form-control {
+  border: 1px solid #ddd;
+  border-radius: 2px;
+}
+
+.row.no-gutters {
+  margin-right: 0;
+  margin-left: 0;
+
+  & > [class^="col-"],
+  & > [class*=" col-"] {
+    padding-right: 0;
+    padding-left: 0;
+  }
+}
+
+.row.gutters-1 {
+  margin-right: 1px;
+  margin-left: 1px;
+
+  & > [class^="col-"],
+  & > [class*=" col-"] {
+    padding-right: 1px;
+    padding-left: 1px;
+  }
+}
+
+.row.gutters-2 {
+  margin-right: 2px;
+  margin-left: 2px;
+
+  & > [class^="col-"],
+  & > [class*=" col-"] {
+    padding-right: 2px;
+    padding-left: 2px;
+  }
+}
+
+/*** UL Menu List ***/
+.menu-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  li {
+
+  }
+}
+
+/*** HR Line ***/
+hr {
+  height: 1px;
+  width: 100%;
+  display: block;
+
+  background: $line-color;
+  border: 0;
+  outline: 0;
+  position: relative;
+
+  &:after {
+    content: attr(data-title);
+    padding: $grid-size;
+    left: 50%;
+    text-align: center;
+    transform: translateY(-50%) translateX(-50%);
+    top: 50%;
+    text-transform: capitalize;
+    background: #fff;
+    position: absolute;
+  }
+}
+
+.sticky-parent {
+  position: relative;
+  display: block;
+}
+
+/*** Flat icon ***/
+.small-icon:before, .small-icon:before,
+.small-icon:after, .small-icon:after {
+  font-size: 18px;
+}
+
+.x-small-icon:before, .x-small-icon:before,
+.x-small-icon:after, .x-small-icon:after {
+  font-size: 12px;
+}
+
+.lg-icon:before, .lg-icon:before,
+.lg-:after, .lg-icon:after {
+  font-size: 30px;
+}
+
+
+.img-square {
+  position: relative;
+  overflow: hidden;
+  padding-bottom: 100%;
+  background: red;
+  img {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    object-position: center;
+    object-fit: cover;
+  }
+}
+
+.wp-bw{
+word-wrap: break-word;
+}
+
+/*** OWl ***/
+.owl-carousel {
+  position: relative;
+  .owl-nav {
+    position: absolute;
+    top: 28%;
+    width: 100%;
+    transform: translateY(-150%);
+    .owl-next{
+      right:-30px;
+
+    }
+    .owl-prev{
+      left:-30px;
+    }
+    .owl-next, .owl-prev {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      top:0;
+      span {
+        font-size: 52px;
+        line-height: 0;
+        font-weight: 200;
+      }
+      outline: none;
+      box-shadow: rgba(0, 0, 0, 0.14) 0px 1px 1px 1px;
+      &.disabled {
+        visibility: hidden;
+      }
+      background: #fff !important;
+    }
+  }
+}
+
+
+/** Success Animation ***/
+$circle-length: 151px;
+$check-length: 36px;
+
+@keyframes scaleAnimation {
+  0% {
+    opacity: 0;
+    transform: scale(1.5);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes drawCircle {
+  0% {
+    stroke-dashoffset: $circle-length;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes drawCheck {
+  0% {
+    stroke-dashoffset: $check-length;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+#successAnimationCircle {
+  stroke-dasharray: $circle-length $circle-length;
+  stroke: forestgreen;
+}
+
+#successAnimationCheck {
+  stroke-dasharray: $check-length $check-length;
+  stroke: forestgreen;
+}
+
+#successAnimationResult {
+  fill: forestgreen;
+  opacity: 0;
+}
+
+#successAnimation.animated {
+  animation: 1s ease-out 0s 1 both scaleAnimation;
+
+  #successAnimationCircle {
+    animation: 1s cubic-bezier(0.77, 0, 0.175, 1) 0s 1 both drawCircle,
+    0.3s linear 0.9s 1 both fadeOut;
+  }
+
+  #successAnimationCheck {
+    animation: 1s cubic-bezier(0.77, 0, 0.175, 1) 0s 1 both drawCheck,
+    0.3s linear 0.9s 1 both fadeOut;
+  }
+
+  #successAnimationResult {
+    animation: 0.3s linear 0.9s both fadeIn;
+  }
+}
+
+
+/*** countdown **/
+.countdown{
+  display: inline-flex;
+  padding: 5px;
+  align-items: center;
+
+  .v{
+    font-size: 45px;
+    text-align: center;
+    span{
+      display: block;
+      font-size: 12px;
+      color: $typography-muted-color;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+  }
+  .s{
+    margin: $grid-size;
+  }
+}

@@ -1,0 +1,64 @@
+@import "variables";
+.list-card{
+  width: 100%;
+  margin: $grid-size*2 0;
+  display: inline-block;
+
+  .img{
+    box-shadow: 0 8px 8px rgba(0,0,0,.06);
+    overflow: hidden;
+    $img-height: 200px;
+    border-radius: 3px;
+    background: $img-placeholder-bg-color;
+
+    display: block;
+    height: $img-height;
+    margin-bottom: $grid-size;
+    img{
+      object-fit: cover;
+      object-position: center;
+      width: 100%;
+      height: $img-height;
+    }
+  }
+  .info{
+    margin: $grid-size 0;
+    .title{
+      font-size: $typography-headline-h5-size;
+      font-weight: 600;
+      text-transform: capitalize;
+    }
+    .descrtiption{
+      font-size: $typography-paragraph-small-size;
+      color: $typography-paragraph-color;
+    }
+  }
+}
+
+.travel-photos-list-card{
+  width: 100%;
+  margin: $grid-size*2 0;
+  display: inline-block;
+  .img{
+    box-shadow: 0 8px 8px rgba(0,0,0,.06);
+    overflow: hidden;
+    $img-height: 200px;
+    background: $img-placeholder-bg-color;
+
+    display: block;
+    height: $img-height;
+    margin-bottom: $grid-size;
+    img{
+      object-fit: cover;
+      object-position: center;
+      width: 100%;
+      height: $img-height;
+    }
+  }
+
+  .info{
+    .location{
+
+    }
+  }
+}
