@@ -10,61 +10,37 @@
 			<div class="row">
 				<div class="col-lg-3 col-md-3 col-sm-3 col-xs-4 padder_right">
 					<div class="sh_float_width">
+					<?php if($banners && $banners->count() > 0){
+						$no = 1;?>
 						<div class="bookmarks">
 							<ul class="test">
-								<li class="bookmark1 active" data="0">
+							<?php foreach($banners as $banner){?>
+								<li class="bookmark<?php echo $no;?> active" data="<?php echo $no-1;?>">
 									<div class="nav_text">
-										<h4>Explore More</h4>
-										<h6 href="javacript:void(0)">shopergy.com</h6>
-										<p>Find the best price on thousands of products.</p>
+										<h4><?php echo $banner->heading_title;?></h4>
+										<p><?php echo $banner->description;?></p>
 									</div>
 								</li>
-								<li class="bookmark2" data="1">
-									<div class="nav_text">
-										<h4>Shop By Category</h4>
-										<p>Find the best price on thousands of products.</p>
-									</div>
-								</li>
-								<li class="bookmark3" data="2">
-									<div class="nav_text">
-										<h4>Top Brands</h4>
-										<p>Find the best price on thousands of products.</p>
-									</div>
-								</li>
-								<li class="bookmark4" data="3">
-									<div class="nav_text">
-										<h4>Top  Product</h4>
-										<p>Find the best price on thousands of products.</p>
-									</div>
-								</li>
+							<?php $no++; } ?>
 							</ul>
 						</div>
+					<?php } ?>
 					</div>
 				</div>
 				<div class="col-lg-9 col-md-9 col-sm-9 col-xs-8 padder_left">
 					<div class="sh_float_width">
+					<?php if($banners && $banners->count() > 0){
+						$no = 1;?>
 						<div class="owl-carousel owlExample">
-							<div class="item" id="bookmark1">
+						<?php foreach($banners as $banner){?>
+							<div class="item" id="bookmark<?php echo $no;?>">
 								<div class="sh_slide_content">
-									<img src="{{env('APP_URL')}}assets/images/slide1.jpg" alt="">
+									<img src="{{env('APP_URL')}}banner_files/<?php echo $banner->display_image;?>" alt="<?php echo $banner->name;?>">
 								</div>
 							</div>
-							<div class="item" id="bookmark2">
-								<div class="sh_slide_content">
-									<img src="{{env('APP_URL')}}assets/images/slide2.jpg" alt="">
-								</div>
-							</div>
-							<div class="item" id="bookmark3">
-								<div class="sh_slide_content">
-									<img src="{{env('APP_URL')}}assets/images/slide3.jpg" alt="">
-								</div>
-							</div>
-							<div class="item" id="bookmark4">
-								<div class="sh_slide_content">
-									<img src="{{env('APP_URL')}}assets/images/slide4.jpg" alt="">
-								</div>
-							</div>
+						<?php $no++; } ?>
 						</div>
+					<?php } ?>
 					</div>
 				</div>
 			</div>

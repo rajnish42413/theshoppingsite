@@ -12,6 +12,7 @@ use \DTS\eBaySDK\Finding\Types;
 use GuzzleHttp\Client;
 use App\Product;
 use App\Category;
+use App\Brand;
 
 class CronController extends Controller
 {
@@ -143,7 +144,7 @@ class CronController extends Controller
             'body' => $body
         ]);
         $categories = simplexml_load_string($response->getBody(),'SimpleXMLElement',LIBXML_NOCDATA);
-		//echo '<Pre>'; print_r($categories->CategoryArray);die;
+		//echo '<Pre>'; print_r($categories);die;
         if ($categories->Ack == 'Success'){
             foreach($categories->CategoryArray->Category as $category){
 				$input['categoryId'] = (string)$category->CategoryID;
@@ -180,8 +181,9 @@ class CronController extends Controller
 		$parent_id = $request->input('categoryId');
 		//echo $search;die;
         $ebay_service = new EbayServices();
+		
         $service = $ebay_service->createFinding();
-
+		
         // Assign the keywords.
         $request = new Types\FindItemsByCategoryRequest();
 		
@@ -245,22 +247,100 @@ class CronController extends Controller
 					$input['topRatedListing'] =  $product->topRatedListing;	
 					$input['created_at'] =  date('Y-m-d H:i:s');					
 					
-					if($check && $check->count() > 0){
+					$item_detail = array();
+					$item_detail = $this->getSingleItem($input['itemId']); //API CALL
+					
+					if($item_detail){
+						$input['Quantity'] = $item_detail['Quantity']; //string
+						$input['Seller'] = $item_detail['Seller']; //json
+						$input['PictureDetails'] = $item_detail['PictureDetails']; //json
+						if($item_detail['Brand'] != ''){
+							$input3['name'] = $item_detail['Brand'];
+							$input3['slug'] = $this->slugify($item_detail['Brand']);
+							$input['created_at'] =  date('Y-m-d H:i:s');
+							
+							$brand_check = Brand::where('slug',$input3['slug'])->first();
+							
+							if($brand_check && $brand_check->count() > 0){
+								$input3['updated_at'] =  date('Y-m-d H:i:s');
+							    Brand::where('id',$brand_check['id'])->update($input3);	
+								$input['brand_id'] = $brand_check['id'];
+							}else{
+								$input['brand_id'] = Brand::create($input3)->id;
+							}
+							
+							
+						}
+					}
+					
+					
+ 					if($check && $check->count() > 0){
 						$input['updated_at'] =  date('Y-m-d H:i:s');
 						Product::where('itemId',$product->itemId)->update($input);	
 					}else{
 						Product::create($input)->id;	
-					}
+					} 
 								
 				}
+				
 				echo 'success';
 			}
 
-			//
-           // return  compact('products');
-
         }
     }	
+	
+	
+    function getSingleItem($item_id) {
+        $headers =  array(
+            'cache-control' => 'no-cache',
+            'X-EBAY-API-COMPATIBILITY-LEVEL' => '861',
+            'X-EBAY-API-SITEID' => '0',
+            'X-EBAY-API-DEV-NAME' => env('EBAY_SANDBOX_DEV_ID'),
+            'X-EBAY-API-CERT-NAME' => env('EBAY_SANDBOX_CERT_ID'),
+            'X-EBAY-API-APP-NAME' => env('EBAY_SANDBOX_APP_ID'),
+            'X-EBAY-API-CALL-NAME' => 'GetItem',
+            'Content-Type' => 'application/xml'
+        );
+        $client = new Client([ 'headers' => $headers]);
+		
+        $body = '<?xml version="1.0" encoding="utf-8"?>
+                 <GetItemRequest xmlns="urn:ebay:apis:eBLBaseComponents">
+				<ItemID>'.$item_id.'</ItemID>
+				<IncludeItemSpecifics>true</IncludeItemSpecifics>
+                 <RequesterCredentials>
+                 <eBayAuthToken>AgAAAA**AQAAAA**aAAAAA**6XbBXA**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6wFk4ajAZaApgSdj6x9nY+seQ**dNwEAA**AAMAAA**Km/jO8yBBu4IUNMSiSxd4rV5g75TwO7eJXdY4FRr7JyOiiYmAKXMRTrFvj2cS0gJAwpLvVJqNrLU71krD/clfDO63yRmnaepNDkhklE9EPipJjaBOWEBoy3uu/xZ/mIVVcXIXYc5vqvtZ9tgGpLiOE89UuBcOsi+JFmC/SLzx9FQISmep1a5rG/rYNuj1zZtTkOW7lc4s5inO7/1UN8UtBoWPX+INrq4tE4cvOC+X2uOdZvSuqzQJwaG+72R+A1pz4EqYJGx3efPslLTRSj3niZvpqyUlMjLM8vtiAb/s1DdxN1Dv78nrUXkPDwj6VNqKdDaiDtmKjmwepLelHskDTrFeQLTE/0NvZuYsK4v/VwdCXhfguvEOaSLGJJmr9LgUD9GxOxuxtYlyFjiuCSh4bIj3CRY7wvk/J9oAubfvtBopeJGbiPxbCtAy/f0bFVyxigFATE5ja27X/2+EAHjl5AhU/IW8i81+SHJxFDdW3gT9zeZe2zBFXO3UW0tcwMYOm0h57k3lp61ZJaiGLT12Mi340i0UOadyOipfYQi1P54nzZgSEN9tNg0LH/a4k7zOdAXZFL9dTiBrgZdMBqQmbTImKgHqSLIVCGPlQ2j7FCLuCh9HM8K9xYPreYQ+WMfUyjT9+FCQHE6AvAZclFnrb8gC2qeBjCrOKjOB/xzH0SMphxagf1drFC/zrI8ZzMNNGSdAfwDT6Axv0tYlJDXhlZQmbNvs5a3ZAMBrLixy/O4OUZTdh1foOmfvck8s1z/</eBayAuthToken>
+                 </RequesterCredentials>
+                 </GetItemRequest>';
+        $response = $client->request('POST', 'https://api.sandbox.ebay.com/ws/api.dll', [
+            'body' => $body
+        ]);
+        $results = simplexml_load_string($response->getBody(),'SimpleXMLElement',LIBXML_NOCDATA);
+		//echo '<Pre>'; print_r($results); echo '</pre>';
+		//return $results;
+ 		$detail = array();
+        if ($results->Ack == 'Success'){
+			$item = $results->Item;
+			
+			$detail['Quantity'] = (string)$item->Quantity;
+			$detail['Seller'] = json_encode((array)$item->Seller); //for json
+			$detail['PictureDetails'] = json_encode((array)$item->PictureDetails); //for json
+			//$detail['ItemSpecifics'] = $item->ItemSpecifics->NameValueList[1]->value; //for json
+			$ItemSpecifics = (array)$item->ItemSpecifics;
+			//echo '<pre>';print_r($ItemSpecifics);die;
+			$detail['Brand'] = '';
+			foreach($ItemSpecifics as $is){
+				if(isset($is[1]) && isset($is[1]->Name)){
+					$s_name = (string)$is[1]->Name;
+					if($s_name == 'Brand'){
+						$detail['Brand']  =  (string)$is[1]->Value;//Brand Name Value
+					}					
+				}			
+			}
+			
+			//die(' rk');
+			return $detail;
+        } 
+    }
 	
 	
 	public static function slugify($text){

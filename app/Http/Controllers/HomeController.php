@@ -12,6 +12,7 @@ use \DTS\eBaySDK\Finding\Types;
 
 use App\Product;
 use App\Category;
+use App\Banner;
 
 class HomeController extends Controller
 {
@@ -37,8 +38,8 @@ class HomeController extends Controller
 		$data['meta_title']= config('app.name')." :: Home";
 		$data['meta_keywords']="Top Products, Recommended Products, Top Deal";
 		$data['meta_desicription']="Top Products, Recommended Products, Top Deal";
-
-		return view('home',['data'=>$data]);
+		$banners = Banner::where('section_name','home_slider')->orderBy('id','asc')->limit(4)->get();
+		return view('home',['data'=>$data,'banners'=>$banners]);
     }
 	
 	public function about(){
