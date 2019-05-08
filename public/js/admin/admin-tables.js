@@ -114,7 +114,7 @@ $(document).ready(function() {
 			{ "data": "categoryName"},	
 			{ "data": "parentCategoryName"},	
 		   { "data": "id","orderable":false,"render": function(data, type, row, meta){ 
-			   return '<a href="categories-edit/'+data+'"  class="hide btn btn-sm btn-info">Edit</a>&nbsp;&nbsp;<button type="button" onclick="delete_single_row('+data+',\'categoriesTable\',\'categories-delete\')" class="btn btn-sm btn-danger">Delete</button>';
+			   return '<a href="categories-edit/'+data+'"  class="btn btn-sm btn-info">Edit</a>&nbsp;&nbsp;<button type="button" onclick="delete_single_row('+data+',\'categoriesTable\',\'categories-delete\')" class="btn btn-sm btn-danger">Delete</button>';
 
 		   }},	
         ]
@@ -217,7 +217,7 @@ $(document).ready(function() {
 			{ "data": "current_price"},	
 			{ "data": "current_price_currency"},	
 		   { "data": "id","orderable":false,"render": function(data, type, row, meta){ 
-			   return '<a href="'+row.viewItemURL+'" target="_blank"  class="btn btn-sm btn-info">View</a>&nbsp;&nbsp;<button type="button" onclick="delete_single_row('+data+',\'productsTable\',\'products-delete\')" class="btn btn-sm btn-danger">Delete</button>';
+			   return '<a href="products-edit/'+data+'"  class="btn btn-sm btn-primary">Edit</a>&nbsp;&nbsp;<a href="'+row.viewItemURL+'" target="_blank"  class="btn btn-sm btn-info">View</a>&nbsp;&nbsp;<button type="button" onclick="delete_single_row('+data+',\'productsTable\',\'products-delete\')" class="btn btn-sm btn-danger">Delete</button>';
 
 		   }},	
         ]

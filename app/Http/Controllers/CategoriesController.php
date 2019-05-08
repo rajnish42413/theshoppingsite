@@ -50,8 +50,8 @@ class CategoriesController extends Controller
         $srch       = $this->getDTsearch($req);
         //echo '<pre>';print_r($srch);die;
 
-        $qry = Category::select(DB::raw("categories.*, c2.categoryName as parentCategoryName"))->Join('categories AS c2',function ($join){$join->on('categories.parentId','=','c2.categoryId'); });
-		$qry->where('categories.parentId','!=','0');
+        $qry = Category::select(DB::raw("categories.*, c2.categoryName as parentCategoryName"))->leftJoin('categories AS c2',function ($join){$join->on('categories.parentId','=','c2.categoryId'); });
+		//$qry->where('categories.parentId','!=','0');
         if(isset($srch['categoryName']))
         {
             $qry->where('categories.categoryName','like',"%" .$srch['categoryName']. "%");
@@ -105,26 +105,42 @@ class CategoriesController extends Controller
     }	
 	
 	public function save_data(Request $request){
-		$validator = Validator::make($request->all(), [
-             'name' => 'required',			 
-             'sortname' => 'required',			 	 		 		 		 
+/* 		$validator = Validator::make($request->all(), [
+             'name' => 'required',			 		 	 		 		 		 
 			], 
 			$messages = [
 			'name.required' => 'Name is required',
-			'sortname.required' => 'Sortname is required',
 		])->validate();	
 
         if (isset($validator) && $validator->fails())
         {
             return response()->json(['errors'=>$validator->errors()->all()]);
-        }else{
+        }else{ */
 			
 			$req   = $request->all();
 			$id = $req['id'];
+			$pre_fileName   ='';
+			if(isset($req['file'])){	
+				$file=$request->file('file');
+				$name=$file->getClientOriginalName();
+				$ext=$file->getClientOriginalExtension();
+				$pre_fileName= time().rand().'.'.$ext;
+				$file->move('category_files',$pre_fileName);
+			}elseif($req['file_name'] != ''){
+				$pre_fileName = $req['file_name'];
+			}else{
+				$m = json_encode(array('file'=>'Image is required.')); 
+				echo ($m."|0");	
+				exit;
+			}			
 
 			$input=array(
-				'name'=> $req['name'],
-				'sortname' => $req['sortname'],
+				'categoryName'=> trim($req['name']),
+				'slug'=> $this->slugify(trim($req['name'])),
+				'is_nav_menu' => $req['is_nav_menu'],
+				'is_top_category' => $req['is_top_category'],
+				'image' => $pre_fileName,
+				'updated_at' => date('Y-m-d H:i:s'),
 			);
 			if($id!=''){
 				Category::where('id',$id)->update($input);	
@@ -134,7 +150,7 @@ class CategoriesController extends Controller
 
 			echo "|success";
 		
-		}
+		//}
     }
 	
 	public function delete_data(Request $request) {
@@ -163,5 +179,31 @@ class CategoriesController extends Controller
 		}
 		echo $output;		
 	}
+	
+	public static function slugify($text){
+	  // replace non letter or digits by -
+	  $text = preg_replace('~[^\pL\d]+~u', '-', $text);
+
+	  // transliterate
+	  $text = iconv('utf-8', 'us-ascii//TRANSLIT', $text);
+
+	  // remove unwanted characters
+	  $text = preg_replace('~[^-\w]+~', '', $text);
+
+	  // trim
+	  $text = trim($text, '-');
+
+	  // remove duplicate -
+	  $text = preg_replace('~-+~', '-', $text);
+
+	  // lowercase
+	  $text = strtolower($text);
+
+	  if (empty($text)) {
+		return 'n-a';
+	  }
+
+	  return $text;
+	}	
 	
 }

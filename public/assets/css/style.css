@@ -305,7 +305,7 @@ a.sh_logo {
 .sh_top_product_section {
     background: #ffffff;
     border: 1px solid #e4e4e4;
-    margin-bottom: 30px;
+    margin-bottom: 10px;
 }
 .sh_top_prod_name {
     padding: 20px 15px;
@@ -396,7 +396,7 @@ a.sh_logo {
 .sh_top_deals_section {
     background: #ffffff;
     border: 1px solid #e4e4e4;
-    margin-bottom: 30px;
+    margin-bottom: 10px;
 	position: relative;
 }
 .sh_top_deals_name {
@@ -1290,7 +1290,6 @@ ul.sh_review_color {
 /*======================== About Us Page ===========================*/
 
 .sh_about_banner {
-    background: url(../images/about_bg.jpg) no-repeat;
     padding: 120px 0;
     text-align: center;
     background-size: cover;
@@ -1326,7 +1325,6 @@ ul.sh_review_color {
     padding: 100px 0;
 }
 .sh_faq_banner {
-    background: url(../images/faq_bg.jpg) no-repeat;
     padding: 120px 0;
     text-align: center;
     background-size: cover;
@@ -1397,7 +1395,6 @@ ul.sh_review_color {
     padding: 100px 0;
 }
 .sh_contact_banner {
-    background: url(../images/contact_bg.jpg) no-repeat;
     padding: 120px 0;
     text-align: center;
     background-size: cover;
@@ -1471,18 +1468,12 @@ ul.sh_review_color {
     border-bottom: 1px solid #e4e4e4;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+.top_categories .sh_top_category_section.sh_float_width {
+    min-height: 275px;
+}
+.top_products .sh_top_product_section.sh_float_width {
+    min-height: 420px;
+}
+.deals .sh_top_deals_section.sh_float_width{
+    min-height: 420px;
+}

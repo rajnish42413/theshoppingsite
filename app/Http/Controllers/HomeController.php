@@ -13,6 +13,8 @@ use \DTS\eBaySDK\Finding\Types;
 use App\Product;
 use App\Category;
 use App\Banner;
+use App\FrontPageSetting;
+use App\FaqData;
 
 class HomeController extends Controller
 {
@@ -37,77 +39,102 @@ class HomeController extends Controller
 		$data['nav'] = 'home';
 		$data['meta_title']= config('app.name')." :: Home";
 		$data['meta_keywords']="Top Products, Recommended Products, Top Deal";
-		$data['meta_desicription']="Top Products, Recommended Products, Top Deal";
+		$data['meta_description']="Top Products, Recommended Products, Top Deal";
 		$banners = Banner::where('section_name','home_slider')->orderBy('id','asc')->limit(4)->get();
-		return view('home',['data'=>$data,'banners'=>$banners]);
+		$deals = Product::where('is_deal_of_the_day',1)->orderBy('id','asc')->limit(8)->get();
+		$top_products = Product::where('is_top_product',1)->orderBy('id','asc')->limit(8)->get();
+		$top_categories = Category::where('is_top_category',1)->orderBy('id','asc')->limit(8)->get();
+		return view('home',['data'=>$data,'banners'=>$banners,'deals'=>$deals,'top_categories'=>$top_categories,'top_products'=>$top_products]);
     }
 	
 	public function about(){
 		$data['nav'] = 'about-us';
-		$data['meta_title'] = config('app.name')." :: About Us";
-		$data['meta_keywords']= config('app.name')." About Us";
-		$data['meta_desicription'] = config('app.name')." About Us";
-		
-        return view('about',['data'=>$data]);
+		$row = FrontPageSetting ::where('page_type','about')->first();
+		$data['meta_title'] = $row->page_title;
+		$data['meta_keywords']= $row->meta_keywords;
+		$data['meta_description'] = $row->meta_description;
+		$banner = Banner::where('section_name','about')->orderBy('id','asc')->limit(1)->first();
+        return view('about',['data'=>$data,'row'=>$row,'banner'=>$banner]);
     }
 	
 	public function faq(){
 		$data['nav'] = 'faq';
-		$data['meta_title'] = config('app.name')." :: FAQ";
-		$data['meta_keywords'] = config('app.name')." FAQ";
-		$data['meta_desicription']= config('app.name')." FAQ";
-        return view('faq',['data'=>$data]);
+		$row = FrontPageSetting ::where('page_type','faq')->first();
+		$faqs = FaqData ::where('status',1)->orderBy('id','asc')->get();
+		$data['meta_title'] = $row->page_title;
+		$data['meta_keywords']= $row->meta_keywords;
+		$data['meta_description'] = $row->meta_description;
+		$banner = Banner::where('section_name','faq')->orderBy('id','asc')->limit(1)->first();
+        return view('faq',['data'=>$data,'row'=>$row,'faqs'=>$faqs,'banner'=>$banner]);
     }
 	
 	public function contact(){
 		$data['nav'] = 'contact';
-		$data['meta_title'] = config('app.name')." :: Contact Us";
-		$data['meta_keywords'] = config('app.name')." Contact Us";
-		$data['meta_desicription']= config('app.name')." Contact Us";
-        return view('contact',['data'=>$data]);
+		$row = FrontPageSetting ::where('page_type','contact')->first();
+		$data['meta_title'] = $row->page_title;
+		$data['meta_keywords']= $row->meta_keywords;
+		$data['meta_description'] = $row->meta_description;
+		$banner = Banner::where('section_name','contact')->orderBy('id','asc')->limit(1)->first();	
+        return view('contact',['data'=>$data,'row'=>$row,'banner'=>$banner]);
     }
 
 	public function terms(){
 		$data['nav'] = 'terms';
-		$data['meta_title'] = config('app.name')." :: Terms and Conditions";
-		$data['meta_keywords'] = config('app.name')." Terms and Conditions";
-		$data['meta_desicription'] = config('app.name')." Terms and Conditions";	
-        return view('terms',['data'=>$data]);
+		$row = FrontPageSetting ::where('page_type','terms')->first();
+		$data['meta_title'] = $row->page_title;
+		$data['meta_keywords']= $row->meta_keywords;
+		$data['meta_description'] = $row->meta_description;
+		$banner = Banner::where('section_name','terms')->orderBy('id','asc')->limit(1)->first();
+        return view('terms',['data'=>$data,'row'=>$row,'banner'=>$banner]);
     }
 
 	public function privacy_policy(){
 		$data['nav'] = 'privacy-policy';
-		$data['meta_title'] = config('app.name')." :: Privacy & Policy";
-		$data['meta_keywords'] = config('app.name')." Privacy & Policy";
-		$data['meta_desicription'] = config('app.name')." Privacy & Policy";
-        return view('privacy_policy',['data'=>$data]);
+		$row = FrontPageSetting ::where('page_type','privacy_policy')->first();
+		$data['meta_title'] = $row->page_title;
+		$data['meta_keywords']= $row->meta_keywords;
+		$data['meta_description'] = $row->meta_description;
+		$banner = Banner::where('section_name','privacy_policy')->orderBy('id','asc')->limit(1)->first();	return view('privacy_policy',['data'=>$data,'row'=>$row,'banner'=>$banner]);
     }
 	
-	public function search_list(Request $request){
-		$categoryId = $request->input('cat');
-		$data['parent_category'] = "-";	
-		if($categoryId != ''){
-			$parent_category = Category::where('categoryId',$categoryId)->first();
-			$data['parent_category'] = $parent_category->categoryName;	
-			$categories = $this->get_categories($categoryId);
-			$products = $this->get_products_by_parent($categoryId);
-			
-		}else{
-			$categories = array();
-			$products = array();
+	
+	
+	public function search_list(Request $request, $slug){
+		$categories = array();
+		$products = array();
+		$data['parent_category'] = '';	
+		$data['category'] = '';	
+		
+		if($slug != ''){
+			$res = Category::where('slug',$slug)->first();
+			if($res && $res->count() > 0){
+				if($res->parentId == '0'){ // parent
+					$data['parent_category'] = $res->categoryName;
+					$categories = $this->get_categories($res->categoryId);
+					$products = $this->get_products_by_parent($res->categoryId);			
+				}else{
+					$res2 = Category::where('categoryId',$res->parentId)->first();
+					if($res2 && $res2->count() > 0){
+						$data['parent_category'] = $res2->categoryName;
+						$data['category'] = $res->categoryName;
+						$categories = $this->get_categories($res->parentId);
+						$products = $this->get_products_by_cat($res->categoryId);							
+					}
+				}				
+			}
 		}
 		
 		$data['nav'] = 'terms';
 		$data['meta_title'] = config('app.name')." :: Search Products";
 		$data['meta_keywords'] = config('app.name')." Search Products";
-		$data['meta_desicription'] = config('app.name')." Search Products";	
+		$data['meta_description'] = config('app.name')." Search Products";	
 		
         return view('search_products/list',['data'=>$data,'categories'=>$categories,'products'=>$products]);		
 	}
 	
 	
-	public function product_detail(Request $request){
-		$id = $request->input('id');
+	public function product_detail(Request $request,$id){
+
 		$data['parent_category'] = "-";	
 		$data['category'] = "-";	
 		$product = array();
@@ -126,7 +153,7 @@ class HomeController extends Controller
 		$data['nav'] = 'terms';
 		$data['meta_title'] = config('app.name')." :: Product Detail";
 		$data['meta_keywords'] = config('app.name')." Product Detail";
-		$data['meta_desicription'] = config('app.name')." Product Detail";	
+		$data['meta_description'] = config('app.name')." Product Detail";	
         return view('search_products/detail',['data'=>$data,'categories'=>$categories,'product'=>$product]);		
 	}	
 	
@@ -168,5 +195,23 @@ class HomeController extends Controller
 		
 		return $products;
 	}	
+
+	public function get_products_by_cat($cat_id=""){
+		$products = array();
+
+		$results = Product::select(DB::raw("products.*, categories.categoryName as categoryName, c2.categoryName as parentCategoryName"))->Join('categories',function ($join){$join->on('categories.categoryId','=','products.categoryId'); })->Join('categories as c2',function ($join){$join->on('c2.categoryId','=','products.parentCategoryId'); });
+		
+		if($cat_id!= '0'){
+			$results = $results->where('products.CategoryId',$cat_id);
+		}		
+		//offset(0)->limit(10)->
+		$results = $results->orderBy('products.current_price','asc');
+		$results = $results->get();
+		if($results->count() > 0){
+			$products = $results;
+		}
+		
+		return $products;
+	}
 	
 }

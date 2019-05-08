@@ -3,33 +3,20 @@ use \App\Http\Controllers\NavigationMenuController;
  ?>
 <?php 
 
-
 $nav_menus = NavigationMenuController::get_main_nav_menus();
-
-if(isset($data['meta_title']) AND !empty($data['meta_title'])){
-$meta_title=$data['meta_title'];
-}
-
-if(isset($data['meta_keywords']) AND !empty($data['meta_keywords'])){
-$meta_keywords=$data['meta_keywords'];
-}
-
-if(isset($data['meta_desicription']) AND !empty($data['meta_desicription'])){
-$meta_description=$data['meta_desicription'];
-}
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
 	<!-- Title Start -->
-	<title><?php echo $meta_title;?></title>
+	<title><?php echo $data['meta_title'];?></title>
 	<!-- Meta Start -->
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta name="description" content="<?php echo $meta_description;?>">
-	<meta name="keywords" content="<?php echo $meta_title;?>">
-	<meta name="author" content="<?php echo $meta_title;?>">
+	<meta name="description" content="<?php echo $data['meta_description'];?>">
+	<meta name="keywords" content="<?php echo $data['meta_keywords'];?>">
+	<meta name="author" content="<?php echo $data['meta_title'];?>">	
 	<meta name="MobileOptimized" content="320">
 	<!-- Style CSS -->
 	<link rel="stylesheet" type="text/css" href="{{env('APP_URL')}}assets/css/bootstrap.css" />
@@ -99,7 +86,7 @@ $meta_description=$data['meta_desicription'];
 								<li><a class="active" href="{{env('APP_URL')}}">Home</a></li>
 						<?php if($nav_menus){
 								foreach($nav_menus as $menu){?>
-								<li><a href="{{env('APP_URL')}}search-list?cat=<?php echo $menu->categoryId;?>"><?php echo $menu->categoryName;?></a></li>
+								<li><a href="{{env('APP_URL')}}category/<?php echo $menu->slug;?>"><?php echo $menu->categoryName;?></a></li>
 								<?php } } ?>
 							</ul> 
 						</nav>

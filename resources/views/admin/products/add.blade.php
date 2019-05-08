@@ -10,7 +10,7 @@
       </h1>
       <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li><a href="<?php echo env('APP_URL');?>states-list"><?php echo $data['title'];?></a></li>
+        <li><a href="<?php echo env('APP_URL');?>products-list"><?php echo $data['title'];?></a></li>
         <li class="active"><?php echo $data['sub_title'];?></li>
       </ol>
     </section>
@@ -34,18 +34,19 @@
 					</div>
 				</div>				
                 <div class="form-group">
-                  <label for="name"><span class="text-danger">*</span> Name</label>
-                  <input type="text" class="form-control" id="name" name="name" placeholder="Enter Name" value="<?php if($row){ echo $row->name; }?>">
+				 <label for="is_deal_of_the_day"><span class="text-danger">*</span> Add On Deal Of The Day</label>
+				<select type="text" class="form-control" id="is_deal_of_the_day" name="is_deal_of_the_day" >
+					<option value="0" <?php if($row){ if($row->is_deal_of_the_day == 0){echo 'selected'; }} ?> >No</option>
+					<option value="1" <?php if($row){ if($row->is_deal_of_the_day == 1){echo 'selected'; }} ?> >Yes</option>
+				</select>
                 </div>
+				
                 <div class="form-group">
-                  <label for="country_id"><span class="text-danger">*</span> Country</label>
-                  <select type="text" class="form-control" id="country_id" name="country_id" >
-					<option value="">--Select--</option>
-					<?php if($countries){
-						foreach($countries as $country){?>
-					<option value="<?php echo $country->id;?>" <?php if($row){ if($row->country_id == $country->id){ echo 'selected';} }?> ><?php echo $country->name;?></option>
-					<?php } } ?>
-				  </select>
+				 <label for="is_top_product"><span class="text-danger">*</span> Top Product</label>
+				<select type="text" class="form-control" id="is_top_product" name="is_top_product" >
+					<option value="0" <?php if($row){ if($row->is_top_product == 0){echo 'selected'; }} ?> >No</option>
+					<option value="1" <?php if($row){ if($row->is_top_product == 1){echo 'selected'; }} ?> >Yes</option>
+				</select>
                 </div>			
               </div>
               <!-- /.box-body -->
@@ -67,7 +68,7 @@
   </div>
 <script>
 
-var surl = '<?php echo route('states-list');?>'; 
+var surl = '<?php echo route('products-list');?>'; 
 $("#addForm").submit(function(e){
 $('.wait_loader').show();	
 	e.preventDefault();
@@ -77,7 +78,7 @@ $('.wait_loader').show();
 	$('.error').html('');
 	$.ajax({
 		type: "POST",
-		url: '<?php echo route('states-save');?>',
+		url: '<?php echo route('products-save');?>',
 		data:  new FormData(this),
 		processData:false,
 		contentType:false,

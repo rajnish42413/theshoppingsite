@@ -98,12 +98,13 @@ class CronController extends Controller
 					
 					$input['isMultiVariationListing'] =  $product->isMultiVariationListing;
 					$input['topRatedListing'] =  $product->topRatedListing;	
-					$input['created_at'] =  date('Y-m-d H:i:s');					
+					$input['updated_at'] =  date('Y-m-d H:i:s');					
 					
 					if($check && $check->count() > 0){
 						$input['updated_at'] =  date('Y-m-d H:i:s');
 						Product::where('itemId',$product->itemId)->update($input);	
 					}else{
+						$input['created_at'] =  date('Y-m-d H:i:s');
 						Product::create($input)->id;	
 					}
 								
@@ -156,17 +157,19 @@ class CronController extends Controller
 					$input['parentId'] = $p_id;
 				}
 				$input['slug'] = $this->slugify($input['categoryName']);
-				$input['created_at'] =  date('Y-m-d H:i:s');
+				$input['updated_at'] =  date('Y-m-d H:i:s');
+				
 				
 				//echo '<pre>'; print_r($input); echo '</pre>';
  				$cat_check = array();					
 				$cat_check = Category::where('categoryId',$input['categoryId'])->first();
 				
 				if($cat_check && $cat_check->count() > 0){
-					$input['updated_at'] =  date('Y-m-d H:i:s');
+					
 					Category::where('categoryId',$input['categoryId'])->update($input);	
 											
 				}else{
+					$input['created_at'] =  date('Y-m-d H:i:s');
 					Category::create($input)->id;	
 				} 				
 					
@@ -245,7 +248,8 @@ class CronController extends Controller
 					
 					$input['isMultiVariationListing'] =  $product->isMultiVariationListing;
 					$input['topRatedListing'] =  $product->topRatedListing;	
-					$input['created_at'] =  date('Y-m-d H:i:s');					
+					$input['updated_at'] =  date('Y-m-d H:i:s');
+										
 					
 					$item_detail = array();
 					$item_detail = $this->getSingleItem($input['itemId']); //API CALL
@@ -257,15 +261,16 @@ class CronController extends Controller
 						if($item_detail['Brand'] != ''){
 							$input3['name'] = $item_detail['Brand'];
 							$input3['slug'] = $this->slugify($item_detail['Brand']);
-							$input['created_at'] =  date('Y-m-d H:i:s');
+							$input3['updated_at'] =  date('Y-m-d H:i:s');
 							
 							$brand_check = Brand::where('slug',$input3['slug'])->first();
 							
 							if($brand_check && $brand_check->count() > 0){
-								$input3['updated_at'] =  date('Y-m-d H:i:s');
+								
 							    Brand::where('id',$brand_check['id'])->update($input3);	
 								$input['brand_id'] = $brand_check['id'];
 							}else{
+								$input['created_at'] =  date('Y-m-d H:i:s');
 								$input['brand_id'] = Brand::create($input3)->id;
 							}
 							
@@ -275,9 +280,10 @@ class CronController extends Controller
 					
 					
  					if($check && $check->count() > 0){
-						$input['updated_at'] =  date('Y-m-d H:i:s');
+						
 						Product::where('itemId',$product->itemId)->update($input);	
 					}else{
+						$input['created_at'] =  date('Y-m-d H:i:s');
 						Product::create($input)->id;	
 					} 
 								
@@ -315,7 +321,7 @@ class CronController extends Controller
             'body' => $body
         ]);
         $results = simplexml_load_string($response->getBody(),'SimpleXMLElement',LIBXML_NOCDATA);
-		//echo '<Pre>'; print_r($results); echo '</pre>';
+		echo '<Pre>'; print_r($results); echo '</pre>';
 		//return $results;
  		$detail = array();
         if ($results->Ack == 'Success'){

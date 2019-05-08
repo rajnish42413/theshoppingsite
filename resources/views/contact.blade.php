@@ -6,11 +6,11 @@
 	<!--Contact Banner Start-->
 	<div class="sh_contact_banner_wrap sh_float_width">
 		<div class="container">
-			<div class="sh_contact_banner sh_float_width">
+			<div class="sh_contact_banner sh_float_width" style="background: url({{ env('APP_URL')}}banner_files/<?php echo $banner->display_image;?>) no-repeat;">
 				<div class="row">
 					<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 						<div class="sh_contact_banner_text sh_float_width">
-							<h1>Contact Us !</h1>
+							<h1><?php echo $banner->heading_title;?></h1>
 						</div>
 					</div>
 				</div>

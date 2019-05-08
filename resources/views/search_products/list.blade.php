@@ -10,7 +10,12 @@
 				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 					<div class="sh_breadcurm sh_float_width">
 						<ul>
+							<?php if($data['parent_category'] != ''){?>
 							<li><a href="javacript:void(0)"><?php echo $data['parent_category'];?></a></li>
+							<?php } ?>
+							<?php if($data['category'] != ''){?>
+								<li><a href="javacript:void(0)"><?php echo $data['category'];?></a></li>
+							<?php } ?>
 						</ul>
 					</div>
 				</div>
@@ -35,7 +40,7 @@
 							<?php if($categories){?>
 								<ul>								
 								<?php foreach($categories as $cat){?>
-									<li><a href="javacript:void(0)"><?php echo $cat->categoryName;?></a></li>
+									<li><a href="<?php echo env('APP_URL')."category/".$cat->slug;?>"><?php echo $cat->categoryName;?></a></li>
 								<?php } ?>
 								</ul>
 							<?php } ?>
@@ -115,11 +120,23 @@
 						</div>
 				<?php if($products){
 					foreach($products as $product){?>
+					
+						<?php  
+						$galleryURL = env('APP_URL')."assets/images/no_image.png";
+						$PictureDetails = $product->PictureDetails; 
+						if($PictureDetails != ''){
+							$pic_det = json_decode($PictureDetails);
+							if($pic_det && isset($pic_det->GalleryURL) && $pic_det->GalleryURL != ''){
+								$galleryURL = $pic_det->GalleryURL;
+							}
+						}
+						?>
+					
 						<div class="sh_product_list_product sh_float_width">
 							<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 sh_padding0">
 								<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
 									<div class="sh_list_product_img sh_float_width">
-										<img src="<?php if($product->galleryURL != ''){echo $product->galleryURL;}else{ echo env('APP_URL')."assets/images/grid/product12.jpg";}?>">
+										<img src="<?php echo $galleryURL;?>">
 										<a href="javacript:void(0)">Quick View</a>
 									</div>
 								</div>
@@ -154,7 +171,7 @@
 										<div class="sh_less_price_store sh_float_width text-left">
 											<a href="javacript:void(0)"><img src="{{env('APP_URL')}}assets/images/ebay.png"></a>
 										</div>
-										<a class="sh_btn" href="{{ env('APP_URL')}}product?id=<?php echo $product->itemId;?>">View Product</a>
+										<a class="sh_btn" href="{{ env('APP_URL')}}product/<?php echo $product->itemId;?>">View Product</a>
 									</div>
 								</div>
 							</div>

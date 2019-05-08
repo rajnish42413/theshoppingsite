@@ -20,6 +20,7 @@ Route::any('/test','HomeController@test')->name('test');
 Route::any('/cron/by-keyword','CronController@byKeyword')->name('cron/by-keyword');
 Route::any('/cron/category','CronController@getCategory')->name('cron/category');
 Route::any('/cron/by-category','CronController@getProductsByCategory')->name('cron/by-category');
+Route::any('/cron/single-item/{id}','CronController@getSingleItem')->name('cron/single-item');
 
 
 Route::get('/user/verify/{token}', 'Auth\RegisterController@verifyUser');
@@ -44,8 +45,8 @@ Route::get('/services', 'HomeController@services')->name('services');
 
 
 Route::post('hotel-get-cities', 'HotelController@get_hotel_cities')->name('hotel-get-cities');
-Route::get('search-list', 'HomeController@search_list')->name('search-list');
-Route::get('product', 'HomeController@product_detail')->name('product');
+Route::get('category/{id}', 'HomeController@search_list')->name('category');
+Route::get('product/{id}', 'HomeController@product_detail')->name('product');
 
 
 
@@ -94,6 +95,14 @@ Route::group(['middleware'=>['Admin']],function(){
 	Route::any('banners-save', 'BannersController@save_data')->name('banners-save');	
 	Route::any('banners-delete', 'BannersController@delete_data')->name('banners-delete');	
 		
+	// Settings - Front Pages 
+ 	Route::any('settings-page-save', 'FrontPagesController@save_data')->name('settings-page-save');	
+ 	Route::any('settings-faq-delete', 'FrontPagesController@delete_faq_data')->name('settings-faq-delete');	
 	
+ 	Route::any('settings-about', 'FrontPagesController@about')->name('settings-about');	
+ 	Route::any('settings-faq', 'FrontPagesController@faq')->name('settings-faq');	
+ 	Route::any('settings-terms', 'FrontPagesController@terms')->name('settings-terms');	
+ 	Route::any('settings-privacy-policy', 'FrontPagesController@privacy_policy')->name('settings-privacy-policy');	
+ 	Route::any('settings-contact', 'FrontPagesController@contact')->name('settings-contact');	
 	
 });

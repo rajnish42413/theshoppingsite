@@ -1,7 +1,24 @@
 @extends('layouts.app')
 
 @section('content')
-
+<?php  
+$pic_array  = array();
+$single_pic = env('APP_URL')."assets/images/no_image.png";
+$PictureDetails = $product->PictureDetails; 
+if($PictureDetails != ''){
+	$pic_det = json_decode($PictureDetails);
+	//echo '<pre>';print_r($pic_det);die;
+	if($pic_det && $pic_det->PhotoDisplay == 'PicturePack'){
+		$pic_detail = $pic_det->PictureURL;
+		if(is_array($pic_detail)){
+			$pic_array = $pic_detail;
+		}else{
+			$single_pic = $pic_detail;
+		}
+		
+	}
+}
+?>
 <!--Main Wrapper Start-->
 <div class="sh_main_wrap sh_float_width">
 	<!--Breadcurm Start-->
@@ -47,6 +64,8 @@
 			</div>	
 		</div>	
 	</div>
+	
+	
 	<div class="sh_product_view_img_wrap sh_float_width">
 		<div class="container">
 			<div class="row">
@@ -54,32 +73,34 @@
 					<div class="sh_product_view_img sh_float_width">
 						<div class="slider-wrapper">
 							<div class="slider-for">
-								<div class="slider-for__item ex1" data-src="{{env('APP_URL')}}assets/images/product_zoom/ipad_big.jpg">
-									<img src="{{env('APP_URL')}}assets/images/product_zoom/ipad_big.jpg" alt="" />
+							<?php 
+							if($pic_array){
+							foreach($pic_array as $pic){?>
+								<div class="slider-for__item ex1" data-src="<?php echo $pic; ?>">
+									<img src="<?php echo $pic; ?>" alt="" />
 								</div>
-								<div class="slider-for__item ex1" data-src="{{env('APP_URL')}}assets/images/product_zoom/ipad_big2.jpg">
-									<img src="{{env('APP_URL')}}assets/images/product_zoom/ipad_big2.jpg" alt="" />
-								</div>
-								<div class="slider-for__item ex1" data-src="{{env('APP_URL')}}assets/images/product_zoom/ipad_big3.jpg">
-									<img src="{{env('APP_URL')}}assets/images/product_zoom/ipad_big3.jpg" alt="" />
-								</div>
-								<div class="slider-for__item ex1" data-src="{{env('APP_URL')}}assets/images/product_zoom/ipad_big4.jpg">
-									<img src="{{env('APP_URL')}}assets/images/product_zoom/ipad_big4.jpg" alt="" />
-								</div>
+							<?php } }else{?>
+								<div class="slider-for__item ex1" data-src="<?php echo $single_pic;?>">
+									<img src="<?php echo $single_pic;?>" alt="" />
+								</div>							
+							<?php }?>							
+
+
 							</div>
 							<div class="slider-nav">
+							<?php 
+							if($pic_array){
+							foreach($pic_array as $pic){?>
 								<div class="slider-nav__item">
-									<img src="{{env('APP_URL')}}assets/images/product_zoom/ipad_big.jpg" alt="" />
+									<img src="<?php echo $pic; ?>" alt="" />
 								</div>
+								
+							<?php } }else{?>
 								<div class="slider-nav__item">
-									<img src="{{env('APP_URL')}}assets/images/product_zoom/ipad_big2.jpg" alt="" />
-								</div>
-								<div class="slider-nav__item">
-									<img src="{{env('APP_URL')}}assets/images/product_zoom/ipad_big3.jpg" alt="" />
-								</div>
-								<div class="slider-nav__item">
-									<img src="{{env('APP_URL')}}assets/images/product_zoom/ipad_big4.jpg" alt="" />
-								</div>
+									<img src="<?php echo $single_pic;?>" alt="" />
+								</div>								
+							<?php }?>
+							
 							</div>
 						</div>
 					</div>

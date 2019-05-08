@@ -10,7 +10,7 @@
       </h1>
       <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li><a href="<?php echo env('APP_URL');?>countries-list"><?php echo $data['title'];?></a></li>
+        <li><a href="<?php echo env('APP_URL');?>categories-list"><?php echo $data['title'];?></a></li>
         <li class="active"><?php echo $data['sub_title'];?></li>
       </ol>
     </section>
@@ -34,13 +34,32 @@
 					</div>
 				</div>				
                 <div class="form-group">
-                  <label for="name"><span class="text-danger">*</span> Name</label>
-                  <input type="text" class="form-control" id="name" name="name" placeholder="Enter Name" value="<?php if($row){ echo $row->name; }?>">
+                  <label for="name"><span class="text-danger">*</span> Category Name</label>
+                  <input type="text" class="form-control" id="name" name="name" placeholder="Category Name" value="<?php if($row){ echo $row->categoryName; }?>" required>
                 </div>
+				
                 <div class="form-group">
-                  <label for="sortname"><span class="text-danger">*</span> Sortname</label>
-                  <input type="text" class="form-control" id="sortname" name="sortname" placeholder="Sortname" value="<?php if($row){ echo $row->sortname; }?>">
-                </div>					
+				 <label for="is_nav_menu"><span class="text-danger">*</span> Add on Navigation Menu</label>
+				<select type="text" class="form-control" id="is_nav_menu" name="is_nav_menu" >
+					<option value="0" <?php if($row){ if($row->is_nav_menu == 0){echo 'selected'; }} ?> >No</option>
+					<option value="1" <?php if($row){ if($row->is_nav_menu == 1){echo 'selected'; }} ?> >Yes</option>
+				</select>
+                </div>
+				
+                <div class="form-group">
+				 <label for="is_top_category"><span class="text-danger">*</span> Top Category</label>
+				<select type="text" class="form-control" id="is_top_category" name="is_top_category" >
+					<option value="0" <?php if($row){ if($row->is_top_category == 0){echo 'selected'; }} ?> >No</option>
+					<option value="1" <?php if($row){ if($row->is_top_category == 1){echo 'selected'; }} ?> >Yes</option>
+				</select>
+                </div>	
+
+                <div class="form-group">
+                  <label for="file"><span class="text-danger">*</span> Image</label>
+					<input type="file" data-id="<?php if($row){echo $row->id;}?>" id="file" class="dropify" <?php if($row && !empty($row->image)){}else{ echo ' ';} ?>  name="file" data-default-file="<?php if($row){if(!empty($row->image)){  echo env("APP_URL").'/category_files/'.$row->image;} }?>" />				  
+                  <input type="hidden" id="file_name" name="file_name" value="<?php if($row){ echo $row->image; }?>">
+                </div>				
+				
               </div>
               <!-- /.box-body -->
 
@@ -61,7 +80,7 @@
   </div>
 <script>
 
-var surl = '<?php echo route('countries-list');?>'; 
+var surl = '<?php echo route('categories-list');?>'; 
 $("#addForm").submit(function(e){
 $('.wait_loader').show();	
 	e.preventDefault();
@@ -71,7 +90,7 @@ $('.wait_loader').show();
 	$('.error').html('');
 	$.ajax({
 		type: "POST",
-		url: '<?php echo route('countries-save');?>',
+		url: '<?php echo route('categories-save');?>',
 		data:  new FormData(this),
 		processData:false,
 		contentType:false,
@@ -127,6 +146,71 @@ $('.wait_loader').show();
 });
 
  </script>
+<script>
+ function readURL(input) {
 
+  if (input.files && input.files[0]) {
+	var file = input.files[0];
+	var imagefile = file.type;
+	var match =  ["image/jpeg","image/png","image/jpg"];
+	if(!((imagefile==match[0]) || (imagefile==match[1]) || (imagefile==match[2]))){
+		$.notify({
+		  message: 'Image format is wrong. Only JPG/PNG formats are allowed.' 
+		 },{ element: 'body', type: "danger", allow_dismiss: true, offset: { x: 20, y: 60 }, delay: 500 
+		 });
+		$("#file").val('');
+		return false;
+	}
+	var imagesize = file.size;
+	if(imagesize > 2097152){ //2MB
+		$.notify({
+		  message: 'Image size bigger than 2 MB are not allowed.' 
+		 },{ element: 'body', type: "danger", allow_dismiss: true, offset: { x: 20, y: 60 }, delay: 500 
+		 });
+		$("#file").val('');	
+		return false;
+	}
+	
+    var reader = new FileReader();
+    reader.onload = function(e) {
+    }
+
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+
+$("#file").change(function() {
+	
+  readURL(this);
+});
+ </script>	
+
+<script>
+	$(document).ready(function(){
+
+		// Used events
+		var drEvent = $('#file').dropify();
+
+		drEvent.on('dropify.beforeClear', function(event, element){
+			return confirm("Do you really want to remove this image?");
+			//element.file.name
+		});
+
+		drEvent.on('dropify.afterClear', function(event, element){
+			var row_id = $('#file').attr('data-id');
+			if(row_id!=''){
+				$('#file_name').val('');						
+			}
+		
+			
+		});
+
+		drEvent.on('dropify.errors', function(event, element){
+			console.log('Has Errors');
+		});
+
+	});
+
+</script>
  
 @endsection

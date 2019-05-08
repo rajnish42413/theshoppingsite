@@ -57,7 +57,10 @@
   
   	 <link rel="stylesheet" href="{{env('APP_URL')}}admin_assets/plugins/dropify/dropify.min.css">
 	 
-
+ <link rel="stylesheet" type="text/css" href="{{env('APP_URL')}}admin_assets/plugins/suggester/Suggester.css">
+ 
+ <script src="{{env('APP_URL')}}admin_assets/plugins/suggester/Suggester.js" type="text/javascript" language="javascript"></script>
+ 
  
 	<script type="text/javascript">
 	$(document).ready(function() {
@@ -189,6 +192,23 @@
             <li class="<?php if($data['sub_nav'] == 'menu_products_list'){echo 'active';}?>"><a href="{{ route('products-list') }}"><i class="fa fa-list"></i> List</a></li>
           </ul>
         </li>
+		
+        <li class="treeview <?php if($data['nav'] == 'menu_settings'){echo 'active';}?>">
+          <a href="#">
+            <i class="fa fa-cog"></i> <span>Content Pages</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li class="<?php if($data['sub_nav'] == 'menu_settings_about'){echo 'active';}?>"><a href="{{ route('settings-about') }}"><i class="fa fa-circle"></i> About</a></li>
+            <li class="<?php if($data['sub_nav'] == 'menu_settings_faq'){echo 'active';}?>"><a href="{{ route('settings-faq') }}"><i class="fa fa-circle"></i> FAQ</a></li>
+            <li class="<?php if($data['sub_nav'] == 'menu_settings_contact'){echo 'active';}?>"><a href="{{ route('settings-contact') }}"><i class="fa fa-circle"></i> Contact</a></li>
+            <li class="<?php if($data['sub_nav'] == 'menu_settings_terms'){echo 'active';}?>"><a href="{{ route('settings-terms') }}"><i class="fa fa-circle"></i> Terms</a></li>
+            <li class="<?php if($data['sub_nav'] == 'menu_settings_privacy_policy'){echo 'active';}?>"><a href="{{ route('settings-privacy-policy') }}"><i class="fa fa-circle"></i> Privacy Policy</a></li>
+           
+          </ul>
+        </li>		
 		
          
 		

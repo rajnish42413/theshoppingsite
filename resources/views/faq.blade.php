@@ -7,11 +7,11 @@
 	<!--FAQ Banner Wrapper Start-->
 	<div class="sh_faq_banner_wrap sh_float_width">
 		<div class="container">
-			<div class="sh_faq_banner sh_float_width">
+			<div class="sh_faq_banner sh_float_width" style="background: url({{ env('APP_URL')}}banner_files/<?php echo $banner->display_image;?>) no-repeat;">
 				<div class="row">
 					<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 						<div class="sh_about_banner_text sh_float_width">
-							<h1>Find all you want to know !</h1>
+							<h1><?php echo $banner->heading_title;?></h1>
 						</div>
 					</div>
 				</div>
@@ -31,61 +31,25 @@
 			<div class="row">
 				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 					<div class="sh_faq_section sh_float_width">
+					<?php if($faqs && $faqs->count() > 0){
+						$i = 1;?>
 						<div class="content">
 							<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+							<?php foreach($faqs as $faq){?>
 								<div class="panel panel-default">
-									<div class="panel-heading" id="headingOne" role="tab">
-										<h4 class="panel-title"><a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">Question 1<i class="pull-right fa fa-plus"></i></a></h4>
+									<div class="panel-heading" id="heading<?php echo $i;?>" role="tab">
+										<h4 class="panel-title"><a class="<?php if($i != 1){ echo 'collapsed';}?>" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse<?php echo $i;?>" aria-expanded="<?php if($i == 1){ echo 'true';}else{ echo 'false';}?>" aria-controls="collapse<?php echo $i;?>"><?php echo $faq->question;?><i class="pull-right fa fa-plus"></i></a></h4>
 									</div>
-									<div class="panel-collapse collapse in" id="collapseOne" role="tabpanel" aria-labelledby="headingOne">
+									<div class="panel-collapse collapse <?php if($i == 1){ echo 'in';}?>" id="collapse<?php echo $i;?>" role="tabpanel" aria-labelledby="heading<?php echo $i;?>">
 										<div class="panel-body">
-											<p>Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.</p>
+											<p><?php echo $faq->answer;?></p>
 										</div>
 									</div>
 								</div>
-								<div class="panel panel-default">
-									<div class="panel-heading" id="headingTwo" role="tab">
-										<h4 class="panel-title"><a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">Question 2<i class="pull-right fa fa-plus"></i></a></h4>
-									</div>
-									<div class="panel-collapse collapse" id="collapseTwo" role="tabpanel" aria-labelledby="headingTwo">
-										<div class="panel-body">
-											<p>Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.</p>
-										</div>
-									</div>
-								</div>
-								<div class="panel panel-default">
-									<div class="panel-heading" id="headingThree" role="tab">
-										<h4 class="panel-title"><a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">Question 3<i class="pull-right fa fa-plus"></i></a></h4>
-									</div>
-									<div class="panel-collapse collapse" id="collapseThree" role="tabpanel" aria-labelledby="headingThree">
-										<div class="panel-body">
-											<p>Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.</p>
-										</div>
-									</div>
-								</div>
-								<div class="panel panel-default">
-									<div class="panel-heading" id="headingFour" role="tab">
-										<h4 class="panel-title"><a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">Question 4<i class="pull-right fa fa-plus"></i></a></h4>
-									</div>
-									<div class="panel-collapse collapse" id="collapseFour" role="tabpanel" aria-labelledby="headingFour">
-										<div class="panel-body">
-											<p>Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.</p>
-										</div>
-									</div>
-								</div>
-								<div class="panel panel-default">
-									<div class="panel-heading" id="headingFive" role="tab">
-										<h4 class="panel-title"><a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="false" aria-controls="collapseFive">Question 5<i class="pull-right fa fa-plus"></i></a></h4>
-									</div>
-									<div class="panel-collapse collapse" id="collapseFive" role="tabpanel" aria-labelledby="headingFive">
-										<div class="panel-body">
-											<p>Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.</p>
-										</div>
-									</div>
-								</div>
-								
+							<?php  $i++; } ?>								
 							</div>
 						</div>
+					<?php } ?>
 					</div>
 				</div>
 			</div>

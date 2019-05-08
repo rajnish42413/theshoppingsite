@@ -42,7 +42,7 @@ class ProductsController extends Controller
 	
 	
     public function ajax_list(Request $req){
-
+		//echo 'yes';die;
         $temppage       = $this->getDTpage($req);
         $length     = $temppage[0];
         $currpage   = $temppage[1]; 
@@ -51,8 +51,10 @@ class ProductsController extends Controller
         $srch       = $this->getDTsearch($req);
         //echo '<pre>';print_r($srch);die;
 
-        $qry = Product::select(DB::raw("products.*, categories.categoryName as categoryName, c2.categoryName as parentCategoryName"))->Join('categories',function ($join){$join->on('categories.categoryId','=','products.categoryId'); })->Join('categories as c2',function ($join){$join->on('c2.categoryId','=','products.parentCategoryId'); });
+        $qry = Product::select(DB::raw("products.*, categories.categoryName as categoryName, c2.categoryName as parentCategoryName"))->leftJoin('categories',function ($join){$join->on('categories.categoryId','=','products.categoryId'); })->leftJoin('categories as c2',function ($join){$join->on('c2.categoryId','=','products.parentCategoryId'); });
+        //$qry = Product::select(DB::raw("products.*"));
 	
+		
 		
         if(isset($srch['title']))
         {
@@ -68,7 +70,7 @@ class ProductsController extends Controller
             $qry->where('categories.parentId',$srch['parentCategoryName']);
         }
 		
-		
+		$qry->groupBy('products.id');
         
 		if($order[0] == 'list_create'){
 			$order[0] = 'products.created_at';
@@ -82,6 +84,7 @@ class ProductsController extends Controller
 	
 		$qry->orderByRaw("$order[0] $order[1]");	
 		 
+		//echo $qry->toSql();die;
         $data['results'] = [];
         $results = $qry->paginate($length);
         
@@ -116,26 +119,26 @@ class ProductsController extends Controller
     }	
 	
 	public function save_data(Request $request){
-		$validator = Validator::make($request->all(), [
-             'name' => 'required',			 
-             'categoryId' => 'required',			 		 		 		 		 
+/* 		$validator = Validator::make($request->all(), [
+             'is_deal_of_the_day' => 'required',			 
+             'is_top_product' => 'required',			 		 		 		 		 
 			], 
 			$messages = [
-			'name.required' => 'Name is required',
-			'categoryId.required' => 'Category is required',
+			'is_deal_of_the_day.required' => 'Deal of the day is required',
+			'is_top_product.required' => 'Top Product is required',
 		])->validate();	
 
         if (isset($validator) && $validator->fails())
         {
             return response()->json(['errors'=>$validator->errors()->all()]);
-        }else{
+        }else{ */
 			
 			$req   = $request->all();
 			$id = $req['id'];
 
 			$input=array(
-				'name'=> $req['name'],
-				'categoryId' => $req['categoryId'],
+				'is_deal_of_the_day'=> $req['is_deal_of_the_day'],
+				'is_top_product' => $req['is_top_product'],
 			);
 			if($id!=''){
 				Product::where('id',$id)->update($input);	
@@ -145,7 +148,7 @@ class ProductsController extends Controller
 
 			echo "|success";
 		
-		}
+		//}
     }
 	
 	public function delete_data(Request $request) {
