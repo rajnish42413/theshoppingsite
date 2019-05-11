@@ -10,11 +10,16 @@ use DB;
 use \Hkonnet\LaravelEbay\EbayServices;
 use \DTS\eBaySDK\Finding\Types;
 
+use App\Brand;
 use App\Product;
 use App\Category;
 use App\Banner;
 use App\FrontPageSetting;
 use App\FaqData;
+
+use App\Contracts\EnquiryServiceContract;
+use App\Mail\EnquiryNew;
+use Mail;
 
 class HomeController extends Controller
 {
@@ -68,14 +73,31 @@ class HomeController extends Controller
         return view('faq',['data'=>$data,'row'=>$row,'faqs'=>$faqs,'banner'=>$banner]);
     }
 	
-	public function contact(){
+	public function contact(Request $req,EnquiryServiceContract $esc){
+
+		$data['success'] = array();
+		$data['errors'] = array();		
+        if($req->isMethod('post')){
+		
+            $input['name'] = trim($req->name);
+            $input['email'] = trim($req->email);
+            $input['subject'] = trim($req->subject);
+            $input['message'] = trim($req->message);
+			$input['contact_no'] = $req->contact_no;
+            $data = $esc->saveInfo($input);
+	
+            if($data['obj']){
+                Mail::send(new EnquiryNew($data['obj']));
+            }
+        }
+		
 		$data['nav'] = 'contact';
 		$row = FrontPageSetting ::where('page_type','contact')->first();
 		$data['meta_title'] = $row->page_title;
 		$data['meta_keywords']= $row->meta_keywords;
 		$data['meta_description'] = $row->meta_description;
 		$banner = Banner::where('section_name','contact')->orderBy('id','asc')->limit(1)->first();	
-        return view('contact',['data'=>$data,'row'=>$row,'banner'=>$banner]);
+        return view('contact',['data'=>$data,'row'=>$row,'banner'=>$banner,'success'=>$data['success'],'error'=>$data['errors']]);
     }
 
 	public function terms(){
@@ -102,23 +124,37 @@ class HomeController extends Controller
 	public function search_list(Request $request, $slug){
 		$categories = array();
 		$products = array();
+		$brands = array();
 		$data['parent_category'] = '';	
-		$data['category'] = '';	
-		
+		$data['category'] = '';
+		$data['parent_cat_id'] = '0';	
+		$data['cat_id'] = '0';	
+		$data['min_price']	= '';
+		$data['max_price'] = '';
 		if($slug != ''){
 			$res = Category::where('slug',$slug)->first();
 			if($res && $res->count() > 0){
 				if($res->parentId == '0'){ // parent
 					$data['parent_category'] = $res->categoryName;
+					$data['parent_cat_id'] = $res->categoryId;
+					$data['cat_id'] = '0';
 					$categories = $this->get_categories($res->categoryId);
-					$products = $this->get_products_by_parent($res->categoryId);			
+					$products = $this->get_products_by_parent($res->categoryId);	
+					$brands = $this->get_brands_by_parent($res->categoryId);	
+					$data['min_price'] = $this->getMinPriceByParentCat($res->categoryId);
+					$data['max_price'] = $this->getMaxPriceByParentCat($res->categoryId);
 				}else{
 					$res2 = Category::where('categoryId',$res->parentId)->first();
 					if($res2 && $res2->count() > 0){
 						$data['parent_category'] = $res2->categoryName;
 						$data['category'] = $res->categoryName;
+						$data['parent_cat_id'] = '0';
+						$data['cat_id'] = $res->categoryId;						
 						$categories = $this->get_categories($res->parentId);
-						$products = $this->get_products_by_cat($res->categoryId);							
+						$products = $this->get_products_by_cat($res->categoryId);
+						$brands = $this->get_brands_by_cat($res->categoryId);
+						$data['min_price'] = $this->getMinPriceByCat($res->categoryId);
+						$data['max_price'] = $this->getMaxPriceByCat($res->categoryId);						
 					}
 				}				
 			}
@@ -129,32 +165,38 @@ class HomeController extends Controller
 		$data['meta_keywords'] = config('app.name')." Search Products";
 		$data['meta_description'] = config('app.name')." Search Products";	
 		
-        return view('search_products/list',['data'=>$data,'categories'=>$categories,'products'=>$products]);		
+        return view('search_products/grid_list',['data'=>$data,'categories'=>$categories,'products'=>$products,'brands'=>$brands]);		
 	}
 	
 	
 	public function product_detail(Request $request,$id){
 
+		$data['nav'] = 'terms';
+		$data['meta_title'] = config('app.name')." :: Product Detail";
+		$data['meta_keywords'] = config('app.name')." Product Detail";
+		$data['meta_description'] = config('app.name')." Product Detail";
 		$data['parent_category'] = "-";	
-		$data['category'] = "-";	
+		$data['category'] = "-";		
 		$product = array();
 		$categories = array();
 		if($id != ''){
 
 			$product = Product::select(DB::raw("products.*, categories.categoryName as categoryName, c2.categoryName as parentCategoryName"))->Join('categories',function ($join){$join->on('categories.categoryId','=','products.categoryId'); })->Join('categories as c2',function ($join){$join->on('c2.categoryId','=','products.parentCategoryId'); })->where('products.itemId',$id)->first();
 					
-			if($product){
+			if($product && $product->count() > 0){
 				$data['parent_category'] = $product->parentCategoryName;	
 				$data['category'] = $product->categoryName;
 				$categories = $this->get_categories($product->parentCategoryId);
-			}
+				
+				return view('search_products/detail',['data'=>$data,'categories'=>$categories,'product'=>$product]);				
+			}else{
+			return redirect(env('APP_URL'));
+		}
+		}else{
+			return redirect(env('APP_URL'));
 		}
 		
-		$data['nav'] = 'terms';
-		$data['meta_title'] = config('app.name')." :: Product Detail";
-		$data['meta_keywords'] = config('app.name')." Product Detail";
-		$data['meta_description'] = config('app.name')." Product Detail";	
-        return view('search_products/detail',['data'=>$data,'categories'=>$categories,'product'=>$product]);		
+        		
 	}	
 	
 	
@@ -181,6 +223,7 @@ class HomeController extends Controller
 		if($parent_id == ""){
 			$parent_id = '0';
 		}
+		$showing_result = 10;
 		$results = Product::select(DB::raw("products.*, categories.categoryName as categoryName, c2.categoryName as parentCategoryName"))->Join('categories',function ($join){$join->on('categories.categoryId','=','products.categoryId'); })->Join('categories as c2',function ($join){$join->on('c2.categoryId','=','products.parentCategoryId'); });
 		
 		if($parent_id!= '0'){
@@ -188,6 +231,7 @@ class HomeController extends Controller
 		}		
 		//offset(0)->limit(10)->
 		$results = $results->orderBy('products.current_price','asc');
+		$results = $results->limit($showing_result);
 		$results = $results->get();
 		if($results->count() > 0){
 			$products = $results;
@@ -198,7 +242,7 @@ class HomeController extends Controller
 
 	public function get_products_by_cat($cat_id=""){
 		$products = array();
-
+		$showing_result = 10;
 		$results = Product::select(DB::raw("products.*, categories.categoryName as categoryName, c2.categoryName as parentCategoryName"))->Join('categories',function ($join){$join->on('categories.categoryId','=','products.categoryId'); })->Join('categories as c2',function ($join){$join->on('c2.categoryId','=','products.parentCategoryId'); });
 		
 		if($cat_id!= '0'){
@@ -206,6 +250,7 @@ class HomeController extends Controller
 		}		
 		//offset(0)->limit(10)->
 		$results = $results->orderBy('products.current_price','asc');
+		$results = $results->limit($showing_result);
 		$results = $results->get();
 		if($results->count() > 0){
 			$products = $results;
@@ -214,4 +259,139 @@ class HomeController extends Controller
 		return $products;
 	}
 	
+	public function get_products_ajax(Request $request){
+		$sorting_name = 'products.current_price';
+		$sorting_p = 'asc';	
+		$brands_array = array();
+		
+		$parent_cat_id = $request->input('parent_cat_id');
+		$brands_array = $request->input('brands');
+		
+		//echo '<pre>'; print_r($brands_array); die;
+		$cat_id = $request->input('cat_id');
+		$pro_name = trim($request->input('pro_name'));
+		$start_price = $request->input('dpriceMin');
+		$end_price = $request->input('dpriceMax');
+		$showing_result = $request->input('showing_result');
+		$sorting_type = $request->input('sorting_type');
+	
+		$results = array();
+		
+		if($parent_cat_id != '0'){
+			$results = Product::select(DB::raw("products.*, categories.categoryName as categoryName, c2.categoryName as parentCategoryName"))->Join('categories',function ($join){$join->on('categories.categoryId','=','products.categoryId'); })->Join('categories as c2',function ($join){$join->on('c2.categoryId','=','products.parentCategoryId'); });
+			$results = $results->where('products.parentCategoryId',$parent_cat_id);			
+		}else{
+			$results = Product::select(DB::raw("products.*, categories.categoryName as categoryName, c2.categoryName as parentCategoryName"))->Join('categories',function ($join){$join->on('categories.categoryId','=','products.categoryId'); })->Join('categories as c2',function ($join){$join->on('c2.categoryId','=','products.parentCategoryId'); });			
+			$results = $results->where('products.CategoryId',$cat_id);
+		}	
+
+		if($start_price!='' && $end_price!=''){
+			$results = $results->where('products.current_price','>=',$start_price);
+			$results = $results->where('products.current_price','<',$end_price);
+		}
+		
+		if($pro_name !=''){
+			$results = $results->where('products.title','like',"%" .$pro_name. "%");
+		}
+		
+		if($brands_array){
+			$results = $results->whereIn('products.brand_id', $brands_array);
+		}
+		if($sorting_type == '1'){
+			$sorting_name = 'products.current_price';
+			$sorting_p = 'asc';
+		}elseif($sorting_type == '2'){
+			$sorting_name = 'products.current_price';
+			$sorting_p = 'desc';
+		}elseif($sorting_type == '3'){
+			$sorting_name = 'products.id';
+			$sorting_p = 'desc';
+		}
+		
+		$results = $results->orderBy($sorting_name,$sorting_p);
+		$results = $results->limit($showing_result);
+		$results = $results->get();
+		//echo $results->toSql();die;
+		if($results && $results->count() > 0){			
+			echo view('search_products/ajax_grid_list',['products'=>$results])->render();				
+		}else{
+			echo '0';
+		} 		
+	}	
+	
+	public function getMaxPriceByParentCat($parent_id){
+		$results = Product::select(DB::raw("CEIL(MAX(current_price)) as price"))->where('parentCategoryId',$parent_id)->first();
+		if($results && $results->count() > 0 && $results->price != null){
+			return $results->price;
+		}else{
+			return '';
+		}		
+			
+	}
+	
+	public function getMinPriceByParentCat($parent_id){
+		$results = Product::select(DB::raw("FLOOR(MIN(current_price)) as price"))->where('parentCategoryId',$parent_id)->first();
+		if($results && $results->count() > 0 && $results->price != null){
+			return $results->price;
+		}else{
+			return '';
+		}
+	}	
+	
+	public function getMaxPriceByCat($cat_id){
+		$results = Product::select(DB::raw("CEIL(MAX(current_price)) as price"))->where('categoryId',$cat_id)->first();
+		if($results && $results->count() > 0 && $results->price != null){
+			return $results->price;
+		}else{
+			return '';
+		}		
+			
+	}
+	
+	public function getMinPriceByCat($cat_id){
+		$results = Product::select(DB::raw("FLOOR(MIN(current_price)) as price"))->where('categoryId',$cat_id)->first();
+		if($results && $results->count() > 0 && $results->price != null){
+			return $results->price;
+		}else{
+			return '';
+		}
+	}		
+
+
+	public function get_brands_by_parent($parent_id=""){
+		$brands = array();
+		if($parent_id == ""){
+			$parent_id = '0';
+		}
+		$results = Brand::select(DB::raw("brands.*"))->Join('products',function ($join){$join->on('products.brand_id','=','brands.id'); })->Join('categories',function ($join){$join->on('categories.categoryId','=','products.categoryId'); })->Join('categories as c2',function ($join){$join->on('c2.categoryId','=','products.parentCategoryId'); });
+		
+		if($parent_id!= '0'){
+			$results = $results->where('products.parentCategoryId',$parent_id);
+		}		
+		$results = $results->groupBy('brands.id');
+		$results = $results->orderBy('brands.name','asc');
+		$results = $results->get();
+		if($results->count() > 0){
+			$brands = $results;
+		}
+		
+		return $brands;
+	}	
+
+	public function get_brands_by_cat($cat_id=""){
+		$brands = array();
+		$results = Brand::select(DB::raw("brands.*"))->Join('products',function ($join){$join->on('products.brand_id','=','brands.id'); })->Join('categories',function ($join){$join->on('categories.categoryId','=','products.categoryId'); })->Join('categories as c2',function ($join){$join->on('c2.categoryId','=','products.parentCategoryId'); });
+		
+		if($cat_id!= '0'){
+			$results = $results->where('products.CategoryId',$cat_id);
+		}		
+		$results = $results->groupBy('brands.id');
+		$results = $results->orderBy('brands.name','asc');
+		$results = $results->get();
+		if($results->count() > 0){
+			$brands = $results;
+		}
+		
+		return $brands;
+	}	
 }

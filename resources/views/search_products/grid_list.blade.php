@@ -1,9 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-<?php
-use \App\Http\Controllers\HotelController;
-?>
 <!--Main Wrapper Start-->
 <div class="sh_main_wrap sh_float_width">
 	<!--Breadcurm Start-->
@@ -13,10 +10,12 @@ use \App\Http\Controllers\HotelController;
 				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 					<div class="sh_breadcurm sh_float_width">
 						<ul>
-							<li><a href="javacript:void(0)">Electronics</a></li>
-							<li><a href="javacript:void(0)">computer &amp; Laptops</a></li>
-							<li><a href="javacript:void(0)">Hardware</a></li>
-							<li><strong>Mackbook</strong></li>
+							<?php if($data['parent_category'] != ''){?>
+							<li><a href="javacript:void(0)"><?php echo $data['parent_category'];?></a></li>
+							<?php } ?>
+							<?php if($data['category'] != ''){?>
+								<li><a href="javacript:void(0)"><?php echo $data['category'];?></a></li>
+							<?php } ?>
 						</ul>
 					</div>
 				</div>
@@ -30,331 +29,146 @@ use \App\Http\Controllers\HotelController;
 				<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
 					<div class="sh_side_bar sh_float_width">
 						<div class="sh_side_bar_section sh_float_width">
-							<h4 class="sh_nav_title">Categories</h4>
+						<form id="filter_form" action="" method="post">
+						{{ csrf_field() }}
+							<input type="hidden" id="sorting_type" value="1" name="sorting_type" />
+							<input type="hidden" id="showing_result" value="10" name="showing_result" />
+							<input type="hidden" id="parent_cat_id" value="<?php echo $data['parent_cat_id'];?>" name="parent_cat_id" />
+							<input type="hidden" id="cat_id" value="<?php echo $data['cat_id'];?>" name="cat_id" />
 							<div class="sh_side_widget sh_cat_search_form sh_float_width">
-								<form>
-									<input type="text" placeholder="Search" value="">
-									<button><span class="icofont-search-2"></span></button>
-								</form>
-							</div>
-							<div class="sh_side_widget sh_sidear_cat_menu sh_float_width">
-								<ul>								
-									<li><a href="javacript:void(0)">Office Electronics</a></li>
-									<li><a href="javacript:void(0)">Tablet</a></li>
-									<li><a href="javacript:void(0)">Computer Components</a></li>
-									<li><a href="javacript:void(0)">Tablet Accessories</a></li>
-									<li>
-										<a href="javacript:void(0)">Computer & Laptop</a>
-										<ul class="sh_sub_category">
-											<li><a href="javacript:void(0)">Desktop
-											</a></li>
-											<li><a href="javacript:void(0)">Servers</a></li>
-											<li><a href="javacript:void(0)">Macbook</a></li>
-											<li><a href="javacript:void(0)">Antivirus</a></li>
-											<li><a href="javacript:void(0)">Laptops</a></li>
-											<li><a href="javacript:void(0)">Accessories</a></li>
-										</ul>
-									</li>
-									<li><a href="javacript:void(0)">Networking</a></li>
-									<li><a href="javacript:void(0)">Memory Cards &amp; SSD</a></li>
-									<li><a href="javacript:void(0)">Cables &amp; Connector</a></li>
-									<li><a href="javacript:void(0)">Mini PC</a></li>
-								</ul>								
-							</div>
+							<h4 class="sh_sidecat_heading">Filter By Name</h4>
+									<input type="text" class="form-control" id="pro_name" name="pro_name" placeholder="Search" value="" oninput="get_product_name(this)">
+							</div>							
+
 							<div class="sh_side_widget sh_sidear_cat_price_filter sh_float_width">
 								<h4 class="sh_sidecat_heading">Filter By Price</h4>
 								<div class="wrapper">
 									<div class="range-slider">
-										<input type="text" class="js-range-slider" value="" />
+										
+										<input class="form-control" type="hidden" value="<?php echo $data['min_price'];?>" name="dpriceMin" id="dpriceMinVal" placeholder="Min" min="0">
+										<input class="form-control" type="hidden" value="<?php echo $data['max_price'];?>" name="dpriceMax" id="dpriceMaxVal" placeholder="Max" min="1">
+										<input type="text" class="price-slider" title="price" placeholder="" name="price_range" id="price_range" data-min="0"/>										
 									</div>
-									<div class="extra-controls form-inline">
-										<div class="form-group">
-											<input type="text" class="js-input-from form-control" value="0" />
-											<input type="text" class="js-input-to form-control" value="0" />
-										</div>
-									</div>
-									<div class="sh_filter_pri">
-										<a class="sh_btn" href="javacript:void(0)">Filter</a>
-									</div>
+
 								</div>
 							</div>
+							<?php if($brands){?>
 							<div class="sh_side_widget sh_sidear_cat_brands sh_float_width">
-								<h4 class="sh_sidecat_heading">Brand</h4>
-								<ul>
-									<li><a href="javacript:void(0)">Philips</a></li>
-									<li><a href="javacript:void(0)">Acer</a></li>
-									<li><a href="javacript:void(0)">Canon</a></li>
-									<li><a href="javacript:void(0)">Hitichi</a></li>	
-									<li><a href="javacript:void(0)">Toshiba</a></li>	
+								<h4 class="sh_sidecat_heading">Filter By Brand</h4>
+								<ul class="my-brands">
+							<?php foreach($brands as $brand){?>
+									<li><input type="checkbox" name="brands[]" class="pro_brands checkmark" value="<?php echo $brand->id;?>" onchange="get_search_data()"><?php echo $brand->name;?></li>	
+							<?php } ?>
 								</ul>
 							</div>
+							<?php } ?>
+							</form>							
 						</div>
+					</div>
+					<div class="sh_side_bar sh_float_width">
+						<div class="sh_side_bar_section sh_float_width">
+										
+							<div class="sh_side_widget sh_sidear_cat_menu sh_float_width">
+								<h4 class="sh_sidecat_heading">Categories</h4>						
+							<?php if($categories){?>
+								<ul class="cat-list">								
+								<?php foreach($categories as $cat){?>
+									<li><a href="<?php echo env('APP_URL')."category/".$cat->slug;?>"><?php echo $cat->categoryName;?></a></li>
+								<?php } ?>
+								</ul>
+							<?php } ?>							
+							</div>						
+						</div>					
 					</div>
 				</div>
 				<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
 					<div class="sh_product_grid sh_float_width">
 						<div class="sh_product_grid_top sh_float_width">
-							<div class="col-lg-5 col-md-5 col-sm-4 col-xs-12">
+							<div class="col-lg-6 col-md-5 col-sm-4 col-xs-12">
 								<div class="sh_search_filter sh_float_width">
 									<ul>
 										<li>Show Result:</li>
 										<li>
-											<select>
-												<option>1 to 10</option>
-												<option>1 to 20</option>
-												<option>1 to 30</option>
-												<option>1 to 40</option>
+											<select id="showing_result_data" onchange="showing_result(this);">
+												<option value="10" selected>1 to 10</option>
+												<option value="20">1 to 20</option>
+												<option value="30">1 to 30</option>
+												<option value="40">1 to 40</option>
 											</select>
 										</li>
 									</ul>
 								</div>
 							</div>
-							<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+							
+							<div class="col-lg-6 col-md-4 col-sm-4 col-xs-12 text-right">
 								<div class="sh_search_filter sh_float_width">
 									<ul>
 										<li>Sort by:</li>
 										<li>
-											<select>
-												<option>Price: Low to High</option>
-												<option>Price: High to Low</option>
-												<option>Price: Low to High</option>
-												<option>Price: Low to High</option>
+											<select id="product_sorting" onchange="product_sorting(this);">
+												<option value="1">Price: Low to High</option>
+												<option value="2">Price: High to Low</option>
+												<option value="3">New</option>
 											</select>
 										</li>
 									</ul>
 								</div>
 							</div>
-							<div class="col-lg-3 col-md-3 col-sm-4 col-xs-12 text-right">
-								<div class="sh_search_filter sh_float_width">
-									<ul>
-										<li>View:</li>
-										<li><a href="javacript:void(0)" class="active"><span class="icofont-listine-dots"></span></a></li>
-										<li><a href="javacript:void(0)"><span class="icofont-transparent"></span></a></li>
-									</ul>
-								</div>
-							</div>
 						</div>
-						<div class="sh_product_list_product sh_float_width">
-							<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 sh_padding0">
-								<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-									<div class="sh_list_product_img sh_float_width">
-										<img src="images/grid/product12.jpg">
-										<a href="javacript:void(0)">Quick View</a>
-									</div>
-								</div>
-								<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-									<div class="sh_list_product_text sh_float_width">
-										<p>Phone</p>
-										<h4 class="sh_prod_name">Samsung Galaxy S9 Limited</h4>
-										<div class="sh_about_prod sh_float_width">
-											<div class="sh_product_review sh_float_width">
+							<img id="listLoading" src="<?php echo env('APP_URL')?>assets/images/loading.gif" style="display: table;margin: auto;">
+						
+						<div id="products-view" class="sh_product_grid_product sh_float_width" style="display:none;">
+					<?php if($products){
+						
+						foreach($products as $product){?>
+					
+							<?php  
+							$galleryURL = env('APP_URL')."assets/images/no_image.png";
+							$PictureDetails = $product->PictureDetails; 
+							if($PictureDetails != ''){
+								$pic_det = json_decode($PictureDetails);
+								if($pic_det && isset($pic_det->GalleryURL) && $pic_det->GalleryURL != ''){
+									$galleryURL = $pic_det->GalleryURL;
+								}
+							}
+							?>
+						
+							<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+								<a href="{{ env('APP_URL')}}product/<?php echo $product->itemId;?>">
+									<div class="sh_grid_product_section sh_float_width">
+										<span class="hide sh_new_prod">New</span>
+										<img class="grid_prd" src="<?php echo $galleryURL;?>">
+										<h4 class="sh_prod_name"><?php echo $product->title;?></h4>
+										<div class="sh_about_prod">
+											<div class="sh_product_price">$<?php echo $product->current_price;?></div>
+											<div class="sh_product_review">
 												<ul>
 													<li><span class="fa fa-star"></span></li>
 													<li><span class="fa fa-star"></span></li>
 													<li><span class="fa fa-star"></span></li>
 													<li><span class="fa fa-star"></span></li>
 													<li><span class="fa fa-star-o"></span></li>
-													<li> (299)</li>
 												</ul>
 											</div>
-											<div class="sh_product_features sh_float_width">
-												<ul>
-													<li>Display: 6.1-inch Liquid</li>
-													<li>Store: 64GB, 128GB, 256GB</li>
-													<li>Metarial: All-glass</li>
-												</ul>
+											<div class="sh_less_price_store sh_float_width text-left">
+												<a href="javacript:void(0)"><img src="{{env('APP_URL')}}assets/images/ebay.png"></a>
 											</div>
+									
 										</div>
 									</div>
-								</div>
-								<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-									<div class="sh_list_product_price_wrap sh_float_width">
-										<h1>$299.00</h1>
-										<div class="sh_less_price_store sh_float_width text-left">
-											<a href="javacript:void(0)"><img src="images/amazon.png"></a>
-										</div>
-										<a class="sh_btn" href="javacript:void(0)">View Product</a>
-									</div>
-								</div>
+								</a>
 							</div>
-						</div>
-						<div class="sh_product_list_product sh_float_width">
-							<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 sh_padding0">
-								<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-									<div class="sh_list_product_img sh_float_width">
-										<img src="images/grid/product1.jpg">
-										<a href="javacript:void(0)">Quick View</a>
-									</div>
-								</div>
-								<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-									<div class="sh_list_product_text sh_float_width">
-										<p>Phone</p>
-										<h4 class="sh_prod_name">Samsung Galaxy S9 Limited</h4>
-										<div class="sh_about_prod sh_float_width">
-											<div class="sh_product_review sh_float_width">
-												<ul>
-													<li><span class="fa fa-star"></span></li>
-													<li><span class="fa fa-star"></span></li>
-													<li><span class="fa fa-star"></span></li>
-													<li><span class="fa fa-star"></span></li>
-													<li><span class="fa fa-star-o"></span></li>
-													<li> (299)</li>
-												</ul>
-											</div>
-											<div class="sh_product_features sh_float_width">
-												<ul>
-													<li>Display: 6.1-inch Liquid</li>
-													<li>Store: 64GB, 128GB, 256GB</li>
-													<li>Metarial: All-glass</li>
-												</ul>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-									<div class="sh_list_product_price_wrap sh_float_width">
-										<h1>$299.00</h1>
-										<div class="sh_less_price_store sh_float_width text-left">
-											<a href="javacript:void(0)"><img src="images/ebay.png"></a>
-										</div>
-										<a class="sh_btn" href="javacript:void(0)">View Product</a>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="sh_product_list_product sh_float_width">
-							<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 sh_padding0">
-								<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-									<div class="sh_list_product_img sh_float_width">
-										<img src="images/grid/product6.jpg">
-										<a href="javacript:void(0)">Quick View</a>
-									</div>
-								</div>
-								<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-									<div class="sh_list_product_text sh_float_width">
-										<p>Phone</p>
-										<h4 class="sh_prod_name">Samsung Galaxy S9 Limited</h4>
-										<div class="sh_about_prod sh_float_width">
-											<div class="sh_product_review sh_float_width">
-												<ul>
-													<li><span class="fa fa-star"></span></li>
-													<li><span class="fa fa-star"></span></li>
-													<li><span class="fa fa-star"></span></li>
-													<li><span class="fa fa-star"></span></li>
-													<li><span class="fa fa-star-o"></span></li>
-													<li> (299)</li>
-												</ul>
-											</div>
-											<div class="sh_product_features sh_float_width">
-												<ul>
-													<li>Display: 6.1-inch Liquid</li>
-													<li>Store: 64GB, 128GB, 256GB</li>
-													<li>Metarial: All-glass</li>
-												</ul>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-									<div class="sh_list_product_price_wrap sh_float_width">
-										<h1>$299.00</h1>
-										<div class="sh_less_price_store sh_float_width text-left">
-											<a href="javacript:void(0)"><img src="images/amazon.png"></a>
-										</div>
-										<a class="sh_btn" href="javacript:void(0)">View Product</a>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="sh_product_list_product sh_float_width">
-							<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 sh_padding0">
-								<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-									<div class="sh_list_product_img sh_float_width">
-										<img src="images/grid/product8.jpg">
-										<a href="javacript:void(0)">Quick View</a>
-									</div>
-								</div>
-								<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-									<div class="sh_list_product_text sh_float_width">
-										<p>Phone</p>
-										<h4 class="sh_prod_name">Samsung Galaxy S9 Limited</h4>
-										<div class="sh_about_prod sh_float_width">
-											<div class="sh_product_review sh_float_width">
-												<ul>
-													<li><span class="fa fa-star"></span></li>
-													<li><span class="fa fa-star"></span></li>
-													<li><span class="fa fa-star"></span></li>
-													<li><span class="fa fa-star"></span></li>
-													<li><span class="fa fa-star-o"></span></li>
-													<li> (299)</li>
-												</ul>
-											</div>
-											<div class="sh_product_features sh_float_width">
-												<ul>
-													<li>Display: 6.1-inch Liquid</li>
-													<li>Store: 64GB, 128GB, 256GB</li>
-													<li>Metarial: All-glass</li>
-												</ul>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-									<div class="sh_list_product_price_wrap sh_float_width">
-										<h1>$299.00</h1>
-										<div class="sh_less_price_store sh_float_width text-left">
-											<a href="javacript:void(0)"><img src="images/ebay.png"></a>
-										</div>
-										<a class="sh_btn" href="javacript:void(0)">View Product</a>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="sh_product_list_product sh_float_width">
-							<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 sh_padding0">
-								<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-									<div class="sh_list_product_img sh_float_width">
-										<img src="images/grid/product1.jpg">
-										<a href="javacript:void(0)">Quick View</a>
-									</div>
-								</div>
-								<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-									<div class="sh_list_product_text sh_float_width">
-										<p>Phone</p>
-										<h4 class="sh_prod_name">Samsung Galaxy S9 Limited</h4>
-										<div class="sh_about_prod sh_float_width">
-											<div class="sh_product_review sh_float_width">
-												<ul>
-													<li><span class="fa fa-star"></span></li>
-													<li><span class="fa fa-star"></span></li>
-													<li><span class="fa fa-star"></span></li>
-													<li><span class="fa fa-star"></span></li>
-													<li><span class="fa fa-star-o"></span></li>
-													<li> (299)</li>
-												</ul>
-											</div>
-											<div class="sh_product_features sh_float_width">
-												<ul>
-													<li>Display: 6.1-inch Liquid</li>
-													<li>Store: 64GB, 128GB, 256GB</li>
-													<li>Metarial: All-glass</li>
-												</ul>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-									<div class="sh_list_product_price_wrap sh_float_width">
-										<h1>$299.00</h1>
-										<div class="sh_less_price_store sh_float_width text-left">
-											<a href="javacript:void(0)"><img src="images/amazon.png"></a>
-										</div>
-										<a class="sh_btn" href="javacript:void(0)">View Product</a>
-									</div>
-								</div>
-							</div>
+					<?php } }else{ ?>
+							<h3 class="alert alert-danger"><i class="fa fa-exclamation-triangle"></i> No Items Found For This Criteria.</h3>					
+					<?php } ?>
+						
 						</div>
 						
+					<?php if($products){?>
+						<div class="load_more" style="display:none;">
+							<div class="col-lg-12 text-center"><button onclick="load_more(this)" class="sh_btn btn btn-block" type="button">Load More <i class="fa fa-spin fa-spinner hide"></i></button></div>
+						</div>
+					<?php } ?>
 					</div>
 				</div>
 				
@@ -363,5 +177,87 @@ use \App\Http\Controllers\HotelController;
 	</div>	
 	
 </div>	
-			
+<script src="{{env('APP_URL')}}assets/js/rang_slider/rang.js"></script>
+<script>
+
+$(window).on('load', function(){
+     $('#listLoading').hide();
+     $('#products-view').show();
+     $('.load_more').show();
+});
+
+function product_sorting(e){
+	var x = e.value;
+	$("#filter_form #sorting_type").val(x);
+	get_search_data();
+}
+
+function showing_result(e){
+	var y = e.value;
+	$("#filter_form #showing_result").val(y);
+	get_search_data();
+}
+
+function get_search_data(){
+	$('#listLoading').show();
+	 $('#products-view').hide();
+	$.ajax({
+			type: "POST",	 			
+			url: '<?php echo env('APP_URL') ?>get-products-ajax',
+			data:$( "#filter_form" ).serialize(),	
+			success: function(res)
+			{ 
+				$('.load_more').show();
+				$('#listLoading').hide();
+				$('.load_more i').addClass('hide');
+				if(res != '0'){
+					$('#products-view').html(res);
+				}else{
+					$('.load_more').hide();
+					$('#products-view').html('<h3 class="alert alert-danger"><i class="fa fa-exclamation-triangle"></i> No Items Found For This Criteria.</h3>');
+				}
+				$('#products-view').show();					
+			}
+		});	
+}
+
+ if ($('.price-slider').length) {
+            priceSlider();
+        }
+    // Price Silder //
+    function priceSlider() {
+        $(".price-slider").ionRangeSlider({
+            min:0,
+            from: <?php if($data['min_price'] != ''){echo $data['min_price'];}else{ echo '0';}?>,
+            max: <?php if($data['max_price'] != ''){echo $data['max_price'];} else{ echo '10000';}?>,
+            to: <?php if($data['max_price'] != ''){echo $data['max_price'];} else{ echo '10000';}?>,
+            type: 'double',
+            prefix: '$',
+            prettify: false,
+            hasGrid: true,
+			onFinish: function (data) {
+				var priceMin = data.from;
+				var priceMax = data.to;
+				$("#dpriceMinVal").val(priceMin);
+				$("#dpriceMaxVal").val(priceMax);		
+				setTimeout(function(){ get_search_data(); }, 500);
+			},
+        });
+    }
+	 
+
+function get_product_name(e){
+	setTimeout(function(){ get_search_data(); }, 500);
+}
+
+function load_more(e){
+	$('.load_more i').removeClass('hide');
+	var z = parseInt($("#filter_form #showing_result").val());
+	var a = parseInt($("#showing_result_data").val());
+	z = z + a;
+	$("#filter_form #showing_result").val(z);
+	setTimeout(function(){ get_search_data(); }, 500);
+}
+	
+</script>	
 @endsection

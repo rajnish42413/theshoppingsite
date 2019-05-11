@@ -28,6 +28,7 @@ $nav_menus = NavigationMenuController::get_main_nav_menus();
 	<link rel="stylesheet" type="text/css" href="{{env('APP_URL')}}assets/css/slider/owl.theme.css" />
 	<link rel="stylesheet" type="text/css" href="{{env('APP_URL')}}assets/css/product_zoom/slick.css" />
 	<link rel="stylesheet" type="text/css" href="{{env('APP_URL')}}assets/css/slider/index.css" />
+	<link rel="stylesheet" type="text/css" href="{{env('APP_URL')}}assets/css/rang_slider/rang.css" />
 	<link rel="stylesheet" type="text/css" href="{{env('APP_URL')}}assets/css/style.css" />
 	<link rel="stylesheet" type="text/css" href="{{env('APP_URL')}}assets/css/responsive.css" />
 	<!-- Favicon Link -->

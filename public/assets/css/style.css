@@ -665,9 +665,7 @@ ul.sh_sub_category li {
     background: #111111;
     bottom: -15px;
 }
-.sh_side_widget.sh_sidear_cat_brands ul li:before {
-	content: "\effc";
-}
+
 .sh_search_filter li {
     display: inline-block;
 }
@@ -1472,8 +1470,70 @@ ul.sh_review_color {
     min-height: 275px;
 }
 .top_products .sh_top_product_section.sh_float_width {
-    min-height: 420px;
+    min-height: 400px;
 }
 .deals .sh_top_deals_section.sh_float_width{
-    min-height: 420px;
+    min-height: 400px;
+}
+
+.top_products .sh_top_product_section.sh_float_width img {
+    max-height: 200px;
+}
+
+.deals .sh_top_deals_section.sh_float_width img {
+    max-height: 240px;
+}
+
+.top_categories .sh_top_category_section.sh_float_width img {
+    max-height: 240px;
+}
+
+.sh_grid_product_section.sh_float_width .grid_prd {
+    height: 200px!important;
+    width: 95%;
+}
+
+.sh_grid_product_section.sh_float_width {
+    min-height: 450px!important;
+    width: 100%;
+}
+
+.my_sh.sh_btn{
+	margin: 15px 0!important;
+}
+
+
+a.sh_logo img {
+    width: 140px!important;
+    height: auto;
+}
+
+
+.checkmark {
+  position: relative;
+  top: 4px;
+  left: -4px;
+  height: 20px;
+  width: 20px;
+  background-color: #eee;
+}
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+ input:checked ~ .checkmark {
+  background-color: #2196F3;
+}
+
+.sh_side_widget > ul.my-brands > li:before {
+    content: none!important;
+}
+
+.sh_side_widget.sh_sidear_cat_menu.sh_float_width ul.cat-list, .sh_side_widget.sh_sidear_cat_brands.sh_float_width ul.my-brands {
+    max-height: 230px;
+    overflow: auto;
+    border: 1px #e4e4e4 solid;
+    padding: 8px;
 }

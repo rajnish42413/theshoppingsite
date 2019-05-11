@@ -179,6 +179,7 @@ return [
         App\Providers\RouteServiceProvider::class,
        // crocodicstudio\crudbooster\CRUDBoosterServiceProvider::class,
 		App\Providers\HotelApiServiceProvider::class,
+		App\Providers\EnquiryServiceProvider::class,		
 
     ],
 

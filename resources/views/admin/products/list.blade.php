@@ -63,8 +63,8 @@
                         <tr>
                             <th style="width:50px"><input name="select_all" value="1" id="example-select-all" type="checkbox" /></th>
                             <th>Title</th>
+                            <th>Parent Category</th>							
                             <th>Category</th>
-                            <th>Parent Category</th>
                             <th>Price</th>
                             <th>Currency</th>
                             <th>Action</th>

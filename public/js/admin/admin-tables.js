@@ -212,8 +212,8 @@ $(document).ready(function() {
 			return '<input type="checkbox" name="id[]" value="'+ $('<div/>').text(data).html() + ' " >';
 			}},
 			{ "data": "title" },
-			{ "data": "categoryName"},	
-			{ "data": "parentCategoryName"},	
+			{ "data": "parentCategoryName"},			
+			{ "data": "categoryName"},		
 			{ "data": "current_price"},	
 			{ "data": "current_price_currency"},	
 		   { "data": "id","orderable":false,"render": function(data, type, row, meta){ 
@@ -302,7 +302,106 @@ $(document).ready(function() {
 	/* ./ productsTable */
 
 
+	/*  enquiriesTable */
 	
+    window.enquiriesTable = $('#enquiriesTable').DataTable({
+      "processing": true,
+      "serverSide": true,
+       "ordering": true,
+      "dom": '<l<t>ip>',
+        "ajax": 'searchajaxenquiries',
+
+        "columns": [
+            { "data": "id","orderable":false,"render": function(data, type, row, meta){ 
+			return '<input type="checkbox" name="id[]" value="'+ $('<div/>').text(data).html() + ' " >';
+			}},
+			{ "data": "name" },
+			{ "data": "email"},
+			{ "data": "subject"},
+			{ "data": "contact_no"},
+            { "data": "message","render": function(data, type, row, meta){ 
+			return data.substring(0, 50)+'...';
+			}},	
+		   { "data": "id","orderable":false,"render": function(data, type, row, meta){ 
+			   return '<button type="button" onclick="delete_single_row('+data+',\'enquiriesTable\',\'enquiries-delete\')" class="btn btn-sm btn-danger">Delete</button>';
+
+		   }},	
+        ]
+		,"columnDefs": [ 
+		{
+		'targets': 0,
+         'searchable': false,
+         'orderable': false,
+		},
+		
+		],
+		'rowCallback': function(row, data, dataIndex){
+			var strVale = $('#checked_ids').val();
+			var rowId = data.id;
+			var arr = strVale.split(',');
+			arr = arr.map(Number);
+			//alert(rowId);
+           if($.inArray(rowId,arr) !== -1){
+			  $(row).find('input[type="checkbox"]').prop('checked', true);
+			}
+      }
+    });
+
+     $('#enquiriesTable tbody').on('click', 'input[type="checkbox"]', function(e){ 
+        updateDataTableSelectAllCtrl(enquiriesTable);
+		e.stopPropagation();
+		var ids = $('#checked_ids').val();
+		var nids = '';
+		
+		 if(this.checked){ 
+			if(ids.length == 0){
+				nids = $(this).val();
+			}else{
+				nids = $(this).val()+','+ids;
+			}
+			$('#checked_ids').val(nids);
+		}else{
+			var nlist = removeValue(ids,$(this).val());
+			$('#checked_ids').val(nlist);
+		}
+		var cvals = $('#checked_ids').val();
+		var arr = cvals.split(',');
+		if(cvals.length == 0){ 
+			$('#selected_count').hide();
+		}else{
+			$('#selected_count').html('Selected Count : '+arr.length);
+			$('#selected_count').show();
+		}
+    });
+   
+    $('#enquiriesTable').on('click', 'tbody td, thead th:first-child', function(e){ 
+      $(this).parent().find('input[type="checkbox"]').trigger('click');
+	});
+   
+   $('#enquiriesTable thead input[name="select_all"]', enquiriesTable.table().container()).on('click', function(e){
+      if(this.checked){ 
+	  	  
+		$('#enquiriesTable tbody input[type="checkbox"]:not(:checked)').trigger('click');
+      } else { 
+			$('#enquiriesTable tbody input[type="checkbox"]:checked').trigger('click');
+	 }
+	e.stopPropagation();
+   });
+
+   // Handle table draw event
+   enquiriesTable.on('draw', function(){
+      updateDataTableSelectAllCtrl(enquiriesTable);
+   });
+	
+	
+	$("#enquiriesfrm #filter_submit").on('click', function () {
+		$('#checked_ids').val('');
+		$('#selected_count').hide();
+        var name = $("#enquiriesfrm #name").val();
+		window.enquiriesTable.column(1).search(name).draw();      
+    });
+	
+	/* ./ enquiriesTable */	
 	
 	
 	
@@ -431,6 +530,9 @@ function delete_row(content,action){
 			if(content == 'bannersTable'){
 				window.bannersTable.draw();
 			}
+			if(content == 'enquiriesTable'){
+				window.enquiriesTable.draw();
+			}			
 			$('#selected_count').hide();	 
 		}
 		});
@@ -461,98 +563,11 @@ function delete_single_row(id,content,action){
 			if(content == 'productsTable'){
 				window.productsTable.draw();
 			}
-			if(content == 'districtsTable'){
-				window.districtsTable.draw();
-			}
-			if(content == 'citiesTable'){
-				window.citiesTable.draw();
-			}
-			if(content == 'companyprofileTable'){
-				window.companyprofileTable.draw();
-			}
-			if(content == 'contactsTable'){
-				window.contactsTable.draw();
-			}
-			if(content == 'departmentsTable'){
-				window.departmentsTable.draw();
-			}
-			if(content == 'branchesTable'){
-				window.branchesTable.draw();
-			}
-			if(content == 'employeesTable'){
-				window.employeesTable.draw();
-			}
-			if(content == 'airlinesTable'){
-				window.airlinesTable.draw();
-			}
-			if(content == 'airportsTable'){
-				window.airportsTable.draw();
-			}
-			if(content == 'mealsplanTable'){
-				window.mealsplanTable.draw();
-			}
-			if(content == 'hotelfacilitiesTable'){
-				window.hotelfacilitiesTable.draw();
-			}
-			if(content == 'hotelchainTable'){
-				window.hotelchainTable.draw();
-			}
-			if(content == 'airticketfareclassTable'){
-				window.airticketfareclassTable.draw();
-			}
-			if(content == 'ratingTable'){
-				window.ratingTable.draw();
-			}
-			if(content == 'paymentmethodsTable'){
-				window.paymentmethodsTable.draw();
-			}
-			if(content == 'languagesTable'){
-				window.languagesTable.draw();
-			}
-			if(content == 'marketsTable'){
-				window.marketsTable.draw();
-			}
-			if(content == 'segmentsTable'){
-				window.segmentsTable.draw();
-			}
-			if(content == 'currenciesTable'){
-				window.currenciesTable.draw();
-			}
-			if(content == 'cuisinesTable'){
-				window.cuisinesTable.draw();
-			}
-			if(content == 'paymenttermsTable'){
-				window.paymenttermsTable.draw();
-			}
-			if(content == 'bookingstatusTable'){
-				window.bookingstatusTable.draw();
-			}
-			if(content == 'rateperiodsTable'){
-				window.rateperiodsTable.draw();
-			}
-			if(content == 'landservicecategoryTable'){
-				window.landservicecategoryTable.draw();
-			}
-			if(content == 'hotelscategoryTable'){
-				window.hotelscategoryTable.draw();
-			}
-			if(content == 'venuesetupTable'){
-				window.venuesetupTable.draw();
-			}
-			if(content == 'sitescategoryTable'){
-				window.sitescategoryTable.draw();
-			}
-			if(content == 'sitesareaTable'){
-				window.sitesareaTable.draw();
-			}
-			if(content == 'sitesTable'){
-				window.sitesTable.draw();
-			}
-			if(content == 'eventsholidaysTable'){
-				window.eventsholidaysTable.draw();
-			}
-			if(content == 'vehiclesTable'){
-				window.vehiclesTable.draw();
+			if(content == 'bannersTable'){
+				window.bannersTable.draw();
+			}			
+			if(content == 'enquiriesTable'){
+				window.enquiriesTable.draw();
 			}
 			$('#selected_count').hide();	
 		}

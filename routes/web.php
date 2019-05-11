@@ -17,10 +17,20 @@ Auth::routes();
 
 Route::get('/home','HomeController@index')->name('home');
 Route::any('/test','HomeController@test')->name('test');
+
+//Cron Sandbox
 Route::any('/cron/by-keyword','CronController@byKeyword')->name('cron/by-keyword');
 Route::any('/cron/category','CronController@getCategory')->name('cron/category');
-Route::any('/cron/by-category','CronController@getProductsByCategory')->name('cron/by-category');
+Route::any('/cron/by-category/{id}','CronController@getProductsByCategory')->name('cron/by-category');
 Route::any('/cron/single-item/{id}','CronController@getSingleItem')->name('cron/single-item');
+
+//Cron Live
+Route::any('/cron/category-live','CronController@getCategory_live')->name('cron/category-live');
+Route::any('/cron/by-category-live/{id}','CronController@getProductsByCategory_live')->name('cron/by-category-live');
+Route::any('/cron/single-item-live/{id}','CronController@getSingleItem_live')->name('cron/single-item-live');
+
+//By other method
+Route::any('/cron/item/{id}','CronController@getItem')->name('cron/item');
 
 
 Route::get('/user/verify/{token}', 'Auth\RegisterController@verifyUser');
@@ -36,7 +46,7 @@ Route::post('hotel-get-cities', 'HotelController@get_hotel_cities')->name('hotel
 
 Route::get('/blog', 'HomeController@blog')->name('blog');
 Route::get('/pricing', 'HomeController@pricing')->name('pricing');
-Route::get('/contact', 'HomeController@contact')->name('contact');
+Route::any('/contact', 'HomeController@contact')->name('contact');
 Route::get('/about', 'HomeController@about')->name('about');
 Route::get('/faq', 'HomeController@faq')->name('faq');
 Route::get('/terms-of-use', 'HomeController@terms')->name('terms-of-use');
@@ -47,8 +57,7 @@ Route::get('/services', 'HomeController@services')->name('services');
 Route::post('hotel-get-cities', 'HotelController@get_hotel_cities')->name('hotel-get-cities');
 Route::get('category/{id}', 'HomeController@search_list')->name('category');
 Route::get('product/{id}', 'HomeController@product_detail')->name('product');
-
-
+Route::post('get-products-ajax', 'HomeController@get_products_ajax')->name('get-products-ajax');
 
 
 /*Admin Routes*/
@@ -104,5 +113,10 @@ Route::group(['middleware'=>['Admin']],function(){
  	Route::any('settings-terms', 'FrontPagesController@terms')->name('settings-terms');	
  	Route::any('settings-privacy-policy', 'FrontPagesController@privacy_policy')->name('settings-privacy-policy');	
  	Route::any('settings-contact', 'FrontPagesController@contact')->name('settings-contact');	
-	
+
+
+	// Enquiry 
+ 	Route::get('enquiries-list', 'EnquiryController@index')->name('enquiries-list');	
+	Route::get('searchajaxenquiries', 'EnquiryController@ajax_list')->name('searchajaxenquiries');
+	Route::any('enquiries-delete', 'EnquiryController@delete_data')->name('enquiries-delete');		
 });

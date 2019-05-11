@@ -175,7 +175,6 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li class=" hide <?php if($data['sub_nav'] == 'menu_categories_add'){echo 'active';}?>"><a href="{{ route('categories-add') }}"><i class="fa fa-plus"></i> Add</a></li>
             <li class="<?php if($data['sub_nav'] == 'menu_categories_list'){echo 'active';}?>"><a href="{{ route('categories-list') }}"><i class="fa fa-list"></i> List</a></li>
           </ul>
         </li>
@@ -188,7 +187,6 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li class="hide <?php if($data['sub_nav'] == 'menu_products_add'){echo 'active';}?>"><a href="{{ route('products-add') }}"><i class="fa fa-plus"></i> Add</a></li>
             <li class="<?php if($data['sub_nav'] == 'menu_products_list'){echo 'active';}?>"><a href="{{ route('products-list') }}"><i class="fa fa-list"></i> List</a></li>
           </ul>
         </li>
@@ -207,6 +205,18 @@
             <li class="<?php if($data['sub_nav'] == 'menu_settings_terms'){echo 'active';}?>"><a href="{{ route('settings-terms') }}"><i class="fa fa-circle"></i> Terms</a></li>
             <li class="<?php if($data['sub_nav'] == 'menu_settings_privacy_policy'){echo 'active';}?>"><a href="{{ route('settings-privacy-policy') }}"><i class="fa fa-circle"></i> Privacy Policy</a></li>
            
+          </ul>
+        </li>
+
+        <li class="treeview <?php if($data['nav'] == 'menu_enquiries'){echo 'active';}?>">
+          <a href="#">
+            <i class="fa fa-tags"></i> <span>Contact Enquiries</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li class="<?php if($data['sub_nav'] == 'menu_enquiries_list'){echo 'active';}?>"><a href="{{ route('enquiries-list') }}"><i class="fa fa-list"></i> List</a></li>
           </ul>
         </li>		
 		

@@ -18,6 +18,8 @@ if($PictureDetails != ''){
 		
 	}
 }
+
+
 ?>
 <!--Main Wrapper Start-->
 <div class="sh_main_wrap sh_float_width">
@@ -693,67 +695,142 @@ if($PictureDetails != ''){
 							</div>
 							<div role="tabpanel" class="tab-pane fade" id="sh_product_deatail">
 								<div class="sh_product_description_wrap sh_float_width">
-									<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+									<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 hide">
 										<div class="sh_product_description_sec sh_float_width">
 											<h4>Apple iPad Air 2 (Wi-Fi/16GB/4G)</h4>
 											<p>Apple iPad Air 2 (Wi-Fi/16GB/4G) Specification and features are mentioned below. The specification are from the 7 seller(s) and other reliable sources Apple iPad Air 2 (Wi-Fi/16GB/4G) Specification and features are mentioned below.The specification are from the 7 seller(s) and other reliable sourcesApple iPad Air 2 (Wi-Fi/16GB/4G) Specification and features are mentioned below. The specification are from the 7 seller(s) and other reliable sources.</p>
 										</div>
 									</div>
+									
+<?php 
+
+if($product->ItemSpecifics!=''){
+	$item_specifics = array();
+	$item_specifics = json_decode($product->ItemSpecifics);
+	if($item_specifics){
+?>									
 									<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 										<div class="sh_product_description_sec sh_float_width">
-											<h4>General Features</h4>
+											<h4>Item Specifications</h4>
 											<div class="table-responsive">          
 												<table class="table">
 													<tbody>
+													<?php 
+													$item_sp_list = $item_specifics->NameValueList;
+													//echo '<pre>'; print_R($item_sp_list);die;
+													if(is_array($item_sp_list)){
+														foreach($item_sp_list as $isl){
+													?>
 														<tr>
-															<td><b>Sim Support:</b></td>
-															<td>Single Sim, NaNo-SIM, GSM</td>
+															<td><b><?php echo $isl->Name;?>:</b></td>
+															<td>
+														<?php 
+												 		if(is_array($isl->Value)){
+															$value = implode(', ',$isl->Value);
+															echo $value;
+														}else{
+															echo $isl->Value;
+														} 															
+														?>
+															</td>
 														</tr>
+														<?php } } else{?>
 														<tr>
-															<td><b>Voice Calling:</b></td>
-															<td>X</td>
-														</tr>
-														<tr>
-															<td><b>Tablet Dimensions:</b></td>
-															<td>240 x 169.5 x 6.1 mm</td>
-														</tr>
-														<tr>
-															<td><b>Tablet Weight:</b></td>
-															<td>444 grams</td>
-														</tr>
+															<td><b><?php echo $item_sp_list->Name;?>:</b></td>
+															<td>
+														<?php 
+												 		if(is_array($item_sp_list->Value)){
+															$ivalue = implode(', ',$item_sp_list->Value);
+															echo $ivalue;
+														}else{
+															echo $item_sp_list->Value;
+														} 															
+														?>
+															</td>
+														</tr>													
+													<?php }?>
 													</tbody>
 												</table>
 											</div>
 										</div>
 									</div>
+<?php } }?>	
+
+<?php 
+if($product->Variations != ''){
+	$p_variations = json_decode($product->Variations);
+	$variations = $p_variations->Variation;
+	if($variations){
+		//echo '<pre>'; print_R($variations); '</pre>';
+?>								
+									
 									<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 										<div class="sh_product_description_sec sh_float_width">
-											<h4>Display</h4>
-											<div class="table-responsive">          
+											<h4>Variations</h4>
+											     
+
+											<?php foreach($variations as $vc){?>
+											<div class="table-responsive">     
 												<table class="table">
-													<tbody>
+													<tbody>	
+														<?php if(isset($vc->SKU)){?>
 														<tr>
-															<td><b>Screen Size:</b></td>
-															<td>9.7 inches</td>
+															<td><b>SKU:</b></td>
+															<td><?php echo $vc->SKU;?></td>
 														</tr>
+														<?php } ?>
+														<?php if(isset($vc->StartPrice)){?>
 														<tr>
-															<td><b>Screen Resolution:</b></td>
-															<td>2048 x 1536 Pixels, 264 ppi</td>
-														</tr>
+															<td><b>Start Price:</b></td>
+															<td><?php echo $vc->StartPrice;?></td>
+														</tr>	
+														<?php }?>
+														<?php if(isset($vc->Quantity)){?>
 														<tr>
-															<td><b>Screen Type:</b></td>
-															<td>Capacitive With Multitouch</td>
-														</tr>
-														<tr>
-															<td><b>Screen Protection:</b></td>
-															<td>Fingerprint-Resistant Oleophobic Coating, Fully Laminated, Antireflective Coating</td>
-														</tr>
+															<td><b>Quantity:</b></td>
+															<td><?php echo $vc->Quantity;?></td>
+														</tr>										<?php } ?>				
 													</tbody>
 												</table>
-											</div>
+											</div>												
+										
+										<?php 
+										
+										if(isset($vc->VariationSpecifics)){
+											//echo '<pre>'; print_r($vc->VariationSpecifics);echo '</pre>';
+										$vspecs = $vc->VariationSpecifics->NameValueList;
+										//echo '<pre>'; var_dump($vspecs); echo '</pre>';
+										//echo $vspecs->Name;
+										?>
+											<h5><b>Variation Specifications</b></h5>
+											<div class="table-responsive">     
+												<table class="table">
+													<tbody>	
+													<?php
+													if(is_array($vspecs)){
+													foreach($vspecs as $vs){?>
+														<tr>
+															<td><?php echo $vs->Name;?>:</td>
+															<td><?php echo $vs->Value;?></td>
+														</tr>
+													<?php } }else{?>
+														<tr>
+															<td><?php echo $vspecs->Name;?>:</td>
+															<td><?php echo $vspecs->Value;?></td>
+														</tr>													
+													<?php } ?>
+													</tbody>
+												</table>
+											</div>												
+										<?php } ?>
+											
+											
+											<hr>
+									<?php } ?>
 										</div>
 									</div>
-									<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+<?php } } ?>									
+									<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 hide">
 										<div class="sh_product_description_sec sh_float_width">
 											<h4>Technical</h4>
 											<div class="table-responsive">          
@@ -780,7 +857,7 @@ if($PictureDetails != ''){
 											</div>
 										</div>
 									</div>
-									<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+									<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 hide">
 										<div class="sh_product_description_sec sh_float_width">
 											<h4>Memory</h4>
 											<div class="table-responsive">          
@@ -807,7 +884,7 @@ if($PictureDetails != ''){
 											</div>
 										</div>
 									</div>
-									<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+									<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 hide">
 										<div class="sh_product_description_sec sh_float_width">
 											<h4>Multimedia</h4>
 											<div class="table-responsive">          
@@ -834,7 +911,7 @@ if($PictureDetails != ''){
 											</div>
 										</div>
 									</div>
-									<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+									<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 hide">
 										<div class="sh_product_description_sec sh_float_width">
 											<h4>Other Features</h4>
 											<div class="table-responsive">          
