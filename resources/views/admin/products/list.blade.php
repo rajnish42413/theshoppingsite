@@ -37,7 +37,7 @@
 			</select>
         </div> 	
 	   <div class="col-lg-3 col-xs-6">
-			<select type="text" class="form-control" id="cat_id" name="cat_id" >
+			<select type="text" class="form-control" id="cat_id" name="cat_id" onchange="get_excel_btn(this);">
 				<option value="">--Select Category--</option>
 			</select>
         </div>		
@@ -45,7 +45,14 @@
 		<button type="button" id="filter_submit" name="filter_submit" class="btn btn-info btn-block">Filter</button>
         </div>
     </div>
-    </form>	  
+    </form>
+	<div class="row text-left margin" id="exportBtnDiv" style="display:none">
+	<hr>
+		<div class="col-lg-12 col-xs-12">
+		<a href="#" id="exportBtn" class="btn btn-success btn-sm" target="_blank"><i class="fa fa-file-excel-o"></i> Export Products</a>
+		</div>
+	</div>
+			
       <div class="row">
         <div class="col-lg-2 col-lg-offset-9 col-xs-6 text-center">
 		<span class="badge label label-primary" id="selected_count" style="display:none;"></span>		
@@ -107,6 +114,27 @@ function get_categories(e){
 			}
 		});
 	}
+}
+
+function get_excel_btn(e){
+	var x = e.value;
+	if(x != ''){
+		$("#exportBtnDiv").show();
+		get_export();
+	}else{
+		$("#exportBtnDiv").hide();
+		}
+}
+
+function get_export(){
+		var parent_id = $('#parent_id').val();
+		var cat_id =  $('#cat_id').val();
+	
+		var url = '<?php echo env('APP_URL');?>excel-generate?parent_id='+parent_id+'&cat_id='+cat_id;
+		
+		$("#exportBtn").attr('href',url);
+		
+		
 }
 </script> 
 @endsection

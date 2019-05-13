@@ -187,6 +187,7 @@
             </span>
           </a>
           <ul class="treeview-menu">
+            <li class="<?php if($data['sub_nav'] == 'menu_products_import'){echo 'active';}?>"><a href="{{ route('products-import') }}"><i class="fa fa-upload"></i> Import Products</a></li>
             <li class="<?php if($data['sub_nav'] == 'menu_products_list'){echo 'active';}?>"><a href="{{ route('products-list') }}"><i class="fa fa-list"></i> List</a></li>
           </ul>
         </li>

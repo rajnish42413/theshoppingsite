@@ -16,7 +16,7 @@ Route::get('/','HomeController@index')->name('home');
 Auth::routes();
 
 Route::get('/home','HomeController@index')->name('home');
-Route::any('/test','HomeController@test')->name('test');
+Route::any('/all-categories','HomeController@all_categories')->name('all-categories');
 
 //Cron Sandbox
 Route::any('/cron/by-keyword','CronController@byKeyword')->name('cron/by-keyword');
@@ -92,6 +92,9 @@ Route::group(['middleware'=>['Admin']],function(){
  	Route::get('products-list', 'ProductsController@index')->name('products-list');	
 	Route::get('searchajaxproducts', 'ProductsController@ajax_list')->name('searchajaxproducts');	
 	Route::any('products-add', 'ProductsController@add')->name('products-add');	
+	Route::any('products-import', 'ProductsController@import')->name('products-import');	
+	Route::any('products-import-save', 'ProductsController@import_save_data')->name('products-import-save');	
+	Route::any('excel-generate', 'ProductsController@excel_genrate')->name('excel-generate');	
 	Route::any('products-edit/{id?}', 'ProductsController@add');	
 	Route::any('products-save', 'ProductsController@save_data')->name('products-save');	
 	Route::any('products-delete', 'ProductsController@delete_data')->name('products-delete');

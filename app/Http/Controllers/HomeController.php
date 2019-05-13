@@ -116,10 +116,40 @@ class HomeController extends Controller
 		$data['meta_title'] = $row->page_title;
 		$data['meta_keywords']= $row->meta_keywords;
 		$data['meta_description'] = $row->meta_description;
-		$banner = Banner::where('section_name','privacy_policy')->orderBy('id','asc')->limit(1)->first();	return view('privacy_policy',['data'=>$data,'row'=>$row,'banner'=>$banner]);
+		$banner = Banner::where('section_name','privacy_policy')->orderBy('id','asc')->limit(1)->first();	
+		return view('privacy_policy',['data'=>$data,'row'=>$row,'banner'=>$banner]);
     }
 	
-	
+	public function all_categories(){
+		$data['nav'] = 'all_categories';
+		$data['meta_title'] = env('APP_URL')." :: All Categories";
+		$data['meta_keywords']= "All Categories";
+		$data['meta_description'] = "All Categories";;		
+		$cat_data = array();
+		$categories = Category :: where('parentId',0)->where('status',1)->get();
+ 		if($categories && $categories->count() > 0){
+			$i=0;
+			foreach($categories as $cat){
+						$cat_data[$i]['parent_cat_name'] = $cat->categoryName;
+						$cat_data[$i]['parent_cat_id'] = $cat->categoryId;				
+						$cat_data[$i]['parent_cat_slug'] = $cat->slug;				
+				$child_categories = Category :: where('parentId',$cat->categoryId)->where('status',1)->get();
+				$cat_data[$i]['sub_categories'] = array();
+				if($child_categories && $child_categories->count() > 0){
+					$j=0;
+					foreach($child_categories as $ch){
+						$cat_data[$i]['sub_categories'][$j]['child_cat_id'] = $ch->categoryId;
+						$cat_data[$i]['sub_categories'][$j]['child_cat_name'] = $ch->categoryName;
+						$cat_data[$i]['sub_categories'][$j]['child_cat_slug'] = $ch->slug;
+						$j++;
+					}
+					$i++;
+				}
+			}
+		} 
+		//echo '<pre>';print_r($cat_data);die;
+		return view('all_categories',['data'=>$data,'cat_data'=>$cat_data]);
+	}
 	
 	public function search_list(Request $request, $slug){
 		$categories = array();
@@ -129,6 +159,8 @@ class HomeController extends Controller
 		$data['category'] = '';
 		$data['parent_cat_id'] = '0';	
 		$data['cat_id'] = '0';	
+		$data['parent_cat_slug'] = '';	
+		$data['cat_slug'] = '';			
 		$data['min_price']	= '';
 		$data['max_price'] = '';
 		if($slug != ''){
@@ -137,6 +169,7 @@ class HomeController extends Controller
 				if($res->parentId == '0'){ // parent
 					$data['parent_category'] = $res->categoryName;
 					$data['parent_cat_id'] = $res->categoryId;
+					$data['parent_cat_slug'] = $res->slug;
 					$data['cat_id'] = '0';
 					$categories = $this->get_categories($res->categoryId);
 					$products = $this->get_products_by_parent($res->categoryId);	
@@ -150,6 +183,7 @@ class HomeController extends Controller
 						$data['category'] = $res->categoryName;
 						$data['parent_cat_id'] = '0';
 						$data['cat_id'] = $res->categoryId;						
+						$data['cat_slug'] = $res2->slug;						
 						$categories = $this->get_categories($res->parentId);
 						$products = $this->get_products_by_cat($res->categoryId);
 						$brands = $this->get_brands_by_cat($res->categoryId);

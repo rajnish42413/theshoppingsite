@@ -63,8 +63,23 @@ $nav_menus = NavigationMenuController::get_main_nav_menus();
 	<div class="sh_header_wrap sh_float_width">
 		<div class="container">
 			<div class="row">
+				<!-- Collect menu -->
+				<div class="col-lg-10 col-md-10 col-sm-10 col-xs-12 pull-left">
+					<div class="sh_main_menu_wrapper sh_float_width">
+						<nav class="sh_main_menu sh_float_width" id="menu">
+							<ul>                       
+								<li><a class="active" href="{{env('APP_URL')}}">Home</a></li>
+						<?php if($nav_menus){
+								foreach($nav_menus as $menu){?>
+								<li><a href="{{env('APP_URL')}}category/<?php echo $menu->slug;?>"><?php echo $menu->categoryName;?></a></li>
+								<?php } } ?>
+								<li><a class="" href="{{env('APP_URL')}}all-categories">See All Categories</a></li>
+							</ul> 
+						</nav>
+					</div>
+				</div>
 				<!-- Social -->
-				<div class="col-lg-4 col-md-4 col-sm-3 col-xs-12 pull-right">
+				<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 pull-right">
 					<div class="sh_header_social_links sh_float_width text-right">
 						<ul>
 							<li><a href="javacript:void(0)"><span class="fa fa-facebook"></span></a></li>
@@ -78,21 +93,7 @@ $nav_menus = NavigationMenuController::get_main_nav_menus();
 							<button class="sh_menu_btn"><span class="fa fa-bars"></span></button>
 						</div>
 					</div>
-				</div>
-				<!-- Collect menu -->
-				<div class="col-lg-8 col-md-8 col-sm-9 col-xs-12 pull-left">
-					<div class="sh_main_menu_wrapper sh_float_width">
-						<nav class="sh_main_menu sh_float_width" id="menu">
-							<ul>                       
-								<li><a class="active" href="{{env('APP_URL')}}">Home</a></li>
-						<?php if($nav_menus){
-								foreach($nav_menus as $menu){?>
-								<li><a href="{{env('APP_URL')}}category/<?php echo $menu->slug;?>"><?php echo $menu->categoryName;?></a></li>
-								<?php } } ?>
-							</ul> 
-						</nav>
-					</div>
-				</div>
+				</div>				
 			</div>
 		</div>
 	</div>
