@@ -2,69 +2,86 @@
 
 @section('content')
 
-	<!--Faq Section Wrapper Start-->
-	<div class="sh_faq_section_wrap sh_float_width">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-6 col-md-8 col-sm-12 col-xs-12 col-lg-offset-3 col-md-offset-2">
-					<div class="sh_heading">
-						<h2>All Categories</h2>
-					</div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-					<div class="sh_faq_section sh_float_width">
-					<?php if($cat_data){
-						$i = 1;?>
-						<div class="content">
-							<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+<!--Main Wrapper Start-->
+<div class="sh_float_width">
+	<!--Slider Start-->
+	<div class="sh_float_width">
+		<div class="container-fluid">
+			<div class="row_counter ">
+            	<div id="menu_header" class="maincate_list">
+                    <div class="filter_flight">
+                        
+                    </div>
+				<?php if($cat_data){
+					$i = 1;?>					
+                    <div class="pn-ProductNav_Wrapper">
+                        <nav id="pnProductNav" class="pn-ProductNav">
+                            <div id="pnProductNavContents" class="pn-ProductNav_Contents">
 							<?php foreach($cat_data as $cat){?>
-								<div class="panel panel-default">
-									<div class="panel-heading" id="heading<?php echo $i;?>" role="tab">
-										<h4 class="panel-title">
-											<a class="<?php if($i != 1){ echo 'collapsed';}?>" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse<?php echo $i;?>" aria-expanded="<?php if($i == 1){ echo 'true';}else{ echo 'false';}?>" aria-controls="collapse<?php echo $i;?>"><?php echo $cat['parent_cat_name'];?><i class="pull-right fa fa-plus"></i></a>
-										</h4>
-									</div>
-									<div class="panel-collapse collapse <?php if($i == 1){ echo 'in';}?>" id="collapse<?php echo $i;?>" role="tabpanel" aria-labelledby="heading<?php echo $i;?>">
-										<?php if($cat['sub_categories']){
-											foreach($cat['sub_categories'] as $sub_cat){?>
-										<div class="panel-body">
-											<a href="{{env('APP_URL')}}category/<?php echo $sub_cat['child_cat_slug'];?>" class="btn-link"><?php echo $sub_cat['child_cat_name'];?></a>
-										</div>	
-									<?php } } ?>
-									</div>
-								</div>
-							<?php  $i++; } ?>								
-							</div>
-						</div>
-					<?php } ?>
+								<?php if($i == 1){?>
+								 <a href="#cat-<?php echo $cat['parent_cat_slug'];?>" class="pn-ProductNav_Link" aria-selected="true"><?php echo $cat['parent_cat_name'];?></a>
+								<?php }else{?>
+									<a href="#cat-<?php echo $cat['parent_cat_slug'];?>" class="pn-ProductNav_Link"><?php echo $cat['parent_cat_name'];?></a>
+								<?php } ?>
+							<?php $i++;} ?>
+                            <span id="pnIndicator" class="pn-ProductNav_Indicator"></span>
+                            </div>
+                        </nav>
+						<button id="pnAdvancerLeft" class="pn-Advancer pn-Advancer_Left" type="button">
+							<svg class="pn-Advancer_Icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 551 1024"><path d="M445.44 38.183L-2.53 512l447.97 473.817 85.857-81.173-409.6-433.23v81.172l409.6-433.23L445.44 38.18z"/></svg>
+						</button>
+						<button id="pnAdvancerRight" class="pn-Advancer pn-Advancer_Right" type="button">
+							<svg class="pn-Advancer_Icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 551 1024"><path d="M105.56 985.817L553.53 512 105.56 38.183l-85.857 81.173 409.6 433.23v-81.172l-409.6 433.23 85.856 81.174z"/></svg>
+						</button>
 					</div>
+				<?php } ?>
+                </div>
+				
+				<div class="width_allCategory">
+					<?php if($cat_data){
+
+					?>				
+						<div class="sub_cate_list" id="cat-<?php echo $cat_data[0]['parent_cat_slug'];?>">
+					<?php if($cat_data[0]['sub_categories']){
+					foreach($cat_data[0]['sub_categories'] as $sub_cat){?>	
+							<div class="col-sm-3">
+								<a href="{{env('APP_URL')}}category/<?php echo $cat_data[0]['parent_cat_slug'];?>" class="main_title_cat"><?php echo $cat_data[0]['parent_cat_name'];?> </a>
+							</div>					
+							<div class="col-sm-2">
+								<img class="img-responsive" src="{{env('APP_URL')}}category_files/<?php echo $sub_cat['child_cat_image'];?>"/>
+							</div>
+							<div class="col-sm-7">
+								<h5><a href="{{env('APP_URL')}}category/<?php echo $sub_cat['child_cat_slug'];?>"><?php echo $sub_cat['child_cat_name'];?></a></h5>
+								<ul class="inner_list_item">
+									<li><a href="#">List </a></li>
+									<li><a href="#">List </a></li>
+									<li><a href="#">List </a></li>
+									<li><a href="#">List </a></li>
+									<li><a href="#">List </a></li>
+									<li><a href="#">List </a></li>
+									<li><a href="#">List </a></li>
+									<li><a href="#">List </a></li>
+									<li><a href="#">List </a></li>
+									<li><a href="#">List </a></li>
+									<li><a href="#">List </a></li>
+									<li><a href="#">List </a></li>
+									<li><a href="#">List </a></li>
+									<li><a href="#">List </a></li>
+									<li><a href="#">List </a></li>
+									<li><a href="#">List </a></li>
+									<li><a href="#">List </a></li>
+									<li><a href="#">List </a></li>
+									<li><a href="#">List </a></li>
+								</ul>
+							</div>
+					<?php } } ?>
+						</div>
+				<?php  } ?>
+				
 				</div>
 			</div>
 		</div>
 	</div>
 
-<script>
-/* function getcat(id){
-	$('.wait_loader').show();
-		$.ajax({
-			type: "POST",
-			headers: {
-			  'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-			},	 			
-			url: '<?php echo env('APP_URL') ?>get-sub-categories',
-			data:  {'id':id},	
-			success: function(res)
-			{ 
-				$('.wait_loader').hide();			
-				if(res == 'error'){
-					alert('Error Occured.');
-				}else{
-					$()
-				}
-			}
-		});		
-} */
-</script>
+</div>	
 @endsection

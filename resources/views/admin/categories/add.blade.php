@@ -39,10 +39,13 @@
                 </div>
 				
                 <div class="form-group">
-				 <label for="is_nav_menu"><span class="text-danger">*</span> Add on Navigation Menu</label>
-				<select type="text" class="form-control" id="is_nav_menu" name="is_nav_menu" >
-					<option value="0" <?php if($row){ if($row->is_nav_menu == 0){echo 'selected'; }} ?> >No</option>
-					<option value="1" <?php if($row){ if($row->is_nav_menu == 1){echo 'selected'; }} ?> >Yes</option>
+				 <label for="nav_menu_id"><span class="text-danger">*</span> Add on Navigation Menu</label>
+				<select type="text" class="form-control" id="nav_menu_id" name="nav_menu_id" >
+					<option value="" >--Select--</option>
+				<?php if($nav_menus && $nav_menus->count() > 0){
+					foreach($nav_menus as $nav){?>
+					<option value="<?php echo $nav->id;?>" <?php if($row){ if($row->nav_menu_id == $nav->id){echo 'selected'; }} ?> ><?php echo $nav->name;?></option>
+				<?php } } ?>
 				</select>
                 </div>
 				

@@ -8,6 +8,7 @@ use DB;
 use Session;
 use App\User;
 use App\Category;
+use App\NavigationMenu;
 use Mail;
 
 class CategoriesController extends Controller
@@ -93,6 +94,8 @@ class CategoriesController extends Controller
 		$data['link'] = 'categories-list';
 		$row = array();
 		$result = array();
+		$nav_menus = array();
+		$nav_menus =  NavigationMenu::where('status',1)->orderBy('id','asc')->get();
 		if($id!=""){
 			$result = Category::where('id',$id)->first();
 			if($result){
@@ -101,7 +104,7 @@ class CategoriesController extends Controller
 			}
 		}
 		
-		return view('admin.categories.add',['row'=>$row,'data'=>$data]);
+		return view('admin.categories.add',['row'=>$row,'data'=>$data,'nav_menus'=>$nav_menus]);
     }	
 	
 	public function save_data(Request $request){
@@ -137,7 +140,7 @@ class CategoriesController extends Controller
 			$input=array(
 				'categoryName'=> trim($req['name']),
 				'slug'=> $this->slugify(trim($req['name'])),
-				'is_nav_menu' => $req['is_nav_menu'],
+				'nav_menu_id' => $req['nav_menu_id'],
 				'is_top_category' => $req['is_top_category'],
 				'image' => $pre_fileName,
 				'updated_at' => date('Y-m-d H:i:s'),

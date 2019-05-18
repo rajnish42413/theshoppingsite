@@ -133,6 +133,7 @@ class HomeController extends Controller
 						$cat_data[$i]['parent_cat_name'] = $cat->categoryName;
 						$cat_data[$i]['parent_cat_id'] = $cat->categoryId;				
 						$cat_data[$i]['parent_cat_slug'] = $cat->slug;				
+						$cat_data[$i]['parent_image'] = $cat->image;				
 				$child_categories = Category :: where('parentId',$cat->categoryId)->where('status',1)->get();
 				$cat_data[$i]['sub_categories'] = array();
 				if($child_categories && $child_categories->count() > 0){
@@ -141,6 +142,12 @@ class HomeController extends Controller
 						$cat_data[$i]['sub_categories'][$j]['child_cat_id'] = $ch->categoryId;
 						$cat_data[$i]['sub_categories'][$j]['child_cat_name'] = $ch->categoryName;
 						$cat_data[$i]['sub_categories'][$j]['child_cat_slug'] = $ch->slug;
+						if($ch->image != ''){
+							$cat_data[$i]['sub_categories'][$j]['child_cat_image'] = $ch->image;
+						}else{
+							$cat_data[$i]['sub_categories'][$j]['child_cat_image'] = 'no_image.png';
+						}
+						
 						$j++;
 					}
 					$i++;

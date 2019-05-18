@@ -103,7 +103,7 @@ class NavigationMenuController extends Controller
     }	
 	
 	public function save_data(Request $request){
-		$validator = Validator::make($request->all(), [
+/* 		$validator = Validator::make($request->all(), [
              'name' => 'required',			 		 		 
              'parent_id' => 'required',			 		 
              'link_name' => 'required',			 		  		 
@@ -117,7 +117,7 @@ class NavigationMenuController extends Controller
         if (isset($validator) && $validator->fails())
         {
             return response()->json(['errors'=>$validator->errors()->all()]);
-        }else{
+        }else{ */
 			$req   = $request->all();
 			$id = $req['id'];
 			$parent_id = $req['parent_id'];
@@ -157,7 +157,7 @@ class NavigationMenuController extends Controller
 				}
 			}
 			echo '|success';				
-        }
+        //}
     }
 	
 	public function delete_data(Request $request) {
@@ -214,12 +214,47 @@ class NavigationMenuController extends Controller
 	
 	public static function get_main_nav_menus(){
 		$nav_menus = array();
-		$results = Category::orderBy('id','asc');
-		$results = $results->where('is_nav_menu',1);	
-		$results = $results->get();
-		if($results->count() > 0){
-			$nav_menus = $results;
+		
+		$results = NavigationMenu::where('status',1)->orderBy('id','asc')->get();
+		if($results && $results->count() > 0){
+			$i=0;
+			foreach($results as $row){
+				$nav_menus[$i]['nav_menu_name'] = $row->name; //string
+				$nav_menus[$i]['categories'] = array(); //array
+				
+				$menu_id = $row->id;
+				$categories = Category::where('nav_menu_id',$menu_id)->where('parentId',0)->where('status',1)->orderBy('id','asc')->get();
+				if($categories && $categories->count() > 0){
+					$j=0;
+					foreach($categories as $cat){
+						$parentId = $cat->categoryId;
+						$nav_menus[$i]['categories'][$j]['id'] = $parentId; //string
+						$nav_menus[$i]['categories'][$j]['name'] = $cat->categoryName;//string
+						$nav_menus[$i]['categories'][$j]['slug'] = $cat->slug; //string
+						$nav_menus[$i]['categories'][$j]['sub_categories'] = array();//array
+						$nav_menus[$i]['categories'][$j]['sub_cat_count'] = 0; //string
+						$sub_categories = Category::where('parentId',$parentId)->where('status',1)->orderBy('id','asc')->get();
+						if($sub_categories && $sub_categories->count() > 0){
+							$k=0;
+							foreach($sub_categories as $sub){
+								$nav_menus[$i]['categories'][$j]['sub_categories'][$k]['id'] = $sub->categoryId; //string
+								$nav_menus[$i]['categories'][$j]['sub_categories'][$k]['name'] = $sub->categoryName; //string
+								$nav_menus[$i]['categories'][$j]['sub_categories'][$k]['slug'] = $sub->slug; //string
+								
+								$k++;
+								
+							}
+							$nav_menus[$i]['categories'][$j]['sub_cat_count'] = $k;
+						}
+						$j++;
+						
+					}
+					
+				}
+				$i++;
+			}
 		}
+		//echo '<pre>'; print_r($nav_menus); die;
 		return $nav_menus;
 	}	
 }

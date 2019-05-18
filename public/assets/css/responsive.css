@@ -21,6 +21,18 @@
 		left: 0;
 		right: 0;
 	}
+	
+/*new css*/
+	.mengamenu ul li a:before{
+		bottom: 0;
+	}
+
+	.list_colmn_container h5 a:before,		
+	.list_colmn_container h5 a.active:before {		
+		top: 35px;		
+	}
+/*new css*/
+	
 	.sh_main_menu ul li a:hover:before,
 	.sh_main_menu ul li a.active:before {
 		width: 100%;

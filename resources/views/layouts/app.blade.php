@@ -64,20 +64,48 @@ $nav_menus = NavigationMenuController::get_main_nav_menus();
 		<div class="container">
 			<div class="row">
 				<!-- Collect menu -->
-				<div class="col-lg-10 col-md-10 col-sm-10 col-xs-12 pull-left">
+				<div class="col-lg-10 col-md-10 col-sm-10 col-xs-12 pull-left pos_static">
 					<div class="sh_main_menu_wrapper sh_float_width">
 						<nav class="sh_main_menu sh_float_width" id="menu">
-							<ul>                       
-								<li><a class="active" href="{{env('APP_URL')}}">Home</a></li>
+							<ul>   
+								<li class="parent_list"><a href="<?php env('APP_URL');?>">Home</a></li>			
 						<?php if($nav_menus){
-								foreach($nav_menus as $menu){?>
-								<li><a href="{{env('APP_URL')}}category/<?php echo $menu->slug;?>"><?php echo $menu->categoryName;?></a></li>
+								foreach($nav_menus as $nav){?>								
+								<li class="parent_list"><a class="active" href="javacript:void(0)"><?php echo $nav['nav_menu_name'];?> <i class="fa fa-angle-down"></i></a>
+								<?php if($nav['categories']){?>
+									<div class="mengamenu">
+										<div class="row">	
+										<?php foreach($nav['categories'] as $cat){?>	
+												<div class="list_colmn_container">
+													<h5><a href="{{env('APP_URL')}}category/<?php echo $cat['slug'];?>"><?php echo $cat['name'];?> 
+                                                        	<i class="fa fa-angle-down"></i>
+                                                         </a></h5>
+												<?php if($cat['sub_categories']){
+													$x=1;?>											 
+													<ul type="unstyled" class="megamenu_content">
+													<?php  
+														foreach($cat['sub_categories'] as $sub_cat){
+													?>
+														<li>
+															<a href="{{env('APP_URL')}}category/<?php echo $sub_cat['slug'];?>"><?php echo $sub_cat['name'];?></a>
+														</li>
+													<?php $x++; } ?>	
+													</ul>
+												<?php } ?>
+													
+												</div>
+											<?php } ?>	
+										</div>
+									</div>
+								<?php } ?>
+								</li>
 								<?php } } ?>
-								<li><a class="" href="{{env('APP_URL')}}all-categories">See All Categories</a></li>
+								<li class="parent_list"><a href="{{env('APP_URL')}}all-categories">See All Categories</a></li>
 							</ul> 
 						</nav>
 					</div>
 				</div>
+				
 				<!-- Social -->
 				<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 pull-right">
 					<div class="sh_header_social_links sh_float_width text-right">

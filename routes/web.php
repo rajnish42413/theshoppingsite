@@ -99,6 +99,14 @@ Route::group(['middleware'=>['Admin']],function(){
 	Route::any('products-save', 'ProductsController@save_data')->name('products-save');	
 	Route::any('products-delete', 'ProductsController@delete_data')->name('products-delete');
 	
+	// Navigation Menu 
+	Route::get('navigation-menu-list', 'NavigationMenuController@index')->name('navigation-menu-list');	
+	Route::get('searchajaxnavmenu', 'NavigationMenuController@ajax_list')->name('searchajaxnavmenu');	
+	Route::any('navigation-menu-add', 'NavigationMenuController@add')->name('navigation-menu-add');	
+	Route::any('navigation-menu-edit/{id?}', 'NavigationMenuController@add');	
+	Route::any('navigation-menu-save', 'NavigationMenuController@save_data')->name('navigation-menu-save');	
+	Route::any('navigation-menu-delete', 'NavigationMenuController@delete_data')->name('navigation-menu-delete');
+	
 	// Banners 
  	Route::get('banners-list', 'BannersController@index')->name('banners-list');	
 	Route::get('searchajaxbanners', 'BannersController@ajax_list')->name('searchajaxbanners');	

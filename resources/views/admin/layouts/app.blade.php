@@ -167,6 +167,20 @@
           </ul>
         </li>
 		
+        <li class="treeview <?php if($data['nav'] == 'menu_navigation_menu'){echo 'active';}?>">
+          <a href="#">
+            <i class="fa fa-tags"></i> <span>Navigation Menu</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li class="<?php if($data['sub_nav'] == 'menu_navigation_menu_add'){echo 'active';}?>"><a href="{{ route('navigation-menu-add') }}"><i class="fa fa-plus"></i> Add</a></li>
+            <li class="<?php if($data['sub_nav'] == 'menu_navigation_menu_list'){echo 'active';}?>"><a href="{{ route('navigation-menu-list') }}"><i class="fa fa-list"></i> List</a></li>
+          </ul>
+        </li>
+		
+		
         <li class="treeview <?php if($data['nav'] == 'menu_categories'){echo 'active';}?>">
           <a href="#">
             <i class="fa fa-tags"></i> <span>Categories</span>
