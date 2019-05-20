@@ -1564,6 +1564,7 @@ a.sh_logo img {
     font-weight: 300;
     padding: 0px;
     padding-top: 5px;
+	font-size:13px;
 }
 .mengamenu .row{
     margin: 0px;
@@ -1815,5 +1816,36 @@ a.pn-ProductNav_Link {
 .owl-carousel.owl-loaded {
     overflow: hidden;
 }
+#search_results {
+    display: none;
+    text-align: left;
+    z-index: 9999;
+    width: 60%;
+    float: left;
+    position: absolute;
+    right: 99px;
+    min-height: 110px;
+    background-color: white;
+    border: 1px solid #19AAA9;
+    padding: 5px 25px;
+    max-width: 367px;
+    top: 55px;
+}
+#search_results a {
+    font-size: 10px;
+    color: #123fab;
+    font-weight: 600;
+    outline: 0;
+    text-decoration: none;	
+}
+#search_results a:hover {
+    color: #ff6600;
+    background-color: #f0f0f0;
+}
+#search_results .no-item {
+    margin-top: 30px;
+}
 
-
+#search_results .col-md-6 {
+    margin-top: 10px;
+}

@@ -12,16 +12,16 @@
                     <div class="filter_flight">
                         
                     </div>
-				<?php if($cat_data){
+				<?php if($categories_list){
 					$i = 1;?>					
                     <div class="pn-ProductNav_Wrapper">
                         <nav id="pnProductNav" class="pn-ProductNav">
                             <div id="pnProductNavContents" class="pn-ProductNav_Contents">
-							<?php foreach($cat_data as $cat){?>
+							<?php foreach($categories_list as $cats){?>
 								<?php if($i == 1){?>
-								 <a href="#cat-<?php echo $cat['parent_cat_slug'];?>" class="pn-ProductNav_Link" aria-selected="true"><?php echo $cat['parent_cat_name'];?></a>
+								 <a href="javascript:void(0);" class="pn-ProductNav_Link" aria-selected="true" onclick="get_all_categories_ajax(<?php echo $cats->categoryId;?>)"><?php echo $cats->categoryName;?></a>
 								<?php }else{?>
-									<a href="#cat-<?php echo $cat['parent_cat_slug'];?>" class="pn-ProductNav_Link"><?php echo $cat['parent_cat_name'];?></a>
+									<a href="javascript:void(0);" class="pn-ProductNav_Link" onclick="get_all_categories_ajax(<?php echo $cats->categoryId;?>)"><?php echo $cats->categoryName;?></a>
 								<?php } ?>
 							<?php $i++;} ?>
                             <span id="pnIndicator" class="pn-ProductNav_Indicator"></span>
@@ -44,36 +44,26 @@
 						<div class="sub_cate_list" id="cat-<?php echo $cat_data[0]['parent_cat_slug'];?>">
 					<?php if($cat_data[0]['sub_categories']){
 					foreach($cat_data[0]['sub_categories'] as $sub_cat){?>	
-							<div class="col-sm-3">
+						<div class="row">
+							<div class="col-sm-2">
 								<a href="{{env('APP_URL')}}category/<?php echo $cat_data[0]['parent_cat_slug'];?>" class="main_title_cat"><?php echo $cat_data[0]['parent_cat_name'];?> </a>
 							</div>					
 							<div class="col-sm-2">
 								<img class="img-responsive" src="{{env('APP_URL')}}category_files/<?php echo $sub_cat['child_cat_image'];?>"/>
 							</div>
-							<div class="col-sm-7">
+							<div class="col-sm-8">
 								<h5><a href="{{env('APP_URL')}}category/<?php echo $sub_cat['child_cat_slug'];?>"><?php echo $sub_cat['child_cat_name'];?></a></h5>
+							<?php if($sub_cat['child_categories']){?>
 								<ul class="inner_list_item">
-									<li><a href="#">List </a></li>
-									<li><a href="#">List </a></li>
-									<li><a href="#">List </a></li>
-									<li><a href="#">List </a></li>
-									<li><a href="#">List </a></li>
-									<li><a href="#">List </a></li>
-									<li><a href="#">List </a></li>
-									<li><a href="#">List </a></li>
-									<li><a href="#">List </a></li>
-									<li><a href="#">List </a></li>
-									<li><a href="#">List </a></li>
-									<li><a href="#">List </a></li>
-									<li><a href="#">List </a></li>
-									<li><a href="#">List </a></li>
-									<li><a href="#">List </a></li>
-									<li><a href="#">List </a></li>
-									<li><a href="#">List </a></li>
-									<li><a href="#">List </a></li>
-									<li><a href="#">List </a></li>
+								<?php foreach($sub_cat['child_categories'] as $cc){?>
+									<li>
+										<a href="{{env('APP_URL')}}category/<?php echo $cc['cc_cat_slug'];?>"><?php echo $cc['cc_cat_name'];?></a>
+									</li>
+								<?php } ?>
 								</ul>
+							<?php } ?>
 							</div>
+						</div>
 					<?php } } ?>
 						</div>
 				<?php  } ?>
@@ -84,4 +74,22 @@
 	</div>
 
 </div>	
+
+<script>
+function get_all_categories_ajax(cat_id){
+	$.ajax({
+			type: "POST",
+			headers: {
+			  'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			},				
+			url: '<?php echo env('APP_URL') ?>all-categories-ajax',
+			data:{'cat_id':cat_id},	
+			success: function(res)
+			{ 
+				$('.width_allCategory').html(res);
+			}
+		});	
+}
+
+</script>
 @endsection

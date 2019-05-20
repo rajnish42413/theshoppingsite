@@ -1,9 +1,10 @@
 <?php 
-use \App\Http\Controllers\NavigationMenuController;
+use \App\Http\Controllers\DetailController;
  ?>
 <?php 
 
-$nav_menus = NavigationMenuController::get_main_nav_menus();
+$nav_menus = DetailController::get_main_nav_menus();
+$google_analytics = DetailController::get_google_analytics();
 ?>
 
 <!DOCTYPE html>
@@ -16,7 +17,8 @@ $nav_menus = NavigationMenuController::get_main_nav_menus();
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="description" content="<?php echo $data['meta_description'];?>">
 	<meta name="keywords" content="<?php echo $data['meta_keywords'];?>">
-	<meta name="author" content="<?php echo $data['meta_title'];?>">	
+	<meta name="author" content="<?php echo $data['meta_title'];?>">
+	<meta name="csrf-token" content="{{ csrf_token() }}">	
 	<meta name="MobileOptimized" content="320">
 	<!-- Style CSS -->
 	<link rel="stylesheet" type="text/css" href="{{env('APP_URL')}}assets/css/bootstrap.css" />
@@ -36,6 +38,7 @@ $nav_menus = NavigationMenuController::get_main_nav_menus();
 	<script src="{{env('APP_URL')}}assets/js/jquery.js"></script>	
 </head>
 <body>
+<?php if($google_analytics){echo $google_analytics;}?>
 <!-- Header Start -->
 <header>
 	<div class="sh_top_header_wrap sh_float_width">
@@ -51,11 +54,14 @@ $nav_menus = NavigationMenuController::get_main_nav_menus();
 				<!-- Search bar -->
 				<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 text-right">
 					<div class="sh_Search_bar sh_float_width">
-						<form>
-							<input type="text" placeholder="Search" value="">
-							<button>Search</button>
+						<form id="searchForm">
+						{{ csrf_field() }}
+							<input type="text" name="search_value" oninput="get_search(this)" id="search_value" placeholder="Search" value="">
+							<button type="submit" id="search_btn">Search</button>
 						</form>
+					
 					</div>
+					<div id="search_results"></div>
 				</div>
 			</div>
 		</div>
@@ -68,7 +74,7 @@ $nav_menus = NavigationMenuController::get_main_nav_menus();
 					<div class="sh_main_menu_wrapper sh_float_width">
 						<nav class="sh_main_menu sh_float_width" id="menu">
 							<ul>   
-								<li class="parent_list"><a href="<?php env('APP_URL');?>">Home</a></li>			
+								<li class="parent_list"><a href="{{env('APP_URL')}}">Home</a></li>			
 						<?php if($nav_menus){
 								foreach($nav_menus as $nav){?>								
 								<li class="parent_list"><a class="active" href="javacript:void(0)"><?php echo $nav['nav_menu_name'];?> <i class="fa fa-angle-down"></i></a>
@@ -240,6 +246,47 @@ $nav_menus = NavigationMenuController::get_main_nav_menus();
 	
 
 
+$("#searchForm").submit(function(e){
+	e.preventDefault();
+	var search_value = $('#search_value').val();
+	if(search_value != ''){
+		
+			$.ajax({
+			type: "POST",	 			
+			url: '<?php echo env('APP_URL') ?>search',
+			data:$( "#searchForm" ).serialize(),	
+			success: function(res)
+			{ 
+				if(res != ''){
+					$('#search_results').html(res);
+				}else{
+				
+					$('#search_results').html('<div class="row no-item"><div class="col-md-12"><span class="alert alert-danger">No Results Found.</span></div></div>');
+				}
+				$('#search_results').show();					
+			}
+		});	
+	}else{
+		$('#search_results').html('');
+		$('#search_results').hide();
+		return false;
+	}
+});
+
+function get_search(e){
+	if(e.value != ''){
+		$("#search_btn").click();
+	}else{
+		$('#search_results').html('');
+		$('#search_results').hide();
+		return false;		
+	}
+}
+
+ function close_search(){
+		$('#search_results').html('');
+		$('#search_results').hide();	
+}
 </script> 
 
 </body>

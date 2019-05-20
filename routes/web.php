@@ -17,6 +17,8 @@ Auth::routes();
 
 Route::get('/home','HomeController@index')->name('home');
 Route::any('/all-categories','HomeController@all_categories')->name('all-categories');
+Route::any('/all-categories-ajax','HomeController@get_all_categories_ajax')->name('all-categories-ajax');
+Route::any('/search','HomeController@search_form')->name('search');
 
 //Cron Sandbox
 Route::any('/cron/by-keyword','CronController@byKeyword')->name('cron/by-keyword');
@@ -55,8 +57,11 @@ Route::get('/services', 'HomeController@services')->name('services');
 
 
 Route::post('hotel-get-cities', 'HotelController@get_hotel_cities')->name('hotel-get-cities');
+//Route::get('category/{id}', 'HomeController@search_list')->name('category');
 Route::get('category/{id}', 'HomeController@search_list')->name('category');
+Route::get('category/{id}/{brand}', 'HomeController@search_list')->name('category');
 Route::get('product/{id}', 'HomeController@product_detail')->name('product');
+Route::get('brand/{id}', 'HomeController@search_by_brands')->name('brand');
 Route::post('get-products-ajax', 'HomeController@get_products_ajax')->name('get-products-ajax');
 
 
@@ -130,4 +135,9 @@ Route::group(['middleware'=>['Admin']],function(){
  	Route::get('enquiries-list', 'EnquiryController@index')->name('enquiries-list');	
 	Route::get('searchajaxenquiries', 'EnquiryController@ajax_list')->name('searchajaxenquiries');
 	Route::any('enquiries-delete', 'EnquiryController@delete_data')->name('enquiries-delete');		
+	
+	// GoogleAnalytics 
+	Route::any('google-analytics-edit', 'GoogleAnalyticsController@add')->name('google-analytics-edit');	
+	Route::any('google-analytics-save', 'GoogleAnalyticsController@save_data')->name('google-analytics-save');	
+		
 });

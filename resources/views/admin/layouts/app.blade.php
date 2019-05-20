@@ -235,7 +235,17 @@
           </ul>
         </li>		
 		
-         
+        <li class="treeview <?php if($data['nav'] == 'menu_google_analytics'){echo 'active';}?>">
+          <a href="#">
+            <i class="fa fa-tags"></i> <span>Google Analytics</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li class="<?php if($data['sub_nav'] == 'menu_google_analytics_add'){echo 'active';}?>"><a href="{{ route('google-analytics-edit') }}"><i class="fa fa-pencil"></i> Edit</a></li>
+          </ul>
+        </li>         
 		
       </ul>
     </section>

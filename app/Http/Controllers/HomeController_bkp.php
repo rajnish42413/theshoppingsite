@@ -220,7 +220,7 @@ class HomeController extends Controller
 		return view('all_categories_ajax',['cat_data'=>$cat_data])->render();
 	}
 	
-	public function search_list($slug, $brand=''){
+	public function search_list(Request $request, $slug){
 		$categories = array();
 		$products = array();
 		$brands = array();
@@ -232,14 +232,7 @@ class HomeController extends Controller
 		$data['cat_slug'] = '';			
 		$data['min_price']	= '';
 		$data['max_price'] = '';
-		$data['brand_id'] = '';
 		if($slug != ''){
-			if($brand != ''){
-				$bb = Brand::where('slug',$brand)->first();
-				if($bb && $bb->count() > 0){
-					$data['brand_id'] = $bb->id;
-				}
-			}
 			$res = Category::where('slug',$slug)->first();
 			if($res && $res->count() > 0){
 				if($res->parentId == '0'){ // parent
@@ -261,7 +254,7 @@ class HomeController extends Controller
 						$data['cat_id'] = $res->categoryId;						
 						$data['cat_slug'] = $res2->slug;						
 						$categories = $this->get_categories($res->parentId);
-						$products = $this->get_products_by_cat($res->categoryId,$data['brand_id']);
+						$products = $this->get_products_by_cat($res->categoryId);
 						$brands = $this->get_brands_by_cat($res->categoryId);
 						$data['min_price'] = $this->getMinPriceByCat($res->categoryId);
 						$data['max_price'] = $this->getMaxPriceByCat($res->categoryId);						
@@ -269,6 +262,7 @@ class HomeController extends Controller
 				}				
 			}
 		}
+		
 		$data['nav'] = 'terms';
 		$data['meta_title'] = config('app.name')." :: Search Products";
 		$data['meta_keywords'] = config('app.name')." Search Products";
@@ -350,16 +344,13 @@ class HomeController extends Controller
 		return $products;
 	}	
 
-	public function get_products_by_cat($cat_id="",$brand_id=""){
+	public function get_products_by_cat($cat_id=""){
 		$products = array();
 		$showing_result = 10;
 		$results = Product::select(DB::raw("products.*, categories.categoryName as categoryName, c2.categoryName as parentCategoryName"))->Join('categories',function ($join){$join->on('categories.categoryId','=','products.categoryId'); })->Join('categories as c2',function ($join){$join->on('c2.categoryId','=','products.parentCategoryId'); });
 		
 		if($cat_id!= '0'){
 			$results = $results->where('products.CategoryId',$cat_id);
-		}
-		if($brand_id!= ''){
-			$results = $results->where('products.brand_id',$brand_id);
 		}		
 		//offset(0)->limit(10)->
 		$results = $results->orderBy('products.current_price','asc');
@@ -514,14 +505,11 @@ class HomeController extends Controller
 		$search_value = $request->input('search_value');
 		if($search_value != ''){		
  		
-		$first = Category::select(DB::raw('categories.categoryName AS name, categories.slug AS pid , "category" AS type, "none" AS custom'))->where('categories.status',1)->where('categories.categoryName','like',"%$search_value%");
-		$second = Brand::select(DB::raw('brands.name AS name, brands.slug AS pid , "brand" AS type, categories.slug AS custom'))->Join('products',function ($join){$join->on('products.brand_id','=','brands.id'); })->Join('categories',function ($join){$join->on('categories.categoryId','=','products.categoryId'); })->where('brands.status',1)->where('brands.name','like',"%$search_value%")->groupBy('categories.categoryId');
-		$products = Product::select(DB::raw('products.title AS name, products.itemId AS pid, "product" AS type, "none" AS custom'))->where('products.status',1)->where('products.title','like',"%$search_value%");
+		$first = Category::select(DB::raw('categories.categoryName AS name, categories.slug AS pid , "category" AS type'))->where('categories.status',1)->where('categories.categoryName','like',"%$search_value%");
+		$products = Product::select(DB::raw('products.title AS name, products.itemId AS pid, "product" AS type'))->where('products.status',1)->where('products.title','like',"%$search_value%");
 		
-		$results = $products->union($first)->union($second)->limit(12)->get(); 
-		//$results = $products->union($first)->union($second)->toSql(); 
-		//echo $results;die;
-		$base_url=env('APP_URL');
+		$results = $products->union($first)->limit(12)->get(); 
+
 		
 		if($results && $results->count() > 0){
 			$output .= '<div class="row"><div class="col-md-9">Search Suggestions:</div><div class="col-md-3"><button onclick="close_search()" class="btn btn-default btn-xs">Hide</button></div>';
@@ -532,15 +520,11 @@ class HomeController extends Controller
 			//foreach start
 			if($row->type == 'category'){
 				$title = (strlen($row->name) > 30) ? substr($row->name,0,27).'...' : $row->name;
-				$url = $base_url.'category/'.$row->pid;
+				$url = env('APP_URL').'category/'.$row->pid;
 				$output .= '<div class="col-md-6"><a class="btn-link" href="'.$url.'">'.$title.'</a></div>';
 			}elseif($row->type == 'product'){
 				$title = (strlen($row->name) > 30) ? substr($row->name,0,27).'...' : $row->name;
-				$url = $base_url.'product/'.$row->pid;
-				$output .= '<div class="col-md-6"><a class="btn-link" href="'.$url.'">'.$title.'</a></div>';
-			}elseif($row->type == 'brand'){
-				$title = (strlen($row->name) > 30) ? substr($row->name,0,27).'...' : $row->name;
-				$url = $base_url.'category/'.$row->custom.'/'.$row->pid;
+				$url = env('APP_URL').'product/'.$row->pid;
 				$output .= '<div class="col-md-6"><a class="btn-link" href="'.$url.'">'.$title.'</a></div>';
 			} 
 

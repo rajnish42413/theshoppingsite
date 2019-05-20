@@ -57,7 +57,7 @@
 								<h4 class="sh_sidecat_heading">Filter By Brand</h4>
 								<ul class="my-brands">
 							<?php foreach($brands as $brand){?>
-									<li><input type="checkbox" name="brands[]" class="pro_brands checkmark" value="<?php echo $brand->id;?>" onchange="get_search_data()"><?php echo $brand->name;?></li>	
+									<li><input type="checkbox" name="brands[]" class="pro_brands checkmark" value="<?php echo $brand->id;?>" onchange="get_search_data()" <?php if($data['brand_id']!= '' && $data['brand_id'] == $brand->id){ echo 'checked'; }?>><?php echo $brand->name;?></li>	
 							<?php } ?>
 								</ul>
 							</div>
