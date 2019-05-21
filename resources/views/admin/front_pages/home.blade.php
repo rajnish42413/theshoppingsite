@@ -6,7 +6,7 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        <?php echo $data['sub_title'].' '.$data['title'];?>
+         <?php echo $data['title'].' - '.$data['sub_title'];?>
       </h1>
       <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -33,34 +33,37 @@
 						</div>
 					</div>
 				</div>				
-                <div class="form-group">
-				 <label for="is_deal_of_the_day"><span class="text-danger">*</span> Add On Deal Of The Day</label>
-				<select type="text" class="form-control" id="is_deal_of_the_day" name="is_deal_of_the_day" >
-					<option value="0" <?php if($row){ if($row->is_deal_of_the_day == 0){echo 'selected'; }} ?> >No</option>
-					<option value="1" <?php if($row){ if($row->is_deal_of_the_day == 1){echo 'selected'; }} ?> >Yes</option>
-				</select>
-                </div>
-				
-                <div class="form-group">
-				 <label for="is_top_product"><span class="text-danger">*</span> Top Product</label>
-				<select type="text" class="form-control" id="is_top_product" name="is_top_product" >
-					<option value="0" <?php if($row){ if($row->is_top_product == 0){echo 'selected'; }} ?> >No</option>
-					<option value="1" <?php if($row){ if($row->is_top_product == 1){echo 'selected'; }} ?> >Yes</option>
-				</select>
-                </div>
-
-                <div class="form-group">
-				 <label for="status"><span class="text-danger">*</span> Status</label>
-				<select type="text" class="form-control" id="status" name="status" >
-					<option value="1" <?php if($row){ if($row->status == 1){echo 'selected'; }} ?> >Active</option>				
-					<option value="0" <?php if($row){ if($row->status == 0){echo 'selected'; }} ?> >Deactive</option>
-				</select>
-                </div>
-				
+					<div class="form-group">
+					  <label for="page_title"><span class="text-danger font_12"> * </span>Page Title</label>
+					  <div class="input-group">
+						<div class="input-group-addon"><i class="fa fa-edit"></i></div>
+						<textarea name="page_title" class="form-control" ><?php if($row){ echo $row->page_title; } ?></textarea>
+					  </div>
+					  <div class="text-danger error font_12" id="page_title_error"></div>
+					</div>
+					<div class="form-group">
+					  <label for="meta_keywords"><span class="text-danger font_12"> * </span>Meta Keywords</label>
+					  <div class="input-group " id="testing">
+						<div class="input-group-addon"><i class="fa fa-edit"></i></div>
+							<input size="2" type="text" name="meta_keywords[]" class="form-control sugg-input" value="<?php if($row){ if(!empty($row->meta_keywords)){ echo $row->meta_keywords; }}?>" autocomplete="off" >
+											
+					  </div>
+					  <small>(Type a comma to create a new keyword)</small>
+					  <div class="text-danger error font_12" id="meta_keywords_error"></div>
+					</div>					
+					<div class="form-group">
+					  <label for="meta_description"><span class="text-danger font_12"> * </span>Meta Description</label>
+					  <div class="input-group">
+						<div class="input-group-addon"><i class="fa fa-edit"></i></div>
+						<textarea name="meta_description" id="meta_description" class="form-control" ><?php if($row){ echo $row->meta_description; } ?></textarea>
+					  </div>
+					  <div class="text-danger error font_12" id="meta_description_error"></div>
+					</div>	
               </div>
               <!-- /.box-body -->
 
               <div class="box-footer">
+			  <input type="hidden" name="page_type" value="<?php if($row){ echo $row->page_type; }else{ echo 'home';} ?>">
 				<input type="hidden" name="id" id="id" value="<?php if($row){ echo $row->id; }?>" >
                 <button type="submit" class="btn btn-primary" id="sub_btn">Submit</button>
               </div>
@@ -76,10 +79,17 @@
     <!-- /.content -->
   </div>
 <script>
+var bodies = [<?php if(!empty($meta_keywords)){ echo $meta_keywords; } ?>];
+$('#testing input').suggester({
+   data: bodies, 
+   minChars: 1
+});
+</script>
+<script>
 
-var surl = '<?php echo route('products-list');?>'; 
+
 $("#addForm").submit(function(e){
-$('.wait_loader').show();	
+	$('.wait_loader').show();
 	e.preventDefault();
 	$('.admin_errors.alert-danger').hide();
 	$('.admin_errors.alert-danger ul').html('');
@@ -87,7 +97,7 @@ $('.wait_loader').show();
 	$('.error').html('');
 	$.ajax({
 		type: "POST",
-		url: '<?php echo route('products-save');?>',
+		url: '<?php echo route('settings-page-save');?>',
 		data:  new FormData(this),
 		processData:false,
 		contentType:false,
@@ -114,18 +124,18 @@ $('.wait_loader').show();
 				<?php if($row){ ?>
 					
 					$.notify({
-					  message: '<?php echo $data['title'];?> Updated Successfully!!' 
+					  message: '<?php echo $data['title'];?> Content Updated Successfully!!' 
 					 },{ element: 'body', type: "success", allow_dismiss: true, offset: { x: 0, y: 60 }, delay: 1000 
 					});
 				<?php }else{ ?>
 					
 					$.notify({
-					  message: '<?php echo $data['title'];?> Added Successfully!!' 
+					  message: '<?php echo $data['title'];?> Content Added Successfully!!' 
 					 },{ element: 'body', type: "success", allow_dismiss: true, offset: { x: 0, y: 60 }, delay: 1000 
 					 });
 				<?php } ?>
 				
-			window.setTimeout(function() { window.location = surl }, 1000); 			
+			window.setTimeout(function() { location.reload(); }, 1000); 			
 		}
 
 		},
@@ -145,5 +155,4 @@ $('.wait_loader').show();
 
  </script>
 
- 
 @endsection

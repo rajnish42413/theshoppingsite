@@ -136,7 +136,15 @@
 							<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
 								<a href="{{ env('APP_URL')}}product/<?php echo $product->itemId;?>">
 									<div class="sh_grid_product_section sh_float_width">
-										<span class="hide sh_new_prod">New</span>
+									<?php if($product->Quantity == 0){?>
+										<div class="out_of_stock">
+											<span>Out of Stock</span>
+										</div>
+									<?php }elseif($product->Quantity <= 10){?>
+										<div class="less_stock">
+											<span>Only <?php echo $product->Quantity;?> Left</span>
+										</div>									
+									<?php }?>
 										<img class="grid_prd" src="<?php echo $galleryURL;?>">
 										<h4 class="sh_prod_name"><?php echo $product->title;?></h4>
 										<div class="sh_about_prod">
@@ -151,7 +159,7 @@
 												</ul>
 											</div>
 											<div class="sh_less_price_store sh_float_width text-left">
-												<a href="javacript:void(0)"><img src="{{env('APP_URL')}}assets/images/ebay.png"></a>
+												<a href="<?php echo $product->viewItemURL;?>"><img src="{{env('APP_URL')}}assets/images/ebay.png"></a>
 											</div>
 									
 										</div>

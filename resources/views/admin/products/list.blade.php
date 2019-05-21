@@ -74,6 +74,7 @@
                             <th>Category</th>
                             <th>Price</th>
                             <th>Currency</th>
+                            <th>Status</th>
                             <th>Action</th>
                         </tr>
                     </thead>

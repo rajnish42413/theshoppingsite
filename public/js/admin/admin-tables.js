@@ -4,9 +4,12 @@ $(document).ready(function() {
 	
     window.navigationMenuTable = $('#navigationMenuTable').DataTable({
       "processing": true,
+	  "language": {
+            "processing": "<div class='wait_loader'></div>"
+        },	  
       "serverSide": true,
        "ordering": true,
-      "dom": '<l<t>ip>',
+      "dom": 'lfrtip',
         "ajax": 'searchajaxnavmenu',
 
         "columns": [
@@ -109,9 +112,12 @@ $(document).ready(function() {
 	
     window.bannersTable = $('#bannersTable').DataTable({
       "processing": true,
+	  "language": {
+            "processing": "<div class='wait_loader'></div>"
+        },	  
       "serverSide": true,
        "ordering": true,
-      "dom": '<l<t>ip>',
+      "dom": 'lfrtip',
         "ajax": 'searchajaxbanners',
 
         "columns": [
@@ -208,9 +214,12 @@ $(document).ready(function() {
 	
     window.categoriesTable = $('#categoriesTable').DataTable({
       "processing": true,
+	  "language": {
+            "processing": "<div class='wait_loader'></div>"
+        }, 	  
       "serverSide": true,
        "ordering": true,
-      "dom": '<l<t>ip>',
+      "dom": 'lfrtip',
         "ajax": 'searchajaxcategories',
 
         "columns": [
@@ -218,7 +227,15 @@ $(document).ready(function() {
 			return '<input type="checkbox" name="id[]" value="'+ $('<div/>').text(data).html() + ' " >';
 			}},
 			{ "data": "categoryName"},	
-			{ "data": "parentCategoryName"},	
+			{ "data": "parentCategoryName"},
+            { "data": "status","render": function(data, type, row, meta){ 
+				if(data=='1'){
+					return '<span class="label label-success">Active</span>';
+				}
+				else if(data=='0'){
+					return '<span class="label label-danger">Deactive</span>';
+				}
+			}},			
 		   { "data": "id","orderable":false,"render": function(data, type, row, meta){ 
 			   return '<a href="categories-edit/'+data+'"  class="btn btn-sm btn-info">Edit</a>&nbsp;&nbsp;<button type="button" onclick="delete_single_row('+data+',\'categoriesTable\',\'categories-delete\')" class="btn btn-sm btn-danger">Delete</button>';
 
@@ -308,9 +325,12 @@ $(document).ready(function() {
 	
     window.productsTable = $('#productsTable').DataTable({
       "processing": true,
+	  "language": {
+            "processing": "<div class='wait_loader'></div>"
+        },  
       "serverSide": true,
-       "ordering": true,
-      "dom": '<l<t>ip>',
+      "ordering": true,
+      "dom": 'lfrtip',
         "ajax": 'searchajaxproducts',
 
         "columns": [
@@ -321,7 +341,15 @@ $(document).ready(function() {
 			{ "data": "parentCategoryName"},			
 			{ "data": "categoryName"},		
 			{ "data": "current_price"},	
-			{ "data": "current_price_currency"},	
+			{ "data": "current_price_currency"},
+            { "data": "status","render": function(data, type, row, meta){ 
+				if(data=='1'){
+					return '<span class="label label-success">Active</span>';
+				}
+				else if(data=='0'){
+					return '<span class="label label-danger">Deactive</span>';
+				}
+			}},			
 		   { "data": "id","orderable":false,"render": function(data, type, row, meta){ 
 			   return '<a href="products-edit/'+data+'"  class="btn btn-sm btn-primary">Edit</a>&nbsp;&nbsp;<a href="'+row.viewItemURL+'" target="_blank"  class="btn btn-sm btn-info">View</a>&nbsp;&nbsp;<button type="button" onclick="delete_single_row('+data+',\'productsTable\',\'products-delete\')" class="btn btn-sm btn-danger">Delete</button>';
 
@@ -390,6 +418,7 @@ $(document).ready(function() {
 
    // Handle table draw event
    productsTable.on('draw', function(){
+	   
       updateDataTableSelectAllCtrl(productsTable);
    });
 	
@@ -412,9 +441,12 @@ $(document).ready(function() {
 	
     window.enquiriesTable = $('#enquiriesTable').DataTable({
       "processing": true,
+	  "language": {
+            "processing": "<div class='wait_loader'></div>"
+        },	  
       "serverSide": true,
        "ordering": true,
-      "dom": '<l<t>ip>',
+      "dom": 'lfrtip',
         "ajax": 'searchajaxenquiries',
 
         "columns": [

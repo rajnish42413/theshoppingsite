@@ -42,14 +42,13 @@ class HomeController extends Controller
     { 
 
 		$data['nav'] = 'home';
-		$row = FrontPageSetting ::where('page_type','home')->first();
-		$data['meta_title'] = $row->page_title;
-		$data['meta_keywords']= $row->meta_keywords;
-		$data['meta_description'] = $row->meta_description;
+		$data['meta_title']= config('app.name')." :: Home";
+		$data['meta_keywords']="Top Products, Recommended Products, Top Deal";
+		$data['meta_description']="Top Products, Recommended Products, Top Deal";
 		$banners = Banner::where('section_name','home_slider')->orderBy('id','asc')->limit(4)->get();
-		$deals = Product::where('is_deal_of_the_day',1)->where('status',1)->orderBy('id','asc')->limit(8)->get();
-		$top_products = Product::where('is_top_product',1)->where('status',1)->orderBy('id','asc')->limit(8)->get();
-		$top_categories = Category::where('is_top_category',1)->where('status',1)->orderBy('id','asc')->limit(8)->get();
+		$deals = Product::where('is_deal_of_the_day',1)->orderBy('id','asc')->limit(8)->get();
+		$top_products = Product::where('is_top_product',1)->orderBy('id','asc')->limit(8)->get();
+		$top_categories = Category::where('is_top_category',1)->orderBy('id','asc')->limit(8)->get();
 		return view('home',['data'=>$data,'banners'=>$banners,'deals'=>$deals,'top_categories'=>$top_categories,'top_products'=>$top_products]);
     }
 	
@@ -241,7 +240,7 @@ class HomeController extends Controller
 					$data['brand_id'] = $bb->id;
 				}
 			}
-			$res = Category::where('slug',$slug)->where('status',1)->first();
+			$res = Category::where('slug',$slug)->first();
 			if($res && $res->count() > 0){
 				if($res->parentId == '0'){ // parent
 					$data['parent_category'] = $res->categoryName;
@@ -254,7 +253,7 @@ class HomeController extends Controller
 					$data['min_price'] = $this->getMinPriceByParentCat($res->categoryId);
 					$data['max_price'] = $this->getMaxPriceByParentCat($res->categoryId);
 				}else{
-					$res2 = Category::where('categoryId',$res->parentId)->where('status',1)->first();
+					$res2 = Category::where('categoryId',$res->parentId)->first();
 					if($res2 && $res2->count() > 0){
 						$data['parent_category'] = $res2->categoryName;
 						$data['category'] = $res->categoryName;
@@ -292,7 +291,7 @@ class HomeController extends Controller
 		$categories = array();
 		if($id != ''){
 
-			$product = Product::select(DB::raw("products.*, categories.categoryName as categoryName, c2.categoryName as parentCategoryName"))->Join('categories',function ($join){$join->on('categories.categoryId','=','products.categoryId'); })->Join('categories as c2',function ($join){$join->on('c2.categoryId','=','products.parentCategoryId'); })->where('products.itemId',$id)->where('products.status',1)->first();
+			$product = Product::select(DB::raw("products.*, categories.categoryName as categoryName, c2.categoryName as parentCategoryName"))->Join('categories',function ($join){$join->on('categories.categoryId','=','products.categoryId'); })->Join('categories as c2',function ($join){$join->on('c2.categoryId','=','products.parentCategoryId'); })->where('products.itemId',$id)->first();
 					
 			if($product && $product->count() > 0){
 				$data['parent_category'] = $product->parentCategoryName;	
@@ -320,7 +319,7 @@ class HomeController extends Controller
 		}
 		$results = Category::orderBy('id','asc');
 		if($parent_id!= '0'){
-			$results = $results->where('parentId',$parent_id)->where('status',1);
+			$results = $results->where('parentId',$parent_id);
 		}		
 		$results = $results->get();
 		if($results->count() > 0){
@@ -335,7 +334,7 @@ class HomeController extends Controller
 			$parent_id = '0';
 		}
 		$showing_result = 10;
-		$results = Product::select(DB::raw("products.*, categories.categoryName as categoryName, c2.categoryName as parentCategoryName"))->Join('categories',function ($join){$join->on('categories.categoryId','=','products.categoryId'); })->Join('categories as c2',function ($join){$join->on('c2.categoryId','=','products.parentCategoryId'); })->where('products.status',1);
+		$results = Product::select(DB::raw("products.*, categories.categoryName as categoryName, c2.categoryName as parentCategoryName"))->Join('categories',function ($join){$join->on('categories.categoryId','=','products.categoryId'); })->Join('categories as c2',function ($join){$join->on('c2.categoryId','=','products.parentCategoryId'); });
 		
 		if($parent_id!= '0'){
 			$results = $results->where('products.parentCategoryId',$parent_id);
@@ -354,7 +353,7 @@ class HomeController extends Controller
 	public function get_products_by_cat($cat_id="",$brand_id=""){
 		$products = array();
 		$showing_result = 10;
-		$results = Product::select(DB::raw("products.*, categories.categoryName as categoryName, c2.categoryName as parentCategoryName"))->Join('categories',function ($join){$join->on('categories.categoryId','=','products.categoryId'); })->Join('categories as c2',function ($join){$join->on('c2.categoryId','=','products.parentCategoryId'); })->where('products.status',1);
+		$results = Product::select(DB::raw("products.*, categories.categoryName as categoryName, c2.categoryName as parentCategoryName"))->Join('categories',function ($join){$join->on('categories.categoryId','=','products.categoryId'); })->Join('categories as c2',function ($join){$join->on('c2.categoryId','=','products.parentCategoryId'); });
 		
 		if($cat_id!= '0'){
 			$results = $results->where('products.CategoryId',$cat_id);
@@ -393,10 +392,10 @@ class HomeController extends Controller
 		
 		if($parent_cat_id != '0'){
 			$results = Product::select(DB::raw("products.*, categories.categoryName as categoryName, c2.categoryName as parentCategoryName"))->Join('categories',function ($join){$join->on('categories.categoryId','=','products.categoryId'); })->Join('categories as c2',function ($join){$join->on('c2.categoryId','=','products.parentCategoryId'); });
-			$results = $results->where('products.parentCategoryId',$parent_cat_id)->where('products.status',1);			
+			$results = $results->where('products.parentCategoryId',$parent_cat_id);			
 		}else{
 			$results = Product::select(DB::raw("products.*, categories.categoryName as categoryName, c2.categoryName as parentCategoryName"))->Join('categories',function ($join){$join->on('categories.categoryId','=','products.categoryId'); })->Join('categories as c2',function ($join){$join->on('c2.categoryId','=','products.parentCategoryId'); });			
-			$results = $results->where('products.CategoryId',$cat_id)->where('products.status',1);
+			$results = $results->where('products.CategoryId',$cat_id);
 		}	
 
 		if($start_price!='' && $end_price!=''){
@@ -514,42 +513,48 @@ class HomeController extends Controller
 		$output = '';
 		$search_value = $request->input('search_value');
 		if($search_value != ''){		
+ 		
+		$first = Category::select(DB::raw('categories.categoryName AS name, categories.slug AS pid , "category" AS type, "none" AS custom'))->where('categories.status',1)->where('categories.categoryName','like',"%$search_value%");
+		$second = Brand::select(DB::raw('brands.name AS name, brands.slug AS pid , "brand" AS type, categories.slug AS custom'))->Join('products',function ($join){$join->on('products.brand_id','=','brands.id'); })->Join('categories',function ($join){$join->on('categories.categoryId','=','products.categoryId'); })->where('brands.status',1)->where('brands.name','like',"%$search_value%")->groupBy('categories.categoryId');
+		$products = Product::select(DB::raw('products.title AS name, products.itemId AS pid, "product" AS type, "none" AS custom'))->where('products.status',1)->where('products.title','like',"%$search_value%");
+		
+		$results = $products->union($first)->union($second)->limit(12)->get(); 
+		//$results = $products->union($first)->union($second)->toSql(); 
+		//echo $results;die;
+		$base_url=env('APP_URL');
+		
+		if($results && $results->count() > 0){
+			$output .= '<div class="row"><div class="col-md-9">Search Suggestions:</div><div class="col-md-3"><button onclick="close_search()" class="btn btn-default btn-xs">Hide</button></div>';
 			
-			$first = Category::select(DB::raw('categories.categoryName AS name, categories.slug AS pid , "category" AS type, "none" AS custom'))->where('categories.status',1)->where('categories.categoryName','like',"%$search_value%");
-			$second = Brand::select(DB::raw('brands.name AS name, brands.slug AS pid , "brand" AS type, categories.slug AS custom'))->Join('products',function ($join){$join->on('products.brand_id','=','brands.id'); })->Join('categories',function ($join){$join->on('categories.categoryId','=','products.categoryId'); })->where('brands.status',1)->where('brands.name','like',"%$search_value%")->groupBy('categories.categoryId');
-			$products = Product::select(DB::raw('products.title AS name, products.itemId AS pid, "product" AS type, "none" AS custom'))->where('products.status',1)->where('products.title','like',"%$search_value%");
-			
-			$results = $products->union($first)->union($second)->limit(12)->get(); 
-			//$results = $products->union($first)->union($second)->toSql(); 
-			//echo $results;die;
-			$base_url=env('APP_URL');
-			
-			if($results && $results->count() > 0){
-				$output .= '<div class="row"><div class="col-md-9">Search Suggestions:</div><div class="col-md-3"><button onclick="close_search()" class="btn btn-default btn-xs">Hide</button></div>';
-				
-				$output .= '<div class="row">';
-				$i=1;
-				foreach($results as $row){
-				//foreach start
-				if($row->type == 'category'){
-					$title = (strlen($row->name) > 30) ? substr($row->name,0,27).'...' : $row->name;
-					$url = $base_url.'category/'.$row->pid;
-					$output .= '<div class="col-md-6"><a class="btn-link" href="'.$url.'">'.$title.'</a></div>';
-				}elseif($row->type == 'product'){
-					$title = (strlen($row->name) > 30) ? substr($row->name,0,27).'...' : $row->name;
-					$url = $base_url.'product/'.$row->pid;
-					$output .= '<div class="col-md-6"><a class="btn-link" href="'.$url.'">'.$title.'</a></div>';
-				}elseif($row->type == 'brand'){
-					$title = (strlen($row->name) > 30) ? substr($row->name,0,27).'...' : $row->name;
-					$url = $base_url.'category/'.$row->custom.'/'.$row->pid;
-					$output .= '<div class="col-md-6"><a class="btn-link" href="'.$url.'">'.$title.'</a></div>';
-				} 
+			$output .= '<div class="row">';
+			$i=1;
+			foreach($results as $row){
+			//foreach start
+			if($row->type == 'category'){
+				$title = (strlen($row->name) > 30) ? substr($row->name,0,27).'...' : $row->name;
+				$url = $base_url.'category/'.$row->pid;
+				$output .= '<div class="col-md-6"><a class="btn-link" href="'.$url.'">'.$title.'</a></div>';
+			}elseif($row->type == 'product'){
+				$title = (strlen($row->name) > 30) ? substr($row->name,0,27).'...' : $row->name;
+				$url = $base_url.'product/'.$row->pid;
+				$output .= '<div class="col-md-6"><a class="btn-link" href="'.$url.'">'.$title.'</a></div>';
+			}elseif($row->type == 'brand'){
+				$title = (strlen($row->name) > 30) ? substr($row->name,0,27).'...' : $row->name;
+				$url = $base_url.'category/'.$row->custom.'/'.$row->pid;
+				$output .= '<div class="col-md-6"><a class="btn-link" href="'.$url.'">'.$title.'</a></div>';
+			} 
 
-				$i++;
-				//foreach end				
-				}
-				$output .= '</div>';
+			$i++;
+			//foreach end				
 			}
+			$output .= '</div>';
+		}
+
+			
+			
+
+			
+			
 		}
 		echo $output;
 		

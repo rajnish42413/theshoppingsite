@@ -1486,6 +1486,7 @@ ul.sh_review_color {
 
 .top_categories .sh_top_category_section.sh_float_width img {
     max-height: 240px;
+    height: 200px;
 }
 
 .sh_grid_product_section.sh_float_width .grid_prd {
@@ -1848,4 +1849,32 @@ a.pn-ProductNav_Link {
 
 #search_results .col-md-6 {
     margin-top: 10px;
+}
+
+.out_of_stock{
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 9;
+    background: linear-gradient(to right, rgb(228, 36, 41) 0%,rgb(222, 36, 42) 100%);
+    color: #fff;
+    width: 100px;
+    height: auto;
+    text-align: center;
+    font-size: 13px;
+    padding: 6px 0;
+}
+
+.less_stock{
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 9;
+    background: linear-gradient(to right, rgb(255, 128, 19) 0%,rgb(247, 149, 91) 100%);
+    color: #fff;
+    width: 100px;
+    height: auto;
+    text-align: center;
+    font-size: 13px;
+    padding: 6px 0;
 }

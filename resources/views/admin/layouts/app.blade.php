@@ -77,7 +77,7 @@
 		height: 100%;
 		z-index: 9999;
 		background: url('<?php echo env('APP_URL');?>admin_assets/dist/img/pageLoader.gif') 50% 50% no-repeat #ffffff5e;
-		background-size: 20%;
+		background-size: 15%;
 		opacity: 1;
 	}
 	</style> 	
@@ -206,7 +206,7 @@
           </ul>
         </li>
 		
-        <li class="treeview <?php if($data['nav'] == 'menu_settings'){echo 'active';}?>">
+        <li class="treeview <?php if($data['nav'] == 'menu_front_pages'){echo 'active';}?>">
           <a href="#">
             <i class="fa fa-cog"></i> <span>Content Pages</span>
             <span class="pull-right-container">
@@ -214,11 +214,12 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li class="<?php if($data['sub_nav'] == 'menu_settings_about'){echo 'active';}?>"><a href="{{ route('settings-about') }}"><i class="fa fa-circle"></i> About</a></li>
-            <li class="<?php if($data['sub_nav'] == 'menu_settings_faq'){echo 'active';}?>"><a href="{{ route('settings-faq') }}"><i class="fa fa-circle"></i> FAQ</a></li>
-            <li class="<?php if($data['sub_nav'] == 'menu_settings_contact'){echo 'active';}?>"><a href="{{ route('settings-contact') }}"><i class="fa fa-circle"></i> Contact</a></li>
-            <li class="<?php if($data['sub_nav'] == 'menu_settings_terms'){echo 'active';}?>"><a href="{{ route('settings-terms') }}"><i class="fa fa-circle"></i> Terms</a></li>
-            <li class="<?php if($data['sub_nav'] == 'menu_settings_privacy_policy'){echo 'active';}?>"><a href="{{ route('settings-privacy-policy') }}"><i class="fa fa-circle"></i> Privacy Policy</a></li>
+		    <li class="<?php if($data['sub_nav'] == 'menu_front_pages_home'){echo 'active';}?>"><a href="{{ route('settings-home') }}"><i class="fa fa-circle"></i> Home</a></li>
+            <li class="<?php if($data['sub_nav'] == 'menu_front_pages_about'){echo 'active';}?>"><a href="{{ route('settings-about') }}"><i class="fa fa-circle"></i> About</a></li>
+            <li class="<?php if($data['sub_nav'] == 'menu_front_pages_faq'){echo 'active';}?>"><a href="{{ route('settings-faq') }}"><i class="fa fa-circle"></i> FAQ</a></li>
+            <li class="<?php if($data['sub_nav'] == 'menu_front_pages_contact'){echo 'active';}?>"><a href="{{ route('settings-contact') }}"><i class="fa fa-circle"></i> Contact</a></li>
+            <li class="<?php if($data['sub_nav'] == 'menu_front_pages_terms'){echo 'active';}?>"><a href="{{ route('settings-terms') }}"><i class="fa fa-circle"></i> Terms</a></li>
+            <li class="<?php if($data['sub_nav'] == 'menu_front_pages_privacy_policy'){echo 'active';}?>"><a href="{{ route('settings-privacy-policy') }}"><i class="fa fa-circle"></i> Privacy Policy</a></li>
            
           </ul>
         </li>
@@ -235,15 +236,15 @@
           </ul>
         </li>		
 		
-        <li class="treeview <?php if($data['nav'] == 'menu_google_analytics'){echo 'active';}?>">
+        <li class="treeview <?php if($data['nav'] == 'menu_settings'){echo 'active';}?>">
           <a href="#">
-            <i class="fa fa-tags"></i> <span>Google Analytics</span>
+            <i class="fa fa-cog"></i> <span>Settings</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
             </span>
           </a>
           <ul class="treeview-menu">
-            <li class="<?php if($data['sub_nav'] == 'menu_google_analytics_add'){echo 'active';}?>"><a href="{{ route('google-analytics-edit') }}"><i class="fa fa-pencil"></i> Edit</a></li>
+            <li class="<?php if($data['sub_nav'] == 'menu_settings_add'){echo 'active';}?>"><a href="{{ route('settings-edit') }}"><i class="fa fa-pencil"></i> Edit</a></li>
           </ul>
         </li>         
 		

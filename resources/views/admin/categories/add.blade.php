@@ -55,7 +55,16 @@
 					<option value="0" <?php if($row){ if($row->is_top_category == 0){echo 'selected'; }} ?> >No</option>
 					<option value="1" <?php if($row){ if($row->is_top_category == 1){echo 'selected'; }} ?> >Yes</option>
 				</select>
-                </div>	
+                </div>
+
+                <div class="form-group">
+				 <label for="status"><span class="text-danger">*</span> Status</label>
+				<select type="text" class="form-control" id="status" name="status" >
+					<option value="1" <?php if($row){ if($row->status == 1){echo 'selected'; }} ?> >Active</option>				
+					<option value="0" <?php if($row){ if($row->status == 0){echo 'selected'; }} ?> >Deactive</option>
+				</select>
+                </div>
+			
 
                 <div class="form-group">
                   <label for="file"><span class="text-danger">*</span> Image</label>

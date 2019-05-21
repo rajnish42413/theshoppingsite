@@ -59,6 +59,7 @@
                             <th style="width:50px"><input name="select_all" value="1" id="example-select-all" type="checkbox" /></th>
                             <th>Category Name</th>
                             <th>Parent Category</th>
+                            <th>Status</th>
                             <th>Action</th>
                         </tr>
                     </thead>

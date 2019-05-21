@@ -29,28 +29,10 @@ class FrontPagesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-	 
-	public function home(){
-		$data['nav'] = 'menu_front_pages';
-		$data['sub_nav'] = 'menu_front_pages_home';
-		$data['title'] = 'Front Pages';
-		$data['sub_title'] = 'Home';
-		$data['link'] = '';
-		$meta_keywords = '';
-		$row = array();
-		$row = FrontPageSetting::where('page_type','home')->where('status',1)->first();
-			if($row && $row->count() > 0){
-				$meta_keywords = $this->page_meta_keywords($row->meta_keywords);
-			}
-		
-		return view('admin.front_pages.home',['row'=>$row,'data'=>$data,'meta_keywords'=>$meta_keywords]);		
-	}
-	
-	
     public function about()
     { 
-		$data['nav'] = 'menu_front_pages';
-		$data['sub_nav'] = 'menu_front_pages_about';
+		$data['nav'] = 'menu_settings';
+		$data['sub_nav'] = 'menu_settings_about';
 		$data['title'] = 'Front Pages';
 		$data['sub_title'] = 'About';
 		$data['link'] = '';
@@ -66,8 +48,8 @@ class FrontPagesController extends Controller
 	
 	
 	public function faq(){
-		$data['nav'] = 'menu_front_pages';
-		$data['sub_nav'] = 'menu_front_pages_faq';
+		$data['nav'] = 'menu_settings';
+		$data['sub_nav'] = 'menu_settings_faq';
 		$data['title'] = 'Front Pages';
 		$data['sub_title'] = 'FAQ';
 		$data['link'] = '';
@@ -93,8 +75,8 @@ class FrontPagesController extends Controller
 	}
 	
 	public function terms(){
-		$data['nav'] = 'menu_front_pages';
-		$data['sub_nav'] = 'menu_front_pages_terms';
+		$data['nav'] = 'menu_settings';
+		$data['sub_nav'] = 'menu_settings_terms';
 		$data['title'] = 'Front Pages';
 		$data['sub_title'] = 'Terms';
 		$data['link'] = '';
@@ -109,8 +91,8 @@ class FrontPagesController extends Controller
 	}
 
 	public function privacy_policy(){
-		$data['nav'] = 'menu_front_pages';
-		$data['sub_nav'] = 'menu_front_pages_privacy_policy';
+		$data['nav'] = 'menu_settings';
+		$data['sub_nav'] = 'menu_settings_privacy_policy';
 		$data['title'] = 'Front Pages';
 		$data['sub_title'] = 'Privacy Policy';
 		$data['link'] = '';
@@ -125,8 +107,8 @@ class FrontPagesController extends Controller
 	}	
 	
 	public function contact(){
-		$data['nav'] = 'menu_front_pages';
-		$data['sub_nav'] = 'menu_front_pages_contact';
+		$data['nav'] = 'menu_settings';
+		$data['sub_nav'] = 'menu_settings_contact';
 		$data['title'] = 'Front Pages';
 		$data['sub_title'] = 'Contact';
 		$data['link'] = '';
@@ -162,7 +144,7 @@ class FrontPagesController extends Controller
 				$meta_keywords = implode(',',$req['meta_keywords']);
 			}
 			
-			if($req['page_type'] == 'faq' || $req['page_type'] == 'contact' || $req['page_type'] == 'home'){
+			if($req['page_type'] == 'faq' || $req['page_type'] == 'contact'){
 				$page_content = '';
 			}else{
 				$page_content = $req['page_content'];

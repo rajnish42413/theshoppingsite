@@ -90,6 +90,7 @@ class ProductsController extends Controller
 	
 		$qry->orderByRaw("$order[0] $order[1]");	
 		 
+		//echo $qry->toSql();die;
         $data['results'] = [];
         $results = $qry->paginate($length);
         

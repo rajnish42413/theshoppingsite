@@ -31,6 +31,10 @@ Route::any('/cron/category-live','CronController@getCategory_live')->name('cron/
 Route::any('/cron/by-category-live/{id}','CronController@getProductsByCategory_live')->name('cron/by-category-live');
 Route::any('/cron/single-item-live/{id}','CronController@getSingleItem_live')->name('cron/single-item-live');
 
+//testing
+Route::any('/cron/test-single-item-live/{id}','CronController@testing_getSingleItem_live')->name('cron/test-single-item-live');
+Route::any('/cron/feedback/{id}','CronController@feedback_live')->name('cron/feedback');
+
 //By other method
 Route::any('/cron/item/{id}','CronController@getItem')->name('cron/item');
 
@@ -44,10 +48,7 @@ Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
 Route::any('/change-password', 'DashboardController@change_password')->name('change-password');
 Route::any('/password-update', 'DashboardController@password_update')->name('password-update');
 Route::any('/image-update', 'DashboardController@image_update')->name('image-update');
-Route::post('hotel-get-cities', 'HotelController@get_hotel_cities')->name('hotel-get-cities');
 
-Route::get('/blog', 'HomeController@blog')->name('blog');
-Route::get('/pricing', 'HomeController@pricing')->name('pricing');
 Route::any('/contact', 'HomeController@contact')->name('contact');
 Route::get('/about', 'HomeController@about')->name('about');
 Route::get('/faq', 'HomeController@faq')->name('faq');
@@ -55,9 +56,6 @@ Route::get('/terms-of-use', 'HomeController@terms')->name('terms-of-use');
 Route::get('/privacy-policy', 'HomeController@privacy_policy')->name('privacy-policy');
 Route::get('/services', 'HomeController@services')->name('services');
 
-
-Route::post('hotel-get-cities', 'HotelController@get_hotel_cities')->name('hotel-get-cities');
-//Route::get('category/{id}', 'HomeController@search_list')->name('category');
 Route::get('category/{id}', 'HomeController@search_list')->name('category');
 Route::get('category/{id}/{brand}', 'HomeController@search_list')->name('category');
 Route::get('product/{id}', 'HomeController@product_detail')->name('product');
@@ -124,6 +122,7 @@ Route::group(['middleware'=>['Admin']],function(){
  	Route::any('settings-page-save', 'FrontPagesController@save_data')->name('settings-page-save');	
  	Route::any('settings-faq-delete', 'FrontPagesController@delete_faq_data')->name('settings-faq-delete');	
 	
+ 	Route::any('settings-home', 'FrontPagesController@home')->name('settings-home');	
  	Route::any('settings-about', 'FrontPagesController@about')->name('settings-about');	
  	Route::any('settings-faq', 'FrontPagesController@faq')->name('settings-faq');	
  	Route::any('settings-terms', 'FrontPagesController@terms')->name('settings-terms');	
@@ -139,5 +138,11 @@ Route::group(['middleware'=>['Admin']],function(){
 	// GoogleAnalytics 
 	Route::any('google-analytics-edit', 'GoogleAnalyticsController@add')->name('google-analytics-edit');	
 	Route::any('google-analytics-save', 'GoogleAnalyticsController@save_data')->name('google-analytics-save');	
+	
+	// Settings 
+	Route::any('settings-edit', 'SettingsController@add')->name('settings-edit');	
+	Route::any('settings-save', 'SettingsController@save_data')->name('settings-save');	
+	Route::any('social-settings-save', 'SettingsController@save_data2')->name('social-settings-save');		
+	Route::any('social-settings-delete', 'SettingsController@social_link_delete')->name('social-settings-delete');		
 		
 });
