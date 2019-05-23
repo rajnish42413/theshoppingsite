@@ -426,7 +426,7 @@ class CronController extends Controller
                  <CategorySiteID>0</CategorySiteID>
                 <DetailLevel>ReturnAll</DetailLevel>
                 <ViewAllNodes>True</ViewAllNodes>
-                <LevelLimit>7</LevelLimit>
+                <LevelLimit>4</LevelLimit>
                  <RequesterCredentials>
                  <eBayAuthToken>AgAAAA**AQAAAA**aAAAAA**GiXVXA**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6ANlYWhCZKGpQSdj6x9nY+seQ**o/kFAA**AAMAAA**LbVctO09rwWm0ounnTNhgG0mF4gKeXwNXlKqRLl6F+EaUtq+YF+M1H1qBNtiI8HtMcZFl+AFQNVLXmz8Bj4m03sjBevL44zptoTuEaOBvSZk8SEeD84LsdpduWmk4J9D6cDE9TlivvNm9yZMvoB1pKi4e+/7tNaH2zaDUt1YrwePWLwNMf34N1Mm+Um98LklluYVjDAnMWK7xoZVT3K7cnONQWPGQNpYwT65q1EtNTtIS2NP3t5V4LWt4Ibe1P5OcoomCJp6Fe33SYRTCYyw7fqOshRsnJmlIZvk8jGq8Jm+CeFDqKU9o6HEbc1iK3G+UTvGnpb5Qy+64/1tpc5NTGkCfiZpVvbeAIgytC1dXRnQM08bCIYYGeh3DYXwAr6VSIYXT3c6euU0n4Npjs2hgLp3NklLd0G4dPzPlDInn3loo5FiOnaa1CDCZaLNazaE9eO23qs5LlmBHI/Bx9e+tZxx78w0hotXAEAqJ54zVEbe5sm54R8qTKajbV9BTWuOXLrxG5LMyytgO0Ij6jdswuRYT6UMhhQRCcjq47ecM/18usXxR5ZF8npkdouD21oiGpIdJdlkXBiPzZqFAKRSPxUCT7vuIB1sXVT7+IbR4/UpRHDiOmDlCCMY7/PHfDx+V4LYnJp4LoDBTx+Eq7jZxNPp9BbQp37VbWyRd2OcJgzB1QfLrFRsHbBgAA7kIhRtCHsRlcuenZJ6rTdlRvKt5LcN9kexQMH5cUzgvJAd7ZQ2qsMijmNAWUtLPV3vh1NL</eBayAuthToken>
                  </RequesterCredentials>
@@ -436,6 +436,7 @@ class CronController extends Controller
         ]);
         $categories = simplexml_load_string($response->getBody(),'SimpleXMLElement',LIBXML_NOCDATA);
 		//echo '<Pre>'; print_r($categories);die;
+		$x=0;
         if ($categories->Ack == 'Success'){
             foreach($categories->CategoryArray->Category as $category){
 				$input['categoryId'] = (string)$category->CategoryID;
@@ -447,6 +448,9 @@ class CronController extends Controller
 					$input['parentId'] = $p_id;
 				}
 				$input['slug'] = $this->slugify($input['categoryName']);
+				
+				$input['slug'] = $this->check_slug($input['slug']);
+				
 				$input['updated_at'] =  date('Y-m-d H:i:s');
 				
 				
@@ -455,15 +459,46 @@ class CronController extends Controller
 				$cat_check = Category::where('categoryId',$input['categoryId'])->first();
 				
 				if($cat_check && $cat_check->count() > 0){
-					
+					$cat_check->id;
 					Category::where('categoryId',$input['categoryId'])->update($input);	
 											
 				}else{
 					$input['created_at'] =  date('Y-m-d H:i:s');
 					Category::create($input)->id;	
-				} 				
-					
+				} 					
+
+			$x++;		
             }
+			
+			$all_categories = Category::orderBy('id','asc')->get();
+			if($all_categories && $all_categories->count() > 0){
+				foreach($all_categories as $cat){
+					$row_id = $cat->id;
+					
+					if($cat->parentId == 0){
+						$level_input = array('catLevel'=>1);
+					}else{
+						$level2 = Category::where('categoryId',$cat->parentId)->first();
+						if($level2->parentId == 0){
+							$level_input = array('catLevel'=>2);
+						}else{
+							$level3 = Category::where('categoryId',$level2->parentId)->first();
+							if($level3->parentId == 0){
+								$level_input = array('catLevel'=>3);
+							}else{
+								$level4 = Category::where('categoryId',$level2->parentId)->first();
+								if($level4->parentId == 0){
+									$level_input = array('catLevel'=>4);
+								}else{
+									$level_input = array('catLevel'=>4);
+								}
+							}
+						}
+					}
+					Category::where('id',$row_id)->update($level_input);				
+					
+				}
+			}
 			echo 'success';
         }
     }
@@ -487,7 +522,7 @@ class CronController extends Controller
 
         // Ask for the first 25 items.
         $request->paginationInput = new Types\PaginationInput();
-        $request->paginationInput->entriesPerPage = 1000;
+        $request->paginationInput->entriesPerPage = 100000;
         $request->paginationInput->pageNumber = 1;
 
         // Ask for the results to be sorted from high to low price.
@@ -512,25 +547,31 @@ class CronController extends Controller
 					$input['title'] =  $product->title;
 					$input['globalId'] =  $product->globalId;
 					
-					$input['categoryId'] =  $product->primaryCategory->categoryId;
+					$catID  =  $product->primaryCategory->categoryId;
 					
-					// Category Check
-					$cat_check  = array();
-					$cat_check  = Category::where('categoryId',$input['categoryId'])->first();
-					if($cat_check && $cat_check->count() > 0){
-						//nothing
+					$input['categoryId'] = $catID;			
+					
+					$input['parentCategoryId'] = $this->getParentID($catID);
+					
+					$catID1 = $catID;
+					$catID2 = $this->getParentID($catID1);
+					$catID3 = $this->getParentID($catID2);
+					$catID4 = $this->getParentID($catID3);
+					
+					$catLevel = array();
+					$catLevel = $this->getCatLevel($catID1,$catID2,$catID3,$catID4);
+					if($catLevel){
+						$input['catID1'] = $catLevel['L1'];
+						$input['catID2'] = $catLevel['L2'];
+						$input['catID3'] = $catLevel['L3'];
+						$input['catID4'] = $catLevel['L4'];
 					}else{
-						$cdata['categoryId'] = $input['categoryId'];
-						$cdata['parentId'] = $parent_id;
-						$cdata['categoryName'] = $product->primaryCategory->categoryName;
-						$cdata['slug'] = $this->slugify($cdata['categoryName']);
-						$cdata['created_at'] = date('Y-m-d H:i:s');
-						$cdata['updated_at'] = date('Y-m-d H:i:s');
-						Category::create($cdata)->id;
+						$input['catID1'] = $input['categoryId'];
+						$input['catID2'] = $input['parentCategoryId'];
+						$input['catID3'] = 0;
+						$input['catID4'] = 0;						
 					}
 					
-					
-					$input['parentCategoryId'] =  $parent_id;
 					$input['galleryURL'] =  $product->galleryURL;
 					$input['viewItemURL'] =  $product->viewItemURL;									
 					$input['autoPay'] =  $product->autoPay;
@@ -550,8 +591,9 @@ class CronController extends Controller
 					$input['isMultiVariationListing'] =  $product->isMultiVariationListing;
 					$input['topRatedListing'] =  $product->topRatedListing;	
 					$input['updated_at'] =  date('Y-m-d H:i:s');
-										
-					$item_detail = array();
+						
+					//echo '<Pre>'; print_r($input); echo '</pre>';
+ 					$item_detail = array();
 					$item_detail = $this->getSingleItem_live($input['itemId']); //API CALL
 					
 					if($item_detail){
@@ -588,15 +630,45 @@ class CronController extends Controller
 					}else{
 						$input['created_at'] =  date('Y-m-d H:i:s');
 						Product::create($input)->id;	
-					} 	
+					}  	
 				}
+				//die('<br>OK');
 				echo 'success';
 			} 
 
         }
     }	
+	function getParentID($catID){
+		$res = 0;
+		$result = Category::where('categoryId',$catID)->first();
+		if($result && $result->count() > 0){
+			$res = $result->parentId;		
+		}
+		return $res;
+	}
 	
-	
+	function getCatLevel($catID1,$catID2,$catID3,$catID4){
+		$catLevel = array();
+		
+		if($catID4 != 0){
+			$catLevel['L1'] = $catID4;
+			$catLevel['L2'] = $catID3;
+			$catLevel['L3'] = $catID2;
+			$catLevel['L4'] = $catID1;
+			
+		}elseif($catID4 == 0 && $catID3 != 0){
+			$catLevel['L1'] = $catID3;
+			$catLevel['L2'] = $catID2;
+			$catLevel['L3'] = $catID1;
+			$catLevel['L4'] = 0;
+		}elseif($catID4 == 0 && $catID3 == 0 && $catID2 != 0){
+			$catLevel['L1'] = $catID2;
+			$catLevel['L2'] = $catID1;
+			$catLevel['L3'] = 0;
+			$catLevel['L4'] = 0;
+		}
+		return $catLevel;
+	}
     function getSingleItem_live($item_id) {
         $headers =  array(
             'cache-control' => 'no-cache',
@@ -763,4 +835,64 @@ class CronController extends Controller
         $results = simplexml_load_string($response->getBody(),'SimpleXMLElement',LIBXML_NOCDATA);
 		echo '<Pre>'; print_r($results); echo '</pre>';die;
     }	
+	
+	
+	
+    function getProducts_live(Request $request, $cat_id) {
+		if($cat_id == ''){
+			echo 'error. category not found';
+			exit;
+		}		
+        $headers =  array(
+            'cache-control' => 'no-cache',
+           // 'X-EBAY-API-COMPATIBILITY-LEVEL' => '861',
+            'X-EBAY-API-SITEID' => '0',
+            'X-EBAY-API-DEV-NAME' => env('EBAY_PROD_DEV_ID'),
+            'X-EBAY-API-CERT-NAME' => env('EBAY_PROD_CERT_ID'),
+            'X-EBAY-API-APP-NAME' => env('EBAY_PROD_APP_ID'),
+            'X-EBAY-API-CALL-NAME' => 'findItemsByCategory',
+            'Content-Type' => 'application/xml'
+        );
+        $client = new Client([ 'headers' => $headers]);
+		
+        $body = '<?xml version="1.0" encoding="utf-8"?>
+                 <findItemsByCategoryRequest xmlns="http://www.ebay.com/marketplace/search/v1/services">
+				 <categoryId>2984</categoryId>
+				 <outputSelector>AspectHistogram</outputSelector>
+                 <RequesterCredentials>
+                 <eBayAuthToken>AgAAAA**AQAAAA**aAAAAA**GiXVXA**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6ANlYWhCZKGpQSdj6x9nY+seQ**o/kFAA**AAMAAA**LbVctO09rwWm0ounnTNhgG0mF4gKeXwNXlKqRLl6F+EaUtq+YF+M1H1qBNtiI8HtMcZFl+AFQNVLXmz8Bj4m03sjBevL44zptoTuEaOBvSZk8SEeD84LsdpduWmk4J9D6cDE9TlivvNm9yZMvoB1pKi4e+/7tNaH2zaDUt1YrwePWLwNMf34N1Mm+Um98LklluYVjDAnMWK7xoZVT3K7cnONQWPGQNpYwT65q1EtNTtIS2NP3t5V4LWt4Ibe1P5OcoomCJp6Fe33SYRTCYyw7fqOshRsnJmlIZvk8jGq8Jm+CeFDqKU9o6HEbc1iK3G+UTvGnpb5Qy+64/1tpc5NTGkCfiZpVvbeAIgytC1dXRnQM08bCIYYGeh3DYXwAr6VSIYXT3c6euU0n4Npjs2hgLp3NklLd0G4dPzPlDInn3loo5FiOnaa1CDCZaLNazaE9eO23qs5LlmBHI/Bx9e+tZxx78w0hotXAEAqJ54zVEbe5sm54R8qTKajbV9BTWuOXLrxG5LMyytgO0Ij6jdswuRYT6UMhhQRCcjq47ecM/18usXxR5ZF8npkdouD21oiGpIdJdlkXBiPzZqFAKRSPxUCT7vuIB1sXVT7+IbR4/UpRHDiOmDlCCMY7/PHfDx+V4LYnJp4LoDBTx+Eq7jZxNPp9BbQp37VbWyRd2OcJgzB1QfLrFRsHbBgAA7kIhRtCHsRlcuenZJ6rTdlRvKt5LcN9kexQMH5cUzgvJAd7ZQ2qsMijmNAWUtLPV3vh1NL</eBayAuthToken>
+                 </RequesterCredentials>
+                 </findItemsByCategoryRequest>';
+        $response = $client->request('POST', 'https://api.ebay.com/ws/api.dll', [
+            'body' => $body
+        ]);
+        $products = simplexml_load_string($response->getBody(),'SimpleXMLElement',LIBXML_NOCDATA);
+		echo '<Pre>'; print_r($products);die;
+        if ($products->Ack == 'Success'){
+			
+		}	
+	}	
+	
+	function check_slug($slug){
+		$rand = time().rand(10,99);
+		$slug_check = Category::where('slug',$slug)->first();
+		if($slug_check && $slug_check->count() > 0){
+			$slug = $slug_check->slug.'-'.$rand;
+			return $slug;
+		}
+		return $slug;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

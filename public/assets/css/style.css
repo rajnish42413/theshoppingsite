@@ -175,11 +175,7 @@ a.sh_logo {
 	width: 100%;
 	position: relative;
 }
-.sh_main_menu ul {
-	display: inline-block;
-	margin: 0;
-	position: relative;
-}
+
 .sh_main_menu ul li {
     list-style: none;
     display: inline-block;
@@ -1581,7 +1577,7 @@ a.sh_logo img {
     display: block;
 }
 .sh_header_wrap ,.sh_header_wrap nav,.sh_main_menu ul li,.sh_header_wrap nav ul,.pos_static,.parent_list{
-    position: static;
+    /*position: static;*/
 }
 .list_colmn_container{
     padding: 0px ;
@@ -1877,4 +1873,87 @@ a.pn-ProductNav_Link {
     text-align: center;
     font-size: 13px;
     padding: 6px 0;
+}
+
+
+/*new css*/
+
+.dropdown:hover .dropdown-content{
+    display: block !important;
+    position: absolute;
+    top: 45px;
+    left: -15px;
+}
+.dropdown2 , .dropdown2a, .dropdown3a{
+	position:relative;  
+}
+.dropdown2:hover .dropdowncontent2 , .dropdown2a:hover .dropdowncontent2a , .dropdown3:hover .dropdowncontent3 , .dropdown3a:hover .dropdowncontent3a{
+	 display: block !important;
+    position: absolute;
+    top: -2px;
+    left: 230px;
+ }
+.dropdown3 a , .dropdown2  a, .dropdown2a  a , .dropdown3a  a{
+		min-width:230px; 
+		padding: 15px 0px !important;
+		display:inline-block;
+ }
+ 
+ 
+ 
+ 
+ div#main_menu_header .nav > li > a:hover {
+    text-decoration: none;
+    background-color: transparent;
+}
+.sh_main_menu ul li a:hover, .sh_main_menu ul li a.active {
+    background-color: transparent;
+}
+div#main_menu_header ul li ul li a {
+    padding: 5px 15px !important;
+    display: block !important;
+	transition:all 0.5s;
+}
+div#main_menu_header .sh_main_menu ul li li {
+    margin: 0px !important;
+    width: 100%;
+}
+div#main_menu_header ul li ul li a:before {
+	display:none !important;
+}
+div#main_menu_header ul li ul li a span.float-right {
+    float: right;
+    font-size: 18px;
+}
+div#main_menu_header .sh_main_menu ul li li a {
+    padding: 7px 15px !important;
+    width: 100%;
+    border-bottom: 1px solid #e4e4e4 !important;
+	font-size:11px;
+}
+div#main_menu_header .dropdown:hover .dropdown-content {
+    padding: 0;
+    top: 60px;
+    left: 0;
+}
+div#main_menu_header .sh_main_menu ul li.dropdown:hover > a span {
+    transform: rotate(90deg);
+	transition:all 0.5s;
+}
+div#main_menu_header .sh_main_menu ul li {
+    position: relative;
+	transition:all 0.5s;
+}
+div#main_menu_header .dropdown2:hover .dropdowncontent2, 
+div#main_menu_header .dropdown2a:hover .dropdowncontent2a, 
+div#main_menu_header .dropdown3:hover .dropdowncontent3, 
+div#main_menu_header .dropdown3a:hover .dropdowncontent3a {
+    top: 0;
+    left: 230px;
+    border-radius: 0px;
+    padding: 0px;
+}
+
+div#main_menu_header .sh_main_menu ul li a {
+    padding: 24px 10px;
 }

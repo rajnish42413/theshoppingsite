@@ -109,6 +109,7 @@
 									<thead>
 									<tr>
 										<th>Display Name</th>
+										<th>Social Icon</th>
 										<th>URL</th>
 										<th>Status</th>
 										<th style="width:20px;"></th>
@@ -121,7 +122,10 @@
 									<tr class="row_class">
 										<td>
 											<input name="display_name[]" class="form-control display_name" value="<?php echo $social_link->display_name;?>">							
-										</td>	
+										</td>
+										<td>
+											<input name="social_icon[]" class="form-control social_icon" value="<?php echo $social_link->social_icon;?>">							
+										</td>										
 										<td>
 												<input name="value[]" class="form-control value" value="<?php echo $social_link->value;?>">							
 										</td>	
@@ -180,8 +184,11 @@
 		<tbody>
 			<tr class="row_class">
 				<td>
-					<input name="display_name[]" class="form-control display_name" value="">							
+					<input name="display_name[]" class="form-control display_name" value="">
 				</td>	
+				<td>
+					<input name="social_icon[]" class="form-control social_icon" value="">							
+				</td>					
 				<td>
 						<input name="value[]" class="form-control value" value="">							
 				</td>	

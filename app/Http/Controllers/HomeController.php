@@ -16,6 +16,7 @@ use App\Category;
 use App\Banner;
 use App\FrontPageSetting;
 use App\FaqData;
+use App\ContactInfo;
 
 use App\Contracts\EnquiryServiceContract;
 use App\Mail\EnquiryNew;
@@ -94,11 +95,12 @@ class HomeController extends Controller
 		
 		$data['nav'] = 'contact';
 		$row = FrontPageSetting ::where('page_type','contact')->first();
+		$contact_info = ContactInfo ::limit(1)->first();
 		$data['meta_title'] = $row->page_title;
 		$data['meta_keywords']= $row->meta_keywords;
 		$data['meta_description'] = $row->meta_description;
 		$banner = Banner::where('section_name','contact')->orderBy('id','asc')->limit(1)->first();	
-        return view('contact',['data'=>$data,'row'=>$row,'banner'=>$banner,'success'=>$data['success'],'error'=>$data['errors']]);
+        return view('contact',['data'=>$data,'row'=>$row,'contact_info'=>$contact_info,'banner'=>$banner,'success'=>$data['success'],'error'=>$data['errors']]);
     }
 
 	public function terms(){
@@ -249,7 +251,7 @@ class HomeController extends Controller
 					$data['parent_cat_slug'] = $res->slug;
 					$data['cat_id'] = '0';
 					$categories = $this->get_categories($res->categoryId);
-					$products = $this->get_products_by_parent($res->categoryId);	
+					$products = $this->get_products_by_parent($res->categoryId, $res->catLevel);	
 					$brands = $this->get_brands_by_parent($res->categoryId);	
 					$data['min_price'] = $this->getMinPriceByParentCat($res->categoryId);
 					$data['max_price'] = $this->getMaxPriceByParentCat($res->categoryId);
@@ -262,7 +264,7 @@ class HomeController extends Controller
 						$data['cat_id'] = $res->categoryId;						
 						$data['cat_slug'] = $res2->slug;						
 						$categories = $this->get_categories($res->parentId);
-						$products = $this->get_products_by_cat($res->categoryId,$data['brand_id']);
+						$products = $this->get_products_by_cat($res->categoryId,$data['brand_id'],$res->catLevel);
 						$brands = $this->get_brands_by_cat($res->categoryId);
 						$data['min_price'] = $this->getMinPriceByCat($res->categoryId);
 						$data['max_price'] = $this->getMaxPriceByCat($res->categoryId);						
@@ -314,6 +316,7 @@ class HomeController extends Controller
 	
 	
 	public function get_categories($parent_id=""){
+
 		$categories = array();
 		if($parent_id == ""){
 			$parent_id = '0';
@@ -329,7 +332,8 @@ class HomeController extends Controller
 		return $categories;
 	}
 
-	public function get_products_by_parent($parent_id=""){
+	public function get_products_by_parent($parent_id="", $level=""){
+		
 		$products = array();
 		if($parent_id == ""){
 			$parent_id = '0';
@@ -337,9 +341,18 @@ class HomeController extends Controller
 		$showing_result = 10;
 		$results = Product::select(DB::raw("products.*, categories.categoryName as categoryName, c2.categoryName as parentCategoryName"))->Join('categories',function ($join){$join->on('categories.categoryId','=','products.categoryId'); })->Join('categories as c2',function ($join){$join->on('c2.categoryId','=','products.parentCategoryId'); })->where('products.status',1);
 		
-		if($parent_id!= '0'){
+		if($level == 1){
+			$results = $results->where('products.catID1',$parent_id);
+		}elseif($level == 2){
+			$results = $results->where('products.catID2',$parent_id);
+		}elseif($level == 3){
+			$results = $results->where('products.catID3',$parent_id);
+		}elseif($level == 4){
+			$results = $results->where('products.catID4',$parent_id);
+		}
+		/* if($parent_id!= '0'){
 			$results = $results->where('products.parentCategoryId',$parent_id);
-		}		
+		} */		
 		//offset(0)->limit(10)->
 		$results = $results->orderBy('products.current_price','asc');
 		$results = $results->limit($showing_result);
@@ -351,14 +364,25 @@ class HomeController extends Controller
 		return $products;
 	}	
 
-	public function get_products_by_cat($cat_id="",$brand_id=""){
+	public function get_products_by_cat($cat_id="",$brand_id="",$level=""){
+		//echo $cat_id;die;
 		$products = array();
 		$showing_result = 10;
 		$results = Product::select(DB::raw("products.*, categories.categoryName as categoryName, c2.categoryName as parentCategoryName"))->Join('categories',function ($join){$join->on('categories.categoryId','=','products.categoryId'); })->Join('categories as c2',function ($join){$join->on('c2.categoryId','=','products.parentCategoryId'); })->where('products.status',1);
 		
-		if($cat_id!= '0'){
+/* 		if($cat_id!= '0'){
 			$results = $results->where('products.CategoryId',$cat_id);
+		} */
+		if($level == 1){
+			$results = $results->where('products.catID1',$cat_id);
+		}elseif($level == 2){
+			$results = $results->where('products.catID2',$cat_id);
+		}elseif($level == 3){
+			$results = $results->where('products.catID3',$cat_id);
+		}elseif($level == 4){
+			$results = $results->where('products.catID4',$cat_id);
 		}
+		
 		if($brand_id!= ''){
 			$results = $results->where('products.brand_id',$brand_id);
 		}		
@@ -392,9 +416,11 @@ class HomeController extends Controller
 		$results = array();
 		
 		if($parent_cat_id != '0'){
+			$cat_check = Category::where('categoryId',$parent_cat_id)->first();
 			$results = Product::select(DB::raw("products.*, categories.categoryName as categoryName, c2.categoryName as parentCategoryName"))->Join('categories',function ($join){$join->on('categories.categoryId','=','products.categoryId'); })->Join('categories as c2',function ($join){$join->on('c2.categoryId','=','products.parentCategoryId'); });
 			$results = $results->where('products.parentCategoryId',$parent_cat_id)->where('products.status',1);			
 		}else{
+			$cat_check = Category::where('categoryId',$cat_id)->first();
 			$results = Product::select(DB::raw("products.*, categories.categoryName as categoryName, c2.categoryName as parentCategoryName"))->Join('categories',function ($join){$join->on('categories.categoryId','=','products.categoryId'); })->Join('categories as c2',function ($join){$join->on('c2.categoryId','=','products.parentCategoryId'); });			
 			$results = $results->where('products.CategoryId',$cat_id)->where('products.status',1);
 		}	

@@ -9,6 +9,7 @@ use Session;
 use App\User;
 use App\FrontPageSetting;
 use App\FaqData;
+use App\ContactInfo;
 use Mail;
 
 class FrontPagesController extends Controller
@@ -133,11 +134,12 @@ class FrontPagesController extends Controller
 		$meta_keywords = '';
 		$row = array();
 		$row = FrontPageSetting::where('page_type','contact')->where('status',1)->first();
+		$contact_info = ContactInfo::limit(1)->first();
 			if($row && $row->count() > 0){
 				$meta_keywords = $this->page_meta_keywords($row->meta_keywords);
 			}
 		
-		return view('admin.front_pages.contact',['row'=>$row,'data'=>$data,'meta_keywords'=>$meta_keywords]);		
+		return view('admin.front_pages.contact',['row'=>$row,'contact_info'=>$contact_info,'data'=>$data,'meta_keywords'=>$meta_keywords]);		
 	}
 	
 	public function save_data(Request $request){
@@ -206,6 +208,17 @@ class FrontPagesController extends Controller
 						}
 						
 					}
+				}
+				
+				if($req['page_type'] == 'contact'){
+					$contact['contact_text'] = $req['contact_text'];
+					$contact['contact_email'] = $req['contact_email'];
+					$contact['contact_address'] = $req['contact_address'];
+					$contact['contact_no'] = $req['contact_no'];
+					$contact['google_map_src_code'] = $req['google_map_src_code'];
+					$contact_id = $req['contact_id'];
+					
+					ContactInfo::where('id',$contact_id)->update($contact);					
 				}
 			echo "|success";
 		

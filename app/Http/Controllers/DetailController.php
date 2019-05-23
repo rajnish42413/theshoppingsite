@@ -10,6 +10,7 @@ use App\User;
 use App\NavigationMenu;
 use App\Category;
 use App\GoogleAnalytics;
+use App\SocialSetting;
 use Mail;
 
 
@@ -40,6 +41,12 @@ class DetailController extends Controller
 			return false;
 		}
 	}
+	
+	public static function get_social_links(){
+		$row = SocialSetting::where('status',1)->get();
+		return $row;
+	}
+	
 	static public function slugify($text){
 	  // replace non letter or digits by -
 	  $text = preg_replace('~[^\pL\d]+~u', '-', $text);

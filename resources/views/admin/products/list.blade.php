@@ -24,11 +24,11 @@
     <form action="searchajaxproducts" method="post" id="productsfrm">
       {{csrf_field()}}
 	<div class="row margin">
-	   <div class="col-lg-3 col-xs-6">
+	   <div class="col-lg-4 col-xs-6">
             <input id="name" name="name" value="" placeholder="Title" data-column="6" class="form-control"/>
         </div>
-	   <div class="col-lg-3 col-xs-6">
-			<select type="text" class="form-control" id="parent_id" name="parent_id" onchange="get_categories(this);">
+	   <div class="col-lg-4 col-xs-6">
+			<select class="form-control" id="parent_id" name="parent_id" onchange="get_categories(this);">
 				<option value="">--Select Parent Category--</option>
 		<?php if($categories){
 				foreach($categories as $category){?>
@@ -36,12 +36,24 @@
 		<?php } } ?>
 			</select>
         </div> 	
-	   <div class="col-lg-3 col-xs-6">
-			<select type="text" class="form-control" id="cat_id" name="cat_id" onchange="get_excel_btn(this);">
+	   <div class="col-lg-4 col-xs-6">
+			<select  class="form-control" id="cat_id" name="cat_id" onchange="get_sub_categories(this);">
 				<option value="">--Select Category--</option>
 			</select>
+        </div>
+    </div>
+	<div class="row margin">
+	   <div class="col-lg-4 col-xs-6">
+			<select  class="form-control" id="sub_cat_id" name="sub_cat_id" onchange="get_sub2_categories(this);">
+				<option value="">--Select Category Level 3--</option>
+			</select>
+        </div>	
+	   <div class="col-lg-4 col-xs-6">
+			<select  class="form-control" id="sub2_cat_id" name="sub2_cat_id" >
+				<option value="">--Select Category Level 4--</option>
+			</select>
         </div>		
-        <div class="col-lg-3 col-xs-6">
+        <div class="col-lg-4 col-xs-6">
 		<button type="button" id="filter_submit" name="filter_submit" class="btn btn-info btn-block">Filter</button>
         </div>
     </div>
@@ -54,11 +66,13 @@
 	</div>
 			
       <div class="row">
-        <div class="col-lg-2 col-lg-offset-9 col-xs-6 text-center">
+        <div class="col-lg-2 col-lg-offset-8 col-xs-6 text-center">
 		<span class="badge label label-primary" id="selected_count" style="display:none;"></span>		
 		</div>
-        <div class="col-lg-1 col-xs-6 text-center">
-		<a id="products_delete_btn" class="btn btn-danger btn-sm"  onclick="delete_row('productsTable','products-delete')" ><i class="fa fa-trash"></i> Delete</a>			
+        <div class="col-lg-2 col-xs-6 text-center">
+		<a id="products_status_btn" class="btn btn-success btn-sm"  onclick="set_status_row('productsTable','products-status-multiple','1')" ><i class="fa fa-check"></i> Active</a>			
+		<a id="products_status_btn2" class="btn btn-danger btn-sm"  onclick="set_status_row('productsTable','products-status-multiple','0')" ><i class="fa fa-remove"></i> Deactive</a>	
+	   
 		</div>		
 	  </div>
 	  <div class="row">
@@ -72,6 +86,8 @@
                             <th>Title</th>
                             <th>Parent Category</th>							
                             <th>Category</th>
+                            <th>Category Level 3</th>
+                            <th>Category Level 4</th>
                             <th>Price</th>
                             <th>Currency</th>
                             <th>Status</th>
@@ -99,6 +115,8 @@ function get_categories(e){
 	var ct = e.value;
 	if(ct =="" || ct == null){
 		$("#cat_id").html('<option value="">--Select Category--</option>');
+		$("#sub_cat_id").html('<option value="">--Select Category Level 3--</option>');
+		$("#sub2_cat_id").html('<option value="">--Select Category Level 4--</option>');
 	}else{
 		$(".wait_loader").show();
 		$.ajax({
@@ -112,6 +130,56 @@ function get_categories(e){
 			{ 
 				$('.wait_loader').hide();
 				$("#cat_id").html(response);										
+				$("#sub_cat_id").html('<option value="">--Select Category Level 3--</option>');								
+				$("#sub2_cat_id").html('<option value="">--Select Category Level 4--</option>');								
+			}
+		});
+	}
+}
+
+
+function get_sub_categories(e){
+	var ct = e.value;
+	if(ct =="" || ct == null){
+		$("#sub_cat_id").html('<option value="">--Select Category Level 3--</option>');
+		$("#sub2_cat_id").html('<option value="">--Select Category Level 4--</option>');
+	}else{
+		$(".wait_loader").show();
+		$.ajax({
+			type: "POST",
+			headers: {
+			  'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			},			
+			url: '<?php echo route('get-sub-categories-by-parent');?>',
+			data: {'parent_id':ct}, // serializes the form's elements.
+			success: function(response)
+			{ 
+				$('.wait_loader').hide();
+				$("#sub_cat_id").html(response);
+				$("#sub2_cat_id").html('<option value="">--Select Category Level 4--</option>');				
+			}
+		});
+	}
+}
+
+
+function get_sub2_categories(e){
+	var ct = e.value;
+	if(ct =="" || ct == null){
+		$("#sub_cat2_id").html('<option value="">--Select Category Level 4--</option>');
+	}else{
+		$(".wait_loader").show();
+		$.ajax({
+			type: "POST",
+			headers: {
+			  'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			},			
+			url: '<?php echo route('get-sub2-categories-by-parent');?>',
+			data: {'parent_id':ct}, // serializes the form's elements.
+			success: function(response)
+			{ 
+				$('.wait_loader').hide();
+				$("#sub2_cat_id").html(response);										
 			}
 		});
 	}
@@ -120,6 +188,7 @@ function get_categories(e){
 function get_excel_btn(e){
 	var x = e.value;
 	if(x != ''){
+		//$("#filter_submit").trigger('click');
 		$("#exportBtnDiv").show();
 		get_export();
 	}else{

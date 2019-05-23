@@ -31,6 +31,8 @@ Route::any('/cron/category-live','CronController@getCategory_live')->name('cron/
 Route::any('/cron/by-category-live/{id}','CronController@getProductsByCategory_live')->name('cron/by-category-live');
 Route::any('/cron/single-item-live/{id}','CronController@getSingleItem_live')->name('cron/single-item-live');
 
+Route::any('/cron/product-live/{id}','CronController@getProducts_live')->name('cron/product-live');
+
 //testing
 Route::any('/cron/test-single-item-live/{id}','CronController@testing_getSingleItem_live')->name('cron/test-single-item-live');
 Route::any('/cron/feedback/{id}','CronController@feedback_live')->name('cron/feedback');
@@ -90,6 +92,8 @@ Route::group(['middleware'=>['Admin']],function(){
 	Route::any('categories-save', 'CategoriesController@save_data')->name('categories-save');	
 	Route::any('categories-delete', 'CategoriesController@delete_data')->name('categories-delete'); 
 	Route::any('get-categories-by-parent', 'CategoriesController@get_category_by_parent')->name('get-categories-by-parent'); 	
+	Route::any('get-sub-categories-by-parent', 'CategoriesController@get_sub_category_by_parent')->name('get-sub-categories-by-parent'); 	
+	Route::any('get-sub2-categories-by-parent', 'CategoriesController@get_sub2_category_by_parent')->name('get-sub2-categories-by-parent'); 	
 	
 	// Products 
  	Route::get('products-list', 'ProductsController@index')->name('products-list');	
@@ -101,6 +105,8 @@ Route::group(['middleware'=>['Admin']],function(){
 	Route::any('products-edit/{id?}', 'ProductsController@add');	
 	Route::any('products-save', 'ProductsController@save_data')->name('products-save');	
 	Route::any('products-delete', 'ProductsController@delete_data')->name('products-delete');
+	Route::any('products-status', 'ProductsController@status_update')->name('products-status');
+	Route::any('products-status-multiple', 'ProductsController@status_multiple_update')->name('products-status-multiple');
 	
 	// Navigation Menu 
 	Route::get('navigation-menu-list', 'NavigationMenuController@index')->name('navigation-menu-list');	

@@ -45,6 +45,15 @@
               <div class="box-footer">
                 <button type="submit" class="btn btn-primary" id="sub_btn">Submit</button>
               </div>
+			  
+              <div class="box-body">
+				<div class="row">
+					<div class="col-sm-12">	
+						<a class="btn btn-warning btn-sm" href="<?php echo env('APP_URL');?>csv/test1.csv"><i class="fa fa-download"></i> Download Sample File</a>
+					</div>
+				</div>
+              </div>
+			  
             </form>
           </div>
           <!-- /.box -->

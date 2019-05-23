@@ -72,34 +72,42 @@ $social_links = DetailController::get_social_links();
 			<div class="row">
 				<!-- Collect menu -->
 				<div class="col-lg-10 col-md-10 col-sm-10 col-xs-12 pull-left pos_static">
-					<div class="sh_main_menu_wrapper sh_float_width" id="main_menu_header">
+					<div class="sh_main_menu_wrapper sh_float_width">
 						<nav class="sh_main_menu sh_float_width" id="menu">
-							<ul class="nav navbar-nav first_ul">  
-								<li class="parent_list"><a href="{{env('APP_URL')}}">Home</a></li>		
+							<ul>   
+								<li class="parent_list"><a href="{{env('APP_URL')}}">Home</a></li>	
+						
 						<?php if($nav_menus){
 								foreach($nav_menus as $nav){?>								
-                            <li class="dropdown">
-                            <a class="dropdown-toggle active" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><?php echo $nav['nav_menu_name'];?> <span class="fa fa-caret-right float-right"></span></a>
-							<?php if($nav['categories']){?>
-                                   <ul class="dropdown-menu second_ul dropdown-content">
-								<?php foreach($nav['categories'] as $cat){?>
-                                        <li class="dropdown3a"><a href="{{env('APP_URL')}}category/<?php echo $cat['slug'];?>"><?php echo $cat['name'];?> <span class="fa fa-caret-right float-right"></span></a>
-										<?php if($cat['sub_categories']){
-													$x=1;?>
-                                        	<ul class="dropdown-menu third_ul dropdowncontent3a">
-											<?php  foreach($cat['sub_categories'] as $sub_cat){
+								<li class="parent_list"><a class="active" href="javacript:void(0)"><?php echo $nav['nav_menu_name'];?> <i class="fa fa-angle-down"></i></a>
+								<?php if($nav['categories']){?>
+									<div class="mengamenu">
+										<div class="row">	
+										<?php foreach($nav['categories'] as $cat){?>	
+												<div class="list_colmn_container">
+													<h5><a href="{{env('APP_URL')}}category/<?php echo $cat['slug'];?>"><?php echo $cat['name'];?> 
+                                                        	<i class="fa fa-angle-down"></i>
+                                                         </a></h5>
+												<?php if($cat['sub_categories']){
+													$x=1;?>											 
+													<ul type="unstyled" class="megamenu_content">
+													<?php  
+														foreach($cat['sub_categories'] as $sub_cat){
 													?>
-                                                 <li><a href="{{env('APP_URL')}}category/<?php echo $sub_cat['slug'];?>"><?php echo $sub_cat['name'];?></a></li>
-                                            <?php } ?>
-                                            </ul>
-										<?php } ?>
-                                        </li>
-									<?php } ?>
-
-									 </ul>
-								<?php }?>
+														<li>
+															<a href="{{env('APP_URL')}}category/<?php echo $sub_cat['slug'];?>"><?php echo $sub_cat['name'];?></a>
+														</li>
+													<?php $x++; } ?>	
+													</ul>
+												<?php } ?>
+													
+												</div>
+											<?php } ?>	
+										</div>
+									</div>
+								<?php } ?>
 								</li>
-							<?php } } ?>	
+								<?php } } ?>
 								<li class="parent_list"><a href="{{env('APP_URL')}}all-categories">See All Categories</a></li>
 							</ul> 
 						</nav>
@@ -202,7 +210,6 @@ $social_links = DetailController::get_social_links();
 <script src="{{env('APP_URL')}}assets/js/slider/owl.carousel.js"></script>
 <script src="{{env('APP_URL')}}assets/js/slider/index.js"></script>
 <script src="{{env('APP_URL')}}assets/js/bootstrap.js"></script>
-<script src="{{env('APP_URL')}}assets/js/popper.min.js"></script>
 <script src="{{env('APP_URL')}}assets/js/custom.js"></script> 
 
 <script src="{{env('APP_URL')}}assets/js/product_zoom/jquery.zoom.min.js"></script>
@@ -282,20 +289,6 @@ function get_search(e){
 		$('#search_results').hide();	
 }
 </script> 
-<script>
-$('#menu_header #pnProductNavContents a').click(function(){
-   e.preventDefault()
-//alert($(this).attr('href'));
-  $('html, body').animate(
-    {
-      scrollTop: $($(this).attr('href')).offset().top =-100,
-    },
-    500,
-    'linear'
-  )
-});
-
-</script>
 
 </body>
 </html>

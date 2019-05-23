@@ -5,11 +5,11 @@ $(document).ready(function() {
     window.navigationMenuTable = $('#navigationMenuTable').DataTable({
       "processing": true,
 	  "language": {
-            "processing": "<div class='wait_loader'></div>"
+            "processing": "<div class='pageloader'></div>"
         },	  
       "serverSide": true,
        "ordering": true,
-      "dom": 'lfrtip',
+      "dom": 'lrtip',
         "ajax": 'searchajaxnavmenu',
 
         "columns": [
@@ -113,11 +113,11 @@ $(document).ready(function() {
     window.bannersTable = $('#bannersTable').DataTable({
       "processing": true,
 	  "language": {
-            "processing": "<div class='wait_loader'></div>"
+            "processing": "<div class='pageloader'></div>"
         },	  
       "serverSide": true,
        "ordering": true,
-      "dom": 'lfrtip',
+      "dom": 'lrtip',
         "ajax": 'searchajaxbanners',
 
         "columns": [
@@ -215,11 +215,11 @@ $(document).ready(function() {
     window.categoriesTable = $('#categoriesTable').DataTable({
       "processing": true,
 	  "language": {
-            "processing": "<div class='wait_loader'></div>"
+            "processing": "<div class='pageloader'></div>"
         }, 	  
       "serverSide": true,
        "ordering": true,
-      "dom": 'lfrtip',
+      "dom": 'lrtip',
         "ajax": 'searchajaxcategories',
 
         "columns": [
@@ -326,32 +326,40 @@ $(document).ready(function() {
     window.productsTable = $('#productsTable').DataTable({
       "processing": true,
 	  "language": {
-            "processing": "<div class='wait_loader'></div>"
+            "processing": "<div class='pageloader'></div>"
         },  
       "serverSide": true,
       "ordering": true,
-      "dom": 'lfrtip',
+      "dom": 'lrtip',
         "ajax": 'searchajaxproducts',
 
         "columns": [
             { "data": "id","orderable":false,"render": function(data, type, row, meta){ 
 			return '<input type="checkbox" name="id[]" value="'+ $('<div/>').text(data).html() + ' " >';
 			}},
-			{ "data": "title" },
-			{ "data": "parentCategoryName"},			
-			{ "data": "categoryName"},		
+            { "data": "title","render": function(data, type, row, meta){ 
+				if(data.length > 30){
+					return data.substring(0,30)+'...';
+				}else{
+					return data;
+				}
+			}},			
+			{ "data": "catName2"},		//parent - level 2	
+			{ "data": "catName1"},		//cat	- level 1
+			{ "data": "catName3"},		//cat	 - level 3
+			{ "data": "catName4"},		//cat	- level 4
 			{ "data": "current_price"},	
 			{ "data": "current_price_currency"},
             { "data": "status","render": function(data, type, row, meta){ 
 				if(data=='1'){
-					return '<span class="label label-success">Active</span>';
+					return '<button type="button" onclick="status_row_single('+row.id+',\'productsTable\',\'products-status\',\'0\')" class="btn btn-sm btn-success">Active</button>';
 				}
 				else if(data=='0'){
-					return '<span class="label label-danger">Deactive</span>';
+					return '<button type="button" onclick="status_row_single('+row.id+',\'productsTable\',\'products-status\',\'1\')" class="btn btn-sm btn-danger">Deactive</button>';
 				}
 			}},			
 		   { "data": "id","orderable":false,"render": function(data, type, row, meta){ 
-			   return '<a href="products-edit/'+data+'"  class="btn btn-sm btn-primary">Edit</a>&nbsp;&nbsp;<a href="'+row.viewItemURL+'" target="_blank"  class="btn btn-sm btn-info">View</a>&nbsp;&nbsp;<button type="button" onclick="delete_single_row('+data+',\'productsTable\',\'products-delete\')" class="btn btn-sm btn-danger">Delete</button>';
+			   return '<a href="products-edit/'+data+'"  class="btn btn-sm btn-primary">Edit</a>&nbsp;&nbsp;<a href="'+row.viewItemURL+'" target="_blank"  class="btn btn-sm btn-info">View</a>';
 
 		   }},	
         ]
@@ -361,6 +369,18 @@ $(document).ready(function() {
          'searchable': false,
          'orderable': false,
 		},
+		{
+		'targets': 4,
+         'searchable': false,
+         'orderable': false,
+         'visible': false,
+		},
+		{
+		 'targets': 5,
+         'searchable': false,
+         'orderable': false,
+         'visible': false,
+		},		
 		
 		],
 		'rowCallback': function(row, data, dataIndex){
@@ -392,6 +412,8 @@ $(document).ready(function() {
 			var nlist = removeValue(ids,$(this).val());
 			$('#checked_ids').val(nlist);
 		}
+		
+		
 		var cvals = $('#checked_ids').val();
 		var arr = cvals.split(',');
 		if(cvals.length == 0){ 
@@ -431,7 +453,9 @@ $(document).ready(function() {
         var name = $("#productsfrm #name").val();
         var parent_id = $("#productsfrm #parent_id").val();
         var cat_id = $("#productsfrm #cat_id").val();
-		window.productsTable.column(1).search(name).column(2).search(cat_id).column(3).search(parent_id).draw(); 		
+        var sub_cat_id = $("#productsfrm #sub_cat_id").val();
+        var sub2_cat_id = $("#productsfrm #sub2_cat_id").val();
+		window.productsTable.column(1).search(name).column(2).search(parent_id).column(3).search(cat_id).column(4).search(sub_cat_id).column(5).search(sub2_cat_id).draw(); 		
     });
 	
 	/* ./ productsTable */
@@ -442,11 +466,11 @@ $(document).ready(function() {
     window.enquiriesTable = $('#enquiriesTable').DataTable({
       "processing": true,
 	  "language": {
-            "processing": "<div class='wait_loader'></div>"
+            "processing": "<div class='pageloader'></div>"
         },	  
       "serverSide": true,
        "ordering": true,
-      "dom": 'lfrtip',
+      "dom": 'lrtip',
         "ajax": 'searchajaxenquiries',
 
         "columns": [
@@ -720,6 +744,43 @@ function delete_single_row(id,content,action){
 }
 
 
+function status_row_single(id,content,action,value){
+	if(confirm("Are you sure you want to change status?")){
+	
+	$.ajax({
+		headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+		type: "POST",
+		url:  action,
+		data: {'id':id,'value':value}, // serializes the form's elements.
+		success: function(res)
+		{ 
+			$.notify({
+			  message: 'Status Successfully Changed' 
+			 },{ element: 'body', type: "success", allow_dismiss: true, offset: { x: 0, y: 60 }, delay: 1000 
+			});	
+			if(content == 'categoriesTable'){
+				window.categoriesTable.draw();
+			}
+			if(content == 'productsTable'){
+				window.productsTable.draw();
+			}
+			if(content == 'bannersTable'){
+				window.bannersTable.draw();
+			}		
+			if(content == 'navigationMenuTable'){
+				window.navigationMenuTable.draw();
+			}			
+			if(content == 'enquiriesTable'){
+				window.enquiriesTable.draw();
+			}
+			$('#selected_count').hide();	
+		}
+		});
+	}
+}
+
 function copy_single_row(id,content,action){
 	if(confirm("Are you sure you want to copy this?")){
 	
@@ -746,9 +807,10 @@ function copy_single_row(id,content,action){
 	}
 }
 
-function set_status_row(selected_type, type,list_id,content,action){
+function set_status_row(content,action,type){
+
 	var form = $('#'+content);
-	if(selected_type == 0){
+
 		if($('#'+content+' tbody input[type="checkbox"]:checked').length == 0){
 			$.notify({
 			  message: 'Please select atleast one row to change status' 
@@ -757,50 +819,43 @@ function set_status_row(selected_type, type,list_id,content,action){
 		return false;
 		}
 	
-	}
+
 	if(confirm("Are you sure you want to change status?")){
-	var ids = [];
+/* 	var ids = [];
 	$.each($('#'+content+' tbody input[type="checkbox"]:checked'),function(index, rowId){
 		var id = $(this).val();
 		ids.push(id);
-	});
+	}); */
+	var ids = $("#checked_ids").val();	
 	$.ajax({
 		headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
 		type: "POST",
 		url: action,
-		data: {'list_id':list_id,'ids':ids,'status':type,'selected_type':selected_type}, // serializes the form's elements.
+		data: {'ids':ids,'status':type}, // serializes the form's elements.
 		success: function(res)
 		{  
-			if(content == 'listContactTable'){
-			window.listContactTable.draw();
+			if(content == 'productsTable'){
+				window.productsTable.draw();
+				setTimeout(function(){ 
+					$('#checked_ids').val('');
+					$(content+' tbody input[type="checkbox"]').prop('checked', false);
+					}, 1000);				
 			}
-			if(selected_type == 1){
 				if(type == 1){
 					$.notify({
-					  message: 'All Contact list set Active successfully!' 
+					  message: 'Selected Items set Active successfully!' 
 					 },{ element: 'body', type: "success", allow_dismiss: true, offset: { x: 0, y: 60 }, delay: 1000 
 					});						
 				}else{
 					$.notify({
-					  message: 'All Contact list set InActive successfully!' 
-					 },{ element: 'body', type: "success", allow_dismiss: true, offset: { x: 0, y: 60 }, delay: 1000 
-					});						
-				}
-			}else{
-				if(type == 1){
-					$.notify({
-					  message: 'Selected Contacts set Active successfully!' 
-					 },{ element: 'body', type: "success", allow_dismiss: true, offset: { x: 0, y: 60 }, delay: 1000 
-					});						
-				}else{
-					$.notify({
-					  message: 'Selected Contacts set InActive successfully!' 
+					  message: 'Selected Items set Deactive successfully!' 
 					 },{ element: 'body', type: "success", allow_dismiss: true, offset: { x: 0, y: 60 }, delay: 1000 
 					});
 				}
-			}
+			$("#selected_count").html('');
+			$("#selected_count").hide();
 		}
 		});
 	}

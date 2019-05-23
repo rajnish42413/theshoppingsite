@@ -184,6 +184,38 @@ class CategoriesController extends Controller
 		echo $output;		
 	}
 	
+	public function get_sub_category_by_parent(Request $request){
+		$output = '';
+		$req    = $request->all();
+		$parent_id = $req['parent_id'];
+		$categories = Category::where('parentId',$parent_id)->where('status',1)->get();
+		if($categories){
+				$output .=  '<option value="">--Select Category Level 3--</option>';
+			foreach($categories as $state){
+					$output .=  '<option value="'.$state->categoryId.'"  >'.$state->categoryName.'</option>';	
+			}
+		}else{
+			$output .= '<option value="">--Select Category Level 3--</option>';
+		}
+		echo $output;		
+	}	
+	
+	public function get_sub2_category_by_parent(Request $request){
+		$output = '';
+		$req    = $request->all();
+		$parent_id = $req['parent_id'];
+		$categories = Category::where('parentId',$parent_id)->where('status',1)->get();
+		if($categories){
+				$output .=  '<option value="">--Select Category Level 4--</option>';
+			foreach($categories as $state){
+					$output .=  '<option value="'.$state->categoryId.'"  >'.$state->categoryName.'</option>';	
+			}
+		}else{
+			$output .= '<option value="">--Select Category Level 4--</option>';
+		}
+		echo $output;		
+	}	
+	
 	public static function slugify($text){
 	  // replace non letter or digits by -
 	  $text = preg_replace('~[^\pL\d]+~u', '-', $text);

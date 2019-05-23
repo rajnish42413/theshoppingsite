@@ -86,31 +86,34 @@
 					</form>
 				  </div>
 				</div>
+			<?php if($contact_info && $contact_info->count() > 0){?>
 				<div class="col-lg-6 col-md-6 col-sm-12">
 					<div class="sh_contact_section sh_float_width">
 						<div class="sh_sub_heading">
 							<h2>Contact Info</h2>
 						</div>
 						<div class="sh_info_text">
-							<p>Connor Turnbull is a part-time writer demmo the technology industry and part-time web designer from the United Kingdom. Connor previously wrote for bellway.</p>
+							<p><?php echo $contact_info->contact_text;?></p>
 						</div>
 						<div class="sh_contact_info sh_float_width">
-							<p><span class="icofont-email"></span><a href="javacript:void(0);">contact@example.com</a></p>
+							<p><span class="icofont-email"></span><a href="mailto:<?php echo $contact_info->contact_email;?>"><?php echo $contact_info->contact_email;?></a></p>
 						</div>
 						<div class="sh_contact_info sh_float_width">
-							<p><span class="icofont-map-pins"></span><a href="javascript:void(0);">shopergy contact address</a></p>
+							<p><span class="icofont-map-pins"></span><a href="javascript:void(0);"><?php echo $contact_info->contact_address;?></a></p>
 						</div>
 						<div class="sh_contact_info sh_float_width">
-							<p><span class="icofont-ui-contact-list"></span><a href="javascript:void(0);">
-							+91 99999-66666</a></p>
+							<p><span class="icofont-ui-contact-list"></span><a href="tel:<?php echo $contact_info->contact_no;?>">
+							<?php echo $contact_info->contact_no;?></a></p>
 						</div>
 					</div>
 				</div>
 				<div class="col-lg-12 col-md-12 col-sm-12">
 				  <div class="sh_map_wrap sh_float_width">
-					 <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d30711137.27491417!2d64.44494055238786!3d20.011950756648737!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30635ff06b92b791%3A0xd78c4fa1854213a6!2sIndia!5e0!3m2!1sen!2sin!4v1556881953906!5m2!1sen!2sin" width="100%" height="400" frameborder="0" style="border:0" allowfullscreen></iframe>
+					 <iframe src="<?php echo $contact_info->google_map_src_code;?>" width="100%" height="400" frameborder="0" style="border:0" allowfullscreen></iframe>
+					 
 				  </div>
 				</div>
+			<?php } ?>
 			</div>
 		</div>
 	</div>

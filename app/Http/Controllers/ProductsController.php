@@ -56,7 +56,7 @@ class ProductsController extends Controller
         $srch       = $this->getDTsearch($req);
         //echo '<pre>';print_r($srch);die;
 
-        $qry = Product::select(DB::raw("products.*, categories.categoryName as categoryName, c2.categoryName as parentCategoryName"))->leftJoin('categories',function ($join){$join->on('categories.categoryId','=','products.categoryId'); })->leftJoin('categories as c2',function ($join){$join->on('c2.categoryId','=','products.parentCategoryId'); });
+        $qry = Product::select(DB::raw("products.*, categories.categoryName as catName1, c2.categoryName as catName2, c3.categoryName as catName3, c4.categoryName as catName4, categories.categoryId as catID1, c2.categoryId as catID2, c3.categoryId as catID3, c4.categoryId as catID4"))->leftJoin('categories',function ($join){$join->on('categories.categoryId','=','products.categoryId'); })->leftJoin('categories as c2',function ($join){$join->on('c2.categoryId','=','products.parentCategoryId'); })->leftJoin('categories as c3',function ($join){$join->on('c3.categoryId','=','products.catID3'); })->leftJoin('categories as c4',function ($join){$join->on('c4.categoryId','=','products.catID4'); });
         //$qry = Product::select(DB::raw("products.*"));
 	
 		$qry->where('categories.status',1);
@@ -66,15 +66,23 @@ class ProductsController extends Controller
         {
             $qry->where('products.title','like',"%" .$srch['title']. "%");
         }
-        if(isset($srch['categoryName']))
+		
+        if(isset($srch['catName1']))
         {
-            $qry->where('products.categoryId',$srch['categoryName']);
-        }else{
-		}		
-        if(isset($srch['parentCategoryName']))
+            $qry->where('products.catID2',$srch['catName1']);
+        }		
+        if(isset($srch['catName2']))
         {
-            $qry->where('categories.parentId',$srch['parentCategoryName']);
+            $qry->where('products.catID1',$srch['catName2']);
         }
+        if(isset($srch['catName3']))
+        {
+            $qry->where('products.catID3',$srch['catName3']);
+        }		
+        if(isset($srch['catName4']))
+        {
+            $qry->where('products.catID4',$srch['catName4']);
+        }		
 		
 		$qry->groupBy('products.id');
         
@@ -90,6 +98,7 @@ class ProductsController extends Controller
 	
 		$qry->orderByRaw("$order[0] $order[1]");	
 		 
+		//echo $qry->toSql();die;
         $data['results'] = [];
         $results = $qry->paginate($length);
         
@@ -372,6 +381,32 @@ class ProductsController extends Controller
 			echo 'success';
 		}
     }	
+	
+	public function status_update(Request $request) {
+		
+        if ($request->isMethod('post'))
+        {
+            $req = $request->all();
+			$statusId = $req['id'];
+			$status = $req['value'];
+			Product::where('id',$statusId)->update(array('status'=>$status));
+			echo 'success';
+		}
+    }
+	
+	public function status_multiple_update(Request $request) {
+		
+        if ($request->isMethod('post'))
+        {
+            $req    = $request->all();
+
+			$statusIds = explode(' ,',$req['ids']);
+			$status = $req['status'];
+			Product::whereIn('id',$statusIds)->update(array('status'=>$status));
+			echo 'success';
+		}
+    }	
+	
 	public static function slugify($text){
 	  // replace non letter or digits by -
 	  $text = preg_replace('~[^\pL\d]+~u', '-', $text);

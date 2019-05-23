@@ -59,12 +59,59 @@
 					  </div>
 					  <div class="text-danger error font_12" id="meta_description_error"></div>
 					</div>	
+					
+					<div class="form-group">
+					  <label for="contact_text"><span class="text-danger font_12"> * </span>Contact Text</label>
+					  <div class="input-group">
+						<div class="input-group-addon"><i class="fa fa-edit"></i></div>
+						<input name="contact_text" class="form-control" value="<?php if($contact_info){ echo $contact_info->contact_text; } ?>" />
+					  </div>
+					  <div class="text-danger error font_12" id="contact_text_error"></div>
+					</div>
+					
+					<div class="form-group">
+					  <label for="contact_email"><span class="text-danger font_12"> * </span>Contact Email</label>
+					  <div class="input-group">
+						<div class="input-group-addon"><i class="fa fa-edit"></i></div>
+						<input name="contact_email" class="form-control" value="<?php if($contact_info){ echo $contact_info->contact_email; } ?>" />
+					  </div>
+					  <div class="text-danger error font_12" id="contact_email_error"></div>
+					</div>	
+					
+					<div class="form-group">
+					  <label for="contact_address"><span class="text-danger font_12"> * </span>Contact Address</label>
+					  <div class="input-group">
+						<div class="input-group-addon"><i class="fa fa-edit"></i></div>
+						<textarea name="contact_address" class="form-control" rows="2"><?php if($contact_info){ echo $contact_info->contact_address; } ?></textarea>
+					  </div>
+					  <div class="text-danger error font_12" id="contact_address_error"></div>
+					</div>	
+					
+					<div class="form-group">
+					  <label for="contact_no"><span class="text-danger font_12"> * </span>Contact No.</label>
+					  <div class="input-group">
+						<div class="input-group-addon"><i class="fa fa-edit"></i></div>
+						<input name="contact_no" class="form-control" value="<?php if($contact_info){ echo $contact_info->contact_no; } ?>" />
+					  </div>
+					  <div class="text-danger error font_12" id="contact_no_error"></div>
+					</div>						
+					
+					<div class="form-group">
+					  <label for="google_map_src_code"><span class="text-danger font_12"> * </span>Google Map Code</label>
+					  <div class="input-group">
+						<div class="input-group-addon"><i class="fa fa-edit"></i></div>
+						<textarea name="google_map_src_code" class="form-control" rows="4"><?php if($contact_info){ echo $contact_info->google_map_src_code; } ?></textarea>
+					  </div>
+					  <div class="text-danger error font_12" id="google_map_src_code_error"></div>
+					</div>
+					<input type="hidden" name="contact_id" id="contact_id" value="<?php if($contact_info){ echo $contact_info->id; }?>" >
               </div>
               <!-- /.box-body -->
 
               <div class="box-footer">
 			  <input type="hidden" name="page_type" value="<?php if($row){ echo $row->page_type; }else{ echo 'contact';} ?>">
 				<input type="hidden" name="id" id="id" value="<?php if($row){ echo $row->id; }?>" >
+				
                 <button type="submit" class="btn btn-primary" id="sub_btn">Submit</button>
               </div>
             </form>

@@ -9,6 +9,7 @@ use Session;
 use App\User;
 use App\FrontPageSetting;
 use App\FaqData;
+use App\ContactInfo;
 use Mail;
 
 class FrontPagesController extends Controller
@@ -29,10 +30,28 @@ class FrontPagesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+	 
+	public function home(){
+		$data['nav'] = 'menu_front_pages';
+		$data['sub_nav'] = 'menu_front_pages_home';
+		$data['title'] = 'Front Pages';
+		$data['sub_title'] = 'Home';
+		$data['link'] = '';
+		$meta_keywords = '';
+		$row = array();
+		$row = FrontPageSetting::where('page_type','home')->where('status',1)->first();
+			if($row && $row->count() > 0){
+				$meta_keywords = $this->page_meta_keywords($row->meta_keywords);
+			}
+		
+		return view('admin.front_pages.home',['row'=>$row,'data'=>$data,'meta_keywords'=>$meta_keywords]);		
+	}
+	
+	
     public function about()
     { 
-		$data['nav'] = 'menu_settings';
-		$data['sub_nav'] = 'menu_settings_about';
+		$data['nav'] = 'menu_front_pages';
+		$data['sub_nav'] = 'menu_front_pages_about';
 		$data['title'] = 'Front Pages';
 		$data['sub_title'] = 'About';
 		$data['link'] = '';
@@ -48,8 +67,8 @@ class FrontPagesController extends Controller
 	
 	
 	public function faq(){
-		$data['nav'] = 'menu_settings';
-		$data['sub_nav'] = 'menu_settings_faq';
+		$data['nav'] = 'menu_front_pages';
+		$data['sub_nav'] = 'menu_front_pages_faq';
 		$data['title'] = 'Front Pages';
 		$data['sub_title'] = 'FAQ';
 		$data['link'] = '';
@@ -75,8 +94,8 @@ class FrontPagesController extends Controller
 	}
 	
 	public function terms(){
-		$data['nav'] = 'menu_settings';
-		$data['sub_nav'] = 'menu_settings_terms';
+		$data['nav'] = 'menu_front_pages';
+		$data['sub_nav'] = 'menu_front_pages_terms';
 		$data['title'] = 'Front Pages';
 		$data['sub_title'] = 'Terms';
 		$data['link'] = '';
@@ -91,8 +110,8 @@ class FrontPagesController extends Controller
 	}
 
 	public function privacy_policy(){
-		$data['nav'] = 'menu_settings';
-		$data['sub_nav'] = 'menu_settings_privacy_policy';
+		$data['nav'] = 'menu_front_pages';
+		$data['sub_nav'] = 'menu_front_pages_privacy_policy';
 		$data['title'] = 'Front Pages';
 		$data['sub_title'] = 'Privacy Policy';
 		$data['link'] = '';
@@ -107,19 +126,20 @@ class FrontPagesController extends Controller
 	}	
 	
 	public function contact(){
-		$data['nav'] = 'menu_settings';
-		$data['sub_nav'] = 'menu_settings_contact';
+		$data['nav'] = 'menu_front_pages';
+		$data['sub_nav'] = 'menu_front_pages_contact';
 		$data['title'] = 'Front Pages';
 		$data['sub_title'] = 'Contact';
 		$data['link'] = '';
 		$meta_keywords = '';
 		$row = array();
 		$row = FrontPageSetting::where('page_type','contact')->where('status',1)->first();
+		$contact_info = ContactInfo::limit(1)->first();
 			if($row && $row->count() > 0){
 				$meta_keywords = $this->page_meta_keywords($row->meta_keywords);
 			}
 		
-		return view('admin.front_pages.contact',['row'=>$row,'data'=>$data,'meta_keywords'=>$meta_keywords]);		
+		return view('admin.front_pages.contact',['row'=>$row,'contact_info'=>$contact_info,'data'=>$data,'meta_keywords'=>$meta_keywords]);		
 	}
 	
 	public function save_data(Request $request){
@@ -144,7 +164,7 @@ class FrontPagesController extends Controller
 				$meta_keywords = implode(',',$req['meta_keywords']);
 			}
 			
-			if($req['page_type'] == 'faq' || $req['page_type'] == 'contact'){
+			if($req['page_type'] == 'faq' || $req['page_type'] == 'contact' || $req['page_type'] == 'home'){
 				$page_content = '';
 			}else{
 				$page_content = $req['page_content'];
@@ -188,6 +208,17 @@ class FrontPagesController extends Controller
 						}
 						
 					}
+				}
+				
+				if($req['page_type'] == 'contact'){
+					$contact['contact_text'] = $req['contact_text'];
+					$contact['contact_email'] = $req['contact_email'];
+					$contact['contact_address'] = $req['contact_address'];
+					$contact['contact_no'] = $req['contact_no'];
+					$contact['google_map_src_code'] = $req['google_map_src_code'];
+					$contact_id = $req['contact_id'];
+					
+					ContactInfo::where('id',$contact_id)->update($contact);					
 				}
 			echo "|success";
 		
