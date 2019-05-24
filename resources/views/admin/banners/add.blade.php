@@ -47,7 +47,7 @@
                 </div>	
                 <div class="form-group">
                   <label for="section_name"><span class="text-danger">*</span> Section</label>
-                  <select type="text" class="form-control" id="section_name" name="section_name" required>
+                  <select class="form-control js-example-basic-single" id="section_name" name="section_name" required>
 				<?php foreach($section_names as $sn){?>
 					<option value="<?php echo $sn->value;?>" <?php if($row){ if($row->section_name == $sn->value){ echo 'selected';} }?> ><?php echo ucwords($sn->label);?></option>
 				<?php } ?>
@@ -76,6 +76,10 @@
     </section>
     <!-- /.content -->
   </div>
+  
+<script>
+    $('.js-example-basic-single').select2();
+</script>  
 <script>
 
 var surl = '<?php echo route('banners-list');?>'; 

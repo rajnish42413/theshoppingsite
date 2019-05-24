@@ -86,7 +86,9 @@ Route::group(['middleware'=>['Admin']],function(){
 	
 	// Categories 
  	Route::get('categories-list', 'CategoriesController@index')->name('categories-list');	
+ 	Route::get('parent-categories-list', 'CategoriesController@index2')->name('parent-categories-list');	
 	Route::get('searchajaxcategories', 'CategoriesController@ajax_list')->name('searchajaxcategories');	
+	Route::get('searchajaxparentcategories', 'CategoriesController@ajax_list2')->name('searchajaxparentcategories');	
 	Route::any('categories-add', 'CategoriesController@add')->name('categories-add');	
 	Route::any('categories-edit/{id?}', 'CategoriesController@add');	
 	Route::any('categories-save', 'CategoriesController@save_data')->name('categories-save');	

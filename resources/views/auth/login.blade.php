@@ -1,3 +1,8 @@
+<?php 
+use \App\Http\Controllers\DetailController;
+$settings = DetailController::get_settings();
+ ?>
+ 
 @extends('auth.layouts.app')
 
 @section('auth_content')
@@ -10,7 +15,7 @@
 			<div class="login-form">
 				<form class="form" method="POST" action="{{ route('login') }}">
 					{{ csrf_field() }}
-					<div class="text-center logo_box">   <a href="{{env('APP_URL')}}" ><img src="{{env('APP_URL')}}assets/images/logo.png" alt="" height="50"></a></div>
+					<div class="text-center logo_box">   <a href="{{env('APP_URL')}}" ><img src="{{env('APP_URL')}}assets/images/<?php if($settings){echo $settings->logo;}?>" alt="" height="50"></a></div>
 							<h3 class="title text-center">
 								Log in
 							</h3>

@@ -29,6 +29,7 @@ class CategoriesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+	 
     public function index()
     { 
 		$data['nav'] = 'menu_categories';
@@ -40,7 +41,6 @@ class CategoriesController extends Controller
 		return view('admin.categories.list',['categories'=>$categories,'data'=>$data]);
     }
 	
-	
     public function ajax_list(Request $req){
 
         $temppage       = $this->getDTpage($req);
@@ -51,8 +51,71 @@ class CategoriesController extends Controller
         $srch       = $this->getDTsearch($req);
         //echo '<pre>';print_r($srch);die;
 
-        $qry = Category::select(DB::raw("categories.*, c2.categoryName as parentCategoryName"))->leftJoin('categories AS c2',function ($join){$join->on('categories.parentId','=','c2.categoryId'); });
-		//$qry->where('categories.parentId','!=','0');
+        $qry = Category::select(DB::raw("categories.*, c2.categoryName as parentCategoryName, c3.categoryName as cat3Name, c4.categoryName as cat4Name"))->leftJoin('categories AS c2',function ($join){$join->on('categories.parentId','=','c2.categoryId'); })->leftJoin('categories AS c3',function ($join){$join->on('c2.parentId','=','c3.categoryId'); })->leftJoin('categories AS c4',function ($join){$join->on('c3.parentId','=','c4.categoryId'); });
+		$qry->where('categories.parentId','!=','0');
+        if(isset($srch['categoryName']))
+        {
+            $qry->where('categories.categoryName','like',"%" .$srch['categoryName']. "%");
+        }
+		
+        if(isset($srch['parentCategoryName']) && !isset($srch['cat3Name']) && !isset($srch['cat4Name']))
+        {
+            $qry->where('categories.parentId',$srch['parentCategoryName']);
+        }
+        if(isset($srch['cat3Name']) && !isset($srch['cat4Name']))
+        {
+            $qry->where('categories.parentId',$srch['cat3Name']);
+        }
+        if(isset($srch['cat4Name']))
+        {
+            $qry->where('categories.parentId',$srch['cat4Name']);
+        }		
+        
+		if($order[0] == 'list_create'){
+			$order[0] = 'categories.created_at';
+		}
+		else if($order[0] == 'listId'){
+			$order[0] = 'categories.id';
+		}
+		else if($order[0] == 'id'){
+			$order[0] = 'categories.id';
+		}					
+	
+		$qry->orderByRaw("$order[0] $order[1]");	
+		 
+        $data['results'] = [];
+        $results = $qry->paginate($length);
+        
+        foreach($results as $rec){
+            $data['results'][] = $rec;
+        }
+        $total = count($data['results']);
+        return $this->responseDTJson($req->draw,$results->total(), $results->total(), $data['results']);    
+    }
+
+//Parent Categories	
+    public function index2()
+    { 
+		$data['nav'] = 'menu_parent_categories';
+		$data['sub_nav'] = 'menu_parent_categories_list';
+		$data['title'] = 'Parent Categories';
+		$data['sub_title'] = 'List';
+		$data['link'] = 'categories-add';
+		return view('admin.categories.parent_list',['data'=>$data]);
+    }
+	
+	
+    public function ajax_list2(Request $req){
+
+        $temppage       = $this->getDTpage($req);
+        $length     = $temppage[0];
+        $currpage   = $temppage[1]; 
+
+        $order      = $this->getDTsort($req);
+        $srch       = $this->getDTsearch($req);
+        //echo '<pre>';print_r($srch);die;
+
+        $qry = Category::select(DB::raw("*"))->where('categories.parentId',0);
         if(isset($srch['categoryName']))
         {
             $qry->where('categories.categoryName','like',"%" .$srch['categoryName']. "%");
@@ -84,6 +147,7 @@ class CategoriesController extends Controller
         $total = count($data['results']);
         return $this->responseDTJson($req->draw,$results->total(), $results->total(), $data['results']);    
     }
+	
 	
     public function add($id="")
     { 

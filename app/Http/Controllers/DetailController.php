@@ -9,8 +9,8 @@ use Session;
 use App\User;
 use App\NavigationMenu;
 use App\Category;
-use App\GoogleAnalytics;
 use App\SocialSetting;
+use App\Setting;
 use Mail;
 
 
@@ -33,14 +33,15 @@ class DetailController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-	public static function get_google_analytics(){
-		$row = GoogleAnalytics::where('status',1)->limit(1)->first();
+	public static function get_settings(){
+		$row = Setting::limit(1)->first();
 		if($row && $row->count() > 0){
-			return $row->content;
+			return $row;
 		}else{
 			return false;
 		}
 	}
+	
 	
 	public static function get_social_links(){
 		$row = SocialSetting::where('status',1)->get();

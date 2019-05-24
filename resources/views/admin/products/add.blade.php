@@ -42,7 +42,7 @@
                 </div>
 				
                 <div class="form-group">
-				 <label for="is_top_product"><span class="text-danger">*</span> Top Product</label>
+				 <label for="is_top_product"><span class="text-danger">*</span> Top Product on Homepage</label>
 				<select type="text" class="form-control" id="is_top_product" name="is_top_product" >
 					<option value="0" <?php if($row){ if($row->is_top_product == 0){echo 'selected'; }} ?> >No</option>
 					<option value="1" <?php if($row){ if($row->is_top_product == 1){echo 'selected'; }} ?> >Yes</option>

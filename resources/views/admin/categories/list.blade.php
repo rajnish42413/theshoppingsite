@@ -24,20 +24,32 @@
     <form action="searchajaxcategories" method="post" id="categoriesfrm">
       {{csrf_field()}}
 	<div class="row margin">
+	   <div class="col-lg-2 col-xs-6">
+            <input id="name" name="name" value="" placeholder="Title" data-column="6" class="form-control"/>
+        </div>
 	   <div class="col-lg-3 col-xs-6">
-            <input id="name" name="name" value="" placeholder="Name" data-column="6" class="form-control"/>
-        </div>  
-	   <div class="col-lg-3 col-xs-6">
-			<select type="text" class="form-control" id="parent_id" name="parent_id" >
+			<select class="form-control js-example-basic-single" id="parent_id" name="parent_id" onchange="get_categories(this);">
 				<option value="">--Select Parent Category--</option>
 		<?php if($categories){
 				foreach($categories as $category){?>
 					<option value="<?php echo $category->categoryId;?>"><?php echo $category->categoryName;?></option>
 		<?php } } ?>
 			</select>
-        </div>  		
-        <div class="col-lg-3 col-xs-6">
-		<button type="button" id="filter_submit" name="filter_submit" class="btn btn-primary btn-block">Filter</button>
+        </div> 	
+	   <div class="col-lg-3 col-xs-6">
+			<select  class="form-control js-example-basic-single" id="cat_id" name="cat_id" onchange="get_sub_categories(this);">
+				<option value="">--Select Category--</option>
+			</select>
+        </div>
+
+	   <div class="col-lg-3 col-xs-6">
+			<select  class="form-control js-example-basic-single" id="sub_cat_id" name="sub_cat_id">
+				<option value="">--Select Category Level 3--</option>
+			</select>
+        </div>	
+	
+        <div class="col-lg-1 col-xs-6">
+		<button type="button" id="filter_submit" name="filter_submit" class="btn btn-info btn-block">Filter</button>
         </div>
     </div>
     </form>	  
@@ -59,6 +71,8 @@
                             <th style="width:50px"><input name="select_all" value="1" id="example-select-all" type="checkbox" /></th>
                             <th>Category Name</th>
                             <th>Parent Category</th>
+                            <th>Cat Level 3</th>
+                            <th>Cat Level 4</th>
                             <th>Status</th>
                             <th>Action</th>
                         </tr>
@@ -78,5 +92,61 @@
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
- 
+<script>
+    $('.js-example-basic-single').select2();
+</script>
+<script>
+function get_categories(e){
+	var ct = e.value;
+	if(ct =="" || ct == null){
+		$("#cat_id").html('<option value="">--Select Category--</option>');
+		$("#sub_cat_id").html('<option value="">--Select Category Level 3--</option>');
+		$("#sub2_cat_id").html('<option value="">--Select Category Level 4--</option>');
+	}else{
+		$(".small_loader").show();
+		$.ajax({
+			type: "POST",
+			headers: {
+			  'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			},			
+			url: '<?php echo route('get-categories-by-parent');?>',
+			data: {'parent_id':ct}, // serializes the form's elements.
+			success: function(response)
+			{ 
+				$('.small_loader').hide();
+				$("#cat_id").html(response);										
+				$("#sub_cat_id").html('<option value="">--Select Category Level 3--</option>');								
+				$("#sub2_cat_id").html('<option value="">--Select Category Level 4--</option>');								
+			}
+		});
+	}
+}
+
+
+function get_sub_categories(e){
+	var ct = e.value;
+	if(ct =="" || ct == null){
+		$("#sub_cat_id").html('<option value="">--Select Category Level 3--</option>');
+		$("#sub2_cat_id").html('<option value="">--Select Category Level 4--</option>');
+	}else{
+		$(".small_loader").show();
+		$.ajax({
+			type: "POST",
+			headers: {
+			  'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			},			
+			url: '<?php echo route('get-sub-categories-by-parent');?>',
+			data: {'parent_id':ct}, // serializes the form's elements.
+			success: function(response)
+			{ 
+				$('.small_loader').hide();
+				$("#sub_cat_id").html(response);
+				$("#sub2_cat_id").html('<option value="">--Select Category Level 4--</option>');				
+			}
+		});
+	}
+}
+
+</script>
+
 @endsection

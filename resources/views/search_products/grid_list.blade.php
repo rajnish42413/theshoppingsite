@@ -6,20 +6,17 @@
 	<!--Breadcurm Start-->
 	<div class="sh_breadcurm_wrap sh_float_width">
 		<div class="container">
+		<?php if($data['cat_breadcrumb'] != ''){?>
 			<div class="row">
 				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 					<div class="sh_breadcurm sh_float_width">
 						<ul>
-							<?php if($data['parent_category'] != ''){?>
-							<li><a href="javacript:void(0)"><?php echo $data['parent_category'];?></a></li>
-							<?php } ?>
-							<?php if($data['category'] != ''){?>
-								<li><a href="javacript:void(0)"><?php echo $data['category'];?></a></li>
-							<?php } ?>
+							<?php echo $data['cat_breadcrumb']; ?>
 						</ul>
 					</div>
 				</div>
-			</div>	
+			</div>
+		<?php } ?>
 		</div>	
 	</div>	
 	<!-- Search Grid Start-->
@@ -27,6 +24,7 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+				<?php if($products && $products->count() > 0){?>
 					<div class="sh_side_bar sh_float_width">
 						<div class="sh_side_bar_section sh_float_width">
 						<form id="filter_form" action="" method="post">
@@ -65,6 +63,7 @@
 							</form>							
 						</div>
 					</div>
+					<?php } ?>
 					<div class="sh_side_bar sh_float_width">
 						<div class="sh_side_bar_section sh_float_width">
 										
@@ -83,6 +82,7 @@
 				</div>
 				<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
 					<div class="sh_product_grid sh_float_width">
+					<?php if($products && $products->count() > 0){?>
 						<div class="sh_product_grid_top sh_float_width">
 							<div class="col-lg-6 col-md-5 col-sm-4 col-xs-12">
 								<div class="sh_search_filter sh_float_width">
@@ -115,10 +115,11 @@
 								</div>
 							</div>
 						</div>
+					<?php } ?>	
 							<img id="listLoading" src="<?php echo env('APP_URL')?>assets/images/loading.gif" style="display: table;margin: auto;">
 						
 						<div id="products-view" class="sh_product_grid_product sh_float_width" style="display:none;">
-					<?php if($products){
+					<?php if($products && $products->count() > 0){
 						
 						foreach($products as $product){?>
 					
@@ -172,7 +173,7 @@
 						
 						</div>
 						
-					<?php if($products){?>
+					<?php if($products && $products->count() >= 10){?>
 						<div class="load_more" style="display:none;">
 							<div class="col-lg-12 text-center"><button onclick="load_more(this)" class="sh_btn btn btn-block" type="button">Load More <i class="fa fa-spin fa-spinner hide"></i></button></div>
 						</div>

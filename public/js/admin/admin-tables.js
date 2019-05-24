@@ -228,6 +228,8 @@ $(document).ready(function() {
 			}},
 			{ "data": "categoryName"},	
 			{ "data": "parentCategoryName"},
+			{ "data": "cat3Name"},
+			{ "data": "cat4Name"},
             { "data": "status","render": function(data, type, row, meta){ 
 				if(data=='1'){
 					return '<span class="label label-success">Active</span>';
@@ -247,7 +249,14 @@ $(document).ready(function() {
          'searchable': false,
          'orderable': false,
 		},
-		
+		{
+		'targets': 3,
+         'visible': false,
+		},
+		{
+		'targets': 4,
+         'visible': false,
+		},		
 		],
 		'rowCallback': function(row, data, dataIndex){
 			var strVale = $('#checked_ids').val();
@@ -316,11 +325,122 @@ $(document).ready(function() {
 		$('#selected_count').hide();
         var name = $("#categoriesfrm #name").val();
         var parent_id = $("#categoriesfrm #parent_id").val();
-		window.categoriesTable.column(1).search(name).column(2).search(parent_id).draw();      
+        var cat_id = $("#categoriesfrm #cat_id").val();
+        var sub_cat_id = $("#categoriesfrm #sub_cat_id").val();
+		window.categoriesTable.column(1).search(name).column(2).search(parent_id).column(3).search(cat_id).column(4).search(sub_cat_id).draw();      
     });
 	
 	/* ./ categoriesTable */
 
+	/*  parentcategoriesTable */
+	
+    window.parentcategoriesTable = $('#parentcategoriesTable').DataTable({
+      "processing": true,
+	  "language": {
+            "processing": "<div class='pageloader'></div>"
+        }, 	  
+      "serverSide": true,
+       "ordering": true,
+      "dom": 'lrtip',
+        "ajax": 'searchajaxparentcategories',
+
+        "columns": [
+            { "data": "id","orderable":false,"render": function(data, type, row, meta){ 
+			return '<input type="checkbox" name="id[]" value="'+ $('<div/>').text(data).html() + ' " >';
+			}},
+			{ "data": "categoryName"},	
+            { "data": "status","render": function(data, type, row, meta){ 
+				if(data=='1'){
+					return '<span class="label label-success">Active</span>';
+				}
+				else if(data=='0'){
+					return '<span class="label label-danger">Deactive</span>';
+				}
+			}},			
+		   { "data": "id","orderable":false,"render": function(data, type, row, meta){ 
+			   return '<a href="categories-edit/'+data+'"  class="btn btn-sm btn-info">Edit</a>&nbsp;&nbsp;<button type="button" onclick="delete_single_row('+data+',\'parentcategoriesTable\',\'categories-delete\')" class="btn btn-sm btn-danger">Delete</button>';
+
+		   }},	
+        ]
+		,"columnDefs": [ 
+		{
+		'targets': 0,
+         'searchable': false,
+         'orderable': false,
+		},
+		
+		],
+		'rowCallback': function(row, data, dataIndex){
+			var strVale = $('#checked_ids').val();
+			var rowId = data.id;
+			var arr = strVale.split(',');
+			arr = arr.map(Number);
+			//alert(rowId);
+           if($.inArray(rowId,arr) !== -1){
+			  $(row).find('input[type="checkbox"]').prop('checked', true);
+			}
+      }
+    });
+
+     $('#parentcategoriesTable tbody').on('click', 'input[type="checkbox"]', function(e){ 
+        updateDataTableSelectAllCtrl(parentcategoriesTable);
+		e.stopPropagation();
+		var ids = $('#checked_ids').val();
+		var nids = '';
+		
+		 if(this.checked){ 
+			if(ids.length == 0){
+				nids = $(this).val();
+			}else{
+				nids = $(this).val()+','+ids;
+			}
+			$('#checked_ids').val(nids);
+		}else{
+			var nlist = removeValue(ids,$(this).val());
+			$('#checked_ids').val(nlist);
+		}
+		var cvals = $('#checked_ids').val();
+		var arr = cvals.split(',');
+		if(cvals.length == 0){ 
+			$('#selected_count').hide();
+		}else{
+			$('#selected_count').html('Selected Count : '+arr.length);
+			$('#selected_count').show();
+		}
+    });
+   
+    $('#parentcategoriesTable').on('click', 'tbody td, thead th:first-child', function(e){ 
+      $(this).parent().find('input[type="checkbox"]').trigger('click');
+	});
+   
+   $('#parentcategoriesTable thead input[name="select_all"]', parentcategoriesTable.table().container()).on('click', function(e){
+      if(this.checked){ 
+	  	  
+		$('#parentcategoriesTable tbody input[type="checkbox"]:not(:checked)').trigger('click');
+      } else { 
+			$('#parentcategoriesTable tbody input[type="checkbox"]:checked').trigger('click');
+	 }
+	e.stopPropagation();
+   });
+
+   // Handle table draw event
+   parentcategoriesTable.on('draw', function(){
+      updateDataTableSelectAllCtrl(parentcategoriesTable);
+   });
+	
+	
+   
+  
+	$("#parentcategoriesfrm #filter_submit").on('click', function () {
+
+		$('#checked_ids').val('');
+		$('#selected_count').hide();
+        var name = $("#parentcategoriesfrm #name").val();
+		window.parentcategoriesTable.column(1).search(name).draw();      
+    });
+	
+	/* ./ parentcategoriesTable */
+	
 	/*  productsTable */
 	
     window.productsTable = $('#productsTable').DataTable({

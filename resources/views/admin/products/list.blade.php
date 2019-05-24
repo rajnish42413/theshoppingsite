@@ -28,7 +28,7 @@
             <input id="name" name="name" value="" placeholder="Title" data-column="6" class="form-control"/>
         </div>
 	   <div class="col-lg-4 col-xs-6">
-			<select class="form-control" id="parent_id" name="parent_id" onchange="get_categories(this);">
+			<select class="form-control js-example-basic-single" id="parent_id" name="parent_id" onchange="get_categories(this);">
 				<option value="">--Select Parent Category--</option>
 		<?php if($categories){
 				foreach($categories as $category){?>
@@ -37,19 +37,19 @@
 			</select>
         </div> 	
 	   <div class="col-lg-4 col-xs-6">
-			<select  class="form-control" id="cat_id" name="cat_id" onchange="get_sub_categories(this);">
+			<select  class="form-control js-example-basic-single" id="cat_id" name="cat_id" onchange="get_sub_categories(this);">
 				<option value="">--Select Category--</option>
 			</select>
         </div>
     </div>
 	<div class="row margin">
 	   <div class="col-lg-4 col-xs-6">
-			<select  class="form-control" id="sub_cat_id" name="sub_cat_id" onchange="get_sub2_categories(this);">
+			<select  class="form-control js-example-basic-single" id="sub_cat_id" name="sub_cat_id" onchange="get_sub2_categories(this);">
 				<option value="">--Select Category Level 3--</option>
 			</select>
         </div>	
 	   <div class="col-lg-4 col-xs-6">
-			<select  class="form-control" id="sub2_cat_id" name="sub2_cat_id" >
+			<select  class="form-control js-example-basic-single" id="sub2_cat_id" name="sub2_cat_id" >
 				<option value="">--Select Category Level 4--</option>
 			</select>
         </div>		
@@ -109,6 +109,9 @@
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
+<script>
+    $('.js-example-basic-single').select2();
+</script>
 
 <script>
 function get_categories(e){
@@ -118,7 +121,7 @@ function get_categories(e){
 		$("#sub_cat_id").html('<option value="">--Select Category Level 3--</option>');
 		$("#sub2_cat_id").html('<option value="">--Select Category Level 4--</option>');
 	}else{
-		$(".wait_loader").show();
+		$(".small_loader").show();
 		$.ajax({
 			type: "POST",
 			headers: {
@@ -128,7 +131,7 @@ function get_categories(e){
 			data: {'parent_id':ct}, // serializes the form's elements.
 			success: function(response)
 			{ 
-				$('.wait_loader').hide();
+				$('.small_loader').hide();
 				$("#cat_id").html(response);										
 				$("#sub_cat_id").html('<option value="">--Select Category Level 3--</option>');								
 				$("#sub2_cat_id").html('<option value="">--Select Category Level 4--</option>');								
@@ -144,7 +147,7 @@ function get_sub_categories(e){
 		$("#sub_cat_id").html('<option value="">--Select Category Level 3--</option>');
 		$("#sub2_cat_id").html('<option value="">--Select Category Level 4--</option>');
 	}else{
-		$(".wait_loader").show();
+		$(".small_loader").show();
 		$.ajax({
 			type: "POST",
 			headers: {
@@ -154,7 +157,7 @@ function get_sub_categories(e){
 			data: {'parent_id':ct}, // serializes the form's elements.
 			success: function(response)
 			{ 
-				$('.wait_loader').hide();
+				$('.small_loader').hide();
 				$("#sub_cat_id").html(response);
 				$("#sub2_cat_id").html('<option value="">--Select Category Level 4--</option>');				
 			}
@@ -168,7 +171,7 @@ function get_sub2_categories(e){
 	if(ct =="" || ct == null){
 		$("#sub_cat2_id").html('<option value="">--Select Category Level 4--</option>');
 	}else{
-		$(".wait_loader").show();
+		$(".small_loader").show();
 		$.ajax({
 			type: "POST",
 			headers: {
@@ -178,7 +181,7 @@ function get_sub2_categories(e){
 			data: {'parent_id':ct}, // serializes the form's elements.
 			success: function(response)
 			{ 
-				$('.wait_loader').hide();
+				$('.small_loader').hide();
 				$("#sub2_cat_id").html(response);										
 			}
 		});
@@ -207,4 +210,5 @@ function get_export(){
 		
 }
 </script> 
+
 @endsection

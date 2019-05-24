@@ -4,7 +4,7 @@ use \App\Http\Controllers\DetailController;
 <?php 
 
 $nav_menus = DetailController::get_main_nav_menus();
-$google_analytics = DetailController::get_google_analytics();
+$settings = DetailController::get_settings();
 $social_links = DetailController::get_social_links();
 ?>
 
@@ -39,7 +39,7 @@ $social_links = DetailController::get_social_links();
 	<script src="{{env('APP_URL')}}assets/js/jquery.js"></script>	
 </head>
 <body>
-<?php if($google_analytics){echo $google_analytics;}?>
+<?php if($settings){echo $settings->google_analytics;}?>
 <!-- Header Start -->
 <header>
 	<div class="sh_top_header_wrap sh_float_width">
@@ -48,7 +48,7 @@ $social_links = DetailController::get_social_links();
 				<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
 					<div class="sh_header_navbar sh_float_width">
 						<div class="sh_logo_wrap">
-							<a class="sh_logo" href="{{env('APP_URL')}}"><img src="{{env('APP_URL')}}assets/images/logo.png" alt="logo"></a>
+							<a class="sh_logo" href="{{env('APP_URL')}}"><img src="{{env('APP_URL')}}assets/images/<?php if($settings){echo $settings->logo;}?>" alt="logo"></a>
 						</div>
 					</div>
 				</div>

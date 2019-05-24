@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <link rel="icon" href="{{env('APP_URL')}}/favicon.ico">
+  <link rel="icon" href="{{env('APP_URL')}}/assets/images/favicon.png">
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>{{ config('app.name') }} Admin | <?php echo $data['title'];?></title>
@@ -39,11 +39,14 @@
   <![endif]-->
 <!-- jQuery 3 -->
 <script src="{{env('APP_URL')}}admin_assets/bower_components/jquery/dist/jquery.min.js"></script>
+<link href="{{env('APP_URL')}}admin_assets/plugins/select2/select2.min.css" rel="stylesheet" />
+<script src="{{env('APP_URL')}}admin_assets/plugins/select2/select2.min.js"></script>
+
 <!-- jQuery UI 1.11.4 -->
 <script src="{{env('APP_URL')}}admin_assets/bower_components/jquery-ui/jquery-ui.min.js"></script>
 
-<script src="{{env('APP_URL')}}admin_assets/plugins/select2/select2.js"></script> 
- <link rel="stylesheet" href="{{env('APP_URL')}}admin_assets/plugins/select2/select2.css">
+
+
  
   <!-- Google Font -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
@@ -80,11 +83,29 @@
 		background-size: 15%;
 		opacity: 1;
 	}
-	</style> 	
+	</style> 
+
+	<style>
+	
+	.small_loader {
+		position: absolute;
+		top: 7px;
+		z-index: 99999;
+		width: 100%;
+		left: 0;
+		right: 0;
+		margin: auto;
+		text-align: center;
+		color: #fff;
+		font-size: 18px;
+	}
+	</style> 
+	
  
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wait_loader" style="display:none;"></div>	
+<div class="small_loader" style="display:none;"><i class="fa fa-spin fa-spinner fa-2x"></i></div>	
 <div class="wrapper">
 
   <header class="main-header">
@@ -189,7 +210,8 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li class="<?php if($data['sub_nav'] == 'menu_categories_list'){echo 'active';}?>"><a href="{{ route('categories-list') }}"><i class="fa fa-list"></i> List</a></li>
+            <li class="<?php if($data['sub_nav'] == 'menu_parent_categories_list'){echo 'active';}?>"><a href="{{ route('parent-categories-list') }}"><i class="fa fa-list"></i> Parent Categories List</a></li>
+            <li class="<?php if($data['sub_nav'] == 'menu_categories_list'){echo 'active';}?>"><a href="{{ route('categories-list') }}"><i class="fa fa-list"></i> All Categories List</a></li>			
           </ul>
         </li>
 		

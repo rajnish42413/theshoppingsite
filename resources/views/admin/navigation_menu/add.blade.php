@@ -40,7 +40,7 @@
                 <div class="form-group">
                   <label for="parent_id"><span class="text-danger">*</span> Parent</label>
 				
-                  <select onchange="get_link(this);" class="form-control" id="parent_id" name="parent_id" placeholder="Parent" >
+                  <select onchange="get_link(this);" class="form-control js-example-basic-single" id="parent_id" name="parent_id" placeholder="Parent" >
 					<option value="0" <?php if($row){ if($row->parent_id == 0){ echo 'selected';} }?>>No Parent</option>				  
 				    <?php if($parents->count() > 0){
 						foreach($parents as $parent){?>
@@ -78,6 +78,10 @@
     </section>
     <!-- /.content -->
   </div>
+<script>
+    $('.js-example-basic-single').select2();
+</script>
+  
 <script>
 function change_is_public(e){
 	if(e.checked == true){

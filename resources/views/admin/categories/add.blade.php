@@ -40,7 +40,7 @@
 				
                 <div class="form-group">
 				 <label for="nav_menu_id"><span class="text-danger">*</span> Add on Navigation Menu</label>
-				<select type="text" class="form-control" id="nav_menu_id" name="nav_menu_id" >
+				<select type="text" class="form-control js-example-basic-single" id="nav_menu_id" name="nav_menu_id" >
 					<option value="" >--Select--</option>
 				<?php if($nav_menus && $nav_menus->count() > 0){
 					foreach($nav_menus as $nav){?>
@@ -50,7 +50,7 @@
                 </div>
 				
                 <div class="form-group">
-				 <label for="is_top_category"><span class="text-danger">*</span> Top Category</label>
+				 <label for="is_top_category"><span class="text-danger">*</span> Top Category on Homepage</label>
 				<select type="text" class="form-control" id="is_top_category" name="is_top_category" >
 					<option value="0" <?php if($row){ if($row->is_top_category == 0){echo 'selected'; }} ?> >No</option>
 					<option value="1" <?php if($row){ if($row->is_top_category == 1){echo 'selected'; }} ?> >Yes</option>
@@ -90,6 +90,9 @@
     </section>
     <!-- /.content -->
   </div>
+<script>
+    $('.js-example-basic-single').select2();
+</script>  
 <script>
 
 var surl = '<?php echo route('categories-list');?>'; 
