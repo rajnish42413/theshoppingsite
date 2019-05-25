@@ -95,7 +95,9 @@ Route::group(['middleware'=>['Admin']],function(){
 	Route::any('categories-delete', 'CategoriesController@delete_data')->name('categories-delete'); 
 	Route::any('get-categories-by-parent', 'CategoriesController@get_category_by_parent')->name('get-categories-by-parent'); 	
 	Route::any('get-sub-categories-by-parent', 'CategoriesController@get_sub_category_by_parent')->name('get-sub-categories-by-parent'); 	
-	Route::any('get-sub2-categories-by-parent', 'CategoriesController@get_sub2_category_by_parent')->name('get-sub2-categories-by-parent'); 	
+	Route::any('get-sub2-categories-by-parent', 'CategoriesController@get_sub2_category_by_parent')->name('get-sub2-categories-by-parent'); 
+	Route::any('categories-status', 'CategoriesController@status_update')->name('categories-status');
+	Route::any('categories-status-multiple', 'CategoriesController@status_multiple_update')->name('categories-status-multiple');	
 	
 	// Products 
  	Route::get('products-list', 'ProductsController@index')->name('products-list');	
@@ -142,15 +144,21 @@ Route::group(['middleware'=>['Admin']],function(){
  	Route::get('enquiries-list', 'EnquiryController@index')->name('enquiries-list');	
 	Route::get('searchajaxenquiries', 'EnquiryController@ajax_list')->name('searchajaxenquiries');
 	Route::any('enquiries-delete', 'EnquiryController@delete_data')->name('enquiries-delete');		
-	
-	// GoogleAnalytics 
-	Route::any('google-analytics-edit', 'GoogleAnalyticsController@add')->name('google-analytics-edit');	
-	Route::any('google-analytics-save', 'GoogleAnalyticsController@save_data')->name('google-analytics-save');	
-	
+		
 	// Settings 
 	Route::any('settings-edit', 'SettingsController@add')->name('settings-edit');	
 	Route::any('settings-save', 'SettingsController@save_data')->name('settings-save');	
 	Route::any('social-settings-save', 'SettingsController@save_data2')->name('social-settings-save');		
-	Route::any('social-settings-delete', 'SettingsController@social_link_delete')->name('social-settings-delete');		
+	Route::any('social-settings-delete', 'SettingsController@social_link_delete')->name('social-settings-delete');	
+
+	// Users 
+ 	Route::get('users-list', 'UsersController@index')->name('users-list');	
+	Route::get('searchajaxusers', 'UsersController@ajax_list')->name('searchajaxusers');	
+	Route::any('users-add', 'UsersController@add')->name('users-add');	
+	Route::any('users-edit/{id?}', 'UsersController@add');	
+	Route::any('users-save', 'UsersController@save_data')->name('users-save');	
+	Route::any('users-delete', 'UsersController@delete_data')->name('users-delete'); 
+	Route::any('users-status', 'UsersController@status_update')->name('users-status');
+	Route::any('users-status-multiple', 'UsersController@status_multiple_update')->name('users-status-multiple');	
 		
 });

@@ -133,37 +133,31 @@ class ProductsController extends Controller
     }	
 	
 	public function save_data(Request $request){
-/* 		$validator = Validator::make($request->all(), [
+		
+		$validator = $request->validate([
              'is_deal_of_the_day' => 'required',			 
              'is_top_product' => 'required',			 		 		 		 		 
 			], 
 			$messages = [
 			'is_deal_of_the_day.required' => 'Deal of the day is required',
 			'is_top_product.required' => 'Top Product is required',
-		])->validate();	
-
-        if (isset($validator) && $validator->fails())
-        {
-            return response()->json(['errors'=>$validator->errors()->all()]);
-        }else{ */
+		]);		
 			
-			$req   = $request->all();
-			$id = $req['id'];
+		$req   = $request->all();
+		$id = $req['id'];
 
-			$input=array(
-				'is_deal_of_the_day'=> $req['is_deal_of_the_day'],
-				'is_top_product' => $req['is_top_product'],
-				'status' => $req['status'],
-			);
-			if($id!=''){
-				Product::where('id',$id)->update($input);	
-			}else{
-				$id = Product::create($input)->id;				
-			}	
+		$input=array(
+			'is_deal_of_the_day'=> $req['is_deal_of_the_day'],
+			'is_top_product' => $req['is_top_product'],
+			'status' => $req['status'],
+		);
+		if($id!=''){
+			Product::where('id',$id)->update($input);	
+		}else{
+			$id = Product::create($input)->id;				
+		}	
 
-			echo "|success";
-		
-		//}
+		echo "|success";
     }
 	
 	
@@ -179,96 +173,97 @@ class ProductsController extends Controller
     }
 	
 	public function import_save_data(Request $request){
-			$req   = $request->all();
-			$pre_fileName   ='';
-			if(isset($req['file'])){	
-				$file_data = $request->file('file');
-				$name = $file_data->getClientOriginalName();
-				$ext = $file_data->getClientOriginalExtension();
-				$pre_fileName = time().rand().'.'.$ext;
-				$file_data->move('product_import_files',$pre_fileName);
-								
-				$file = fopen("product_import_files/".$pre_fileName,"r");
-				$i = 0;
-				$importData_arr = array();
-				while (($filedata = fgetcsv($file,1000, ",")) !== FALSE) {
-					$num = count($filedata );
-					
-					for ($c=0; $c < $num; $c++) {
-						$importData_arr[$i][] = $filedata [$c];
-					}
-					$i++;
-				}
-				fclose($file);
-				$skip = 0;
-				//echo '<pre>'; print_r($importData_arr); die;
- 				$arrayCount = count($importData_arr);
-				$idata = array();
-				$insert_data = array();
-				$update_data = array();
-				$uwhere = array();
+		
+		$req   = $request->all();
+		$pre_fileName   ='';
+		if(isset($req['file'])){	
+			$file_data = $request->file('file');
+			$name = $file_data->getClientOriginalName();
+			$ext = $file_data->getClientOriginalExtension();
+			$pre_fileName = time().rand().'.'.$ext;
+			$file_data->move('product_import_files',$pre_fileName);
+							
+			$file = fopen("product_import_files/".$pre_fileName,"r");
+			$i = 0;
+			$importData_arr = array();
+			while (($filedata = fgetcsv($file,1000, ",")) !== FALSE) {
+				$num = count($filedata );
 				
-				for($i=1;$i<$arrayCount;$i++){ 
-					$itemId = trim($importData_arr[$i][0]);	// itemId
-					$category = trim($importData_arr[$i][1]);	// category
-					$parent_category = trim($importData_arr[$i][2]);	// parent_category
-					$title = trim($importData_arr[$i][3]);	// title
-					$price = trim($importData_arr[$i][4]);	// price
-					$currency = trim($importData_arr[$i][5]);	// currency
-					$brand = trim($importData_arr[$i][6]);	// brand
-					$item_url = trim($importData_arr[$i][7]);	// item_url
-					$payment_method = trim($importData_arr[$i][8]);	// payment_method
-					$quantity = trim($importData_arr[$i][9]);	// quantity
-					$description = trim($importData_arr[$i][10]);	// description
-					$brand_id = 0;
- 					if($brand !=''){
-						$input2 = array(
-							'name' => $brand,
-							'slug' => $this->slugify($brand),
-							'updated_at' => date('Y-m-d H:i:s'),
-						);
-						$brand_check = Brand::where('slug',$input2['slug'])->first();
-						if($brand_check && $brand_check->count() > 0){
-							$brand_id = $brand_check->id;
-							Brand::where('id',$brand_id)->update($input2);
-						}else{
-							$input2['updated_at'] = date('Y-m-d H:i:s');
-							$brand_id = Brand::create($input2)->id;
-						}
-						
-					} 
-					$input = array(
-						'itemId'=> $itemId,
-						'categoryId'=> $category,
-						'parentCategoryId'=> $parent_category,
-						'title' => $title,
-						'current_price' => $price,
-						'current_price_currency' => $currency,
-						'PaymentMethods' => $payment_method,
-						'Quantity' => $quantity,
-						'Description' => $description,
-						'viewItemURL' => $item_url,
-						'brand_id' => $brand_id,
+				for ($c=0; $c < $num; $c++) {
+					$importData_arr[$i][] = $filedata [$c];
+				}
+				$i++;
+			}
+			fclose($file);
+			$skip = 0;
+			//echo '<pre>'; print_r($importData_arr); die;
+			$arrayCount = count($importData_arr);
+			$idata = array();
+			$insert_data = array();
+			$update_data = array();
+			$uwhere = array();
+			
+			for($i=1;$i<$arrayCount;$i++){ 
+				$itemId = trim($importData_arr[$i][0]);	// itemId
+				$category = trim($importData_arr[$i][1]);	// category
+				$parent_category = trim($importData_arr[$i][2]);	// parent_category
+				$title = trim($importData_arr[$i][3]);	// title
+				$price = trim($importData_arr[$i][4]);	// price
+				$currency = trim($importData_arr[$i][5]);	// currency
+				$brand = trim($importData_arr[$i][6]);	// brand
+				$item_url = trim($importData_arr[$i][7]);	// item_url
+				$payment_method = trim($importData_arr[$i][8]);	// payment_method
+				$quantity = trim($importData_arr[$i][9]);	// quantity
+				$description = trim($importData_arr[$i][10]);	// description
+				$brand_id = 0;
+				if($brand !=''){
+					$input2 = array(
+						'name' => $brand,
+						'slug' => $this->slugify($brand),
 						'updated_at' => date('Y-m-d H:i:s'),
 					);
-					echo '<pre>'; print_r($input); echo '</pre>';
- 					$product_check = Product::where('itemId',$input2['slug'])->first();
-					if($product_check && $product_check->count() > 0){
-						$product_id = $product_check->id;
-						Product::where('id',$product_id)->update($input);
+					$brand_check = Brand::where('slug',$input2['slug'])->first();
+					if($brand_check && $brand_check->count() > 0){
+						$brand_id = $brand_check->id;
+						Brand::where('id',$brand_id)->update($input2);
 					}else{
-						$input['updated_at'] = date('Y-m-d H:i:s');
-						$product_id = Product::create($input)->id;
-					} 
-			
+						$input2['updated_at'] = date('Y-m-d H:i:s');
+						$brand_id = Brand::create($input2)->id;
+					}
+					
 				} 
-				echo 'success';
-								
-			}else{
-				$m = json_encode(array('file'=>'Excel File is required.')); 
-				echo ($m."|0");	
-				exit;
-			}		
+				$input = array(
+					'itemId'=> $itemId,
+					'categoryId'=> $category,
+					'parentCategoryId'=> $parent_category,
+					'title' => $title,
+					'current_price' => $price,
+					'current_price_currency' => $currency,
+					'PaymentMethods' => $payment_method,
+					'Quantity' => $quantity,
+					'Description' => $description,
+					'viewItemURL' => $item_url,
+					'brand_id' => $brand_id,
+					'updated_at' => date('Y-m-d H:i:s'),
+				);
+				echo '<pre>'; print_r($input); echo '</pre>';
+				$product_check = Product::where('itemId',$input2['slug'])->first();
+				if($product_check && $product_check->count() > 0){
+					$product_id = $product_check->id;
+					Product::where('id',$product_id)->update($input);
+				}else{
+					$input['updated_at'] = date('Y-m-d H:i:s');
+					$product_id = Product::create($input)->id;
+				} 
+		
+			} 
+			echo 'success';
+							
+		}else{
+			$m = json_encode(array('file'=>'Excel File is required.')); 
+			echo ($m."|0");	
+			exit;
+		}		
 	}
 	
 	public function excel_genrate(Request $request){

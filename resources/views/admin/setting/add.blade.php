@@ -1,6 +1,11 @@
 @extends('admin.layouts.app')
 
 @section('content')
+<?php 
+use \App\Http\Controllers\DetailController;
+$menu_permissions = DetailController::get_menu_permissions();
+?>
+
    <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -23,10 +28,15 @@
           <div class="box box-primary">
           <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
+			<?php if(Auth::user()->is_super_admin == 1 || in_array('setting_site',$menu_permissions) ){?>			
               <li class="active"><a href="#site-settings" data-toggle="tab">Site</a></li>
+			<?php } ?>
+			<?php if(Auth::user()->is_super_admin == 1 || in_array('setting_social',$menu_permissions) ){?>
               <li><a href="#social-settings" data-toggle="tab">Social</a></li>
+			<?php } ?>
             </ul>
             <div class="tab-content">
+			<?php if(Auth::user()->is_super_admin == 1 || in_array('setting_site',$menu_permissions) ){?>
               <div class="active tab-pane" id="site-settings">
             <!-- form start -->
 				<form role="form" id="siteForm" enctype="multipart/form-data">
@@ -82,6 +92,8 @@
 
               </div>
               <!-- /.tab-pane -->
+			<?php } ?>
+			<?php if(Auth::user()->is_super_admin == 1 || in_array('setting_social',$menu_permissions) ){?>			  
               <div class="tab-pane" id="social-settings">
 				<form role="form" id="socialForm" enctype="multipart/form-data">
 				 {{csrf_field()}}
@@ -96,11 +108,6 @@
 				<div class="form-group col-md-12">
 					<div class="pull-left">
 					<label for="type"><span class="text-danger">*</span> Social Links</label>
-						<div class="row margin-bottom">
-							<div class="col-lg-3">
-								<a href="javascript:void(0)" id="add_row" onclick="add_row();" class="btn btn-success btn-sm"><i class="fa fa-plus"></i> Add New</a>
-							</div>
-						</div>
 					</div>
 				  <div class="row">
 					  <div class="col-lg-12">
@@ -151,7 +158,12 @@
 								  </table>
 						 </div>				  
 					</div>
-				</div>				
+				</div>
+						<div class="row margin-bottom">
+							<div class="col-lg-3">
+								<a href="javascript:void(0)" id="add_row" onclick="add_row();" class="btn btn-success btn-sm"><i class="fa fa-plus"></i> Add New</a>
+							</div>
+						</div>				
 				</div>					
 				  </div>
 				  <!-- /.box-body -->
@@ -163,6 +175,7 @@
 				</form>
               </div>
               <!-- /.tab-pane -->
+		<?php } ?>
             </div>
             <!-- /.tab-content -->
           </div>

@@ -101,60 +101,55 @@ class BannersController extends Controller
     }	
 	
 	public function save_data(Request $request){
-		//echo '<Pre>'; print_R($request->all());die;
-/* 		$validator = Validator::make($request->all(), [
+
+		$validator = $request->validate([
              'name' => 'required',			 		 		 
              'heading_title' => 'required',			 		 
              'description' => 'required',			 		 
-             'section_name' => 'required',			 		 
-			], 
+             'section_name' => 'required',	
+		], 
 			$messages = [
 			'name.required' => 'Name is required',
 			'heading_title.required' => 'Heading Title is required',
 			'description.required' => 'Description is required',
 			'section.required' => 'Section is required',
-		])->validate(); */	
-		//echo '<pre>'; print_R($validator); die;
-       // if (isset($validator) && $validator->fails())
-        //{
-            //return response()->json(['errors'=>$validator->errors()->all()]);
-        //}else{
-			$req   = $request->all();
-			$id = $req['id'];
-			$pre_fileName   ='';
-			if(isset($req['file'])){	
-				$file=$request->file('file');
-				$name=$file->getClientOriginalName();
-				$ext=$file->getClientOriginalExtension();
-				$pre_fileName= time().rand().'.'.$ext;
-				$file->move('banner_files',$pre_fileName);
-			}elseif($req['file_name'] != ''){
-				$pre_fileName = $req['file_name'];
-			}else{
-				$m = json_encode(array('file'=>'Image is required.')); 
-				echo ($m."|0");	
-				exit;
-			}
+		]);
 
-			$input=array(
-				'name'=> $req['name'],
-				'description' => addslashes($req['description']),
-				'heading_title' => $req['heading_title'],
-				'section_name' => $req['section_name'],
-				'display_image' => $pre_fileName,
-				'updated_by' => Auth::user()->id,
-				'updated_at' => date('Y-m-d H:i:s'),
-			);
-			if($id!=''){
-				Banner::where('id',$id)->update($input);	
-			}else{
-				$input['created_by'] = Auth::user()->id;
-				$input['created_at'] = date('Y-m-d H:i:s');
-				$id = Banner::create($input)->id;				
-			}	
+		$req   = $request->all();
+		$id = $req['id'];
+		$pre_fileName   ='';
+		if(isset($req['file'])){	
+			$file=$request->file('file');
+			$name=$file->getClientOriginalName();
+			$ext=$file->getClientOriginalExtension();
+			$pre_fileName= time().rand().'.'.$ext;
+			$file->move('banner_files',$pre_fileName);
+		}elseif($req['file_name'] != ''){
+			$pre_fileName = $req['file_name'];
+		}else{
+			$m = json_encode(array('file'=>'Image is required.')); 
+			echo ($m."|0");	
+			exit;
+		}
 
-			echo '|success';				
-        //}
+		$input=array(
+			'name'=> $req['name'],
+			'description' => addslashes($req['description']),
+			'heading_title' => $req['heading_title'],
+			'section_name' => $req['section_name'],
+			'display_image' => $pre_fileName,
+			'updated_by' => Auth::user()->id,
+			'updated_at' => date('Y-m-d H:i:s'),
+		);
+		if($id!=''){
+			Banner::where('id',$id)->update($input);	
+		}else{
+			$input['created_by'] = Auth::user()->id;
+			$input['created_at'] = date('Y-m-d H:i:s');
+			$id = Banner::create($input)->id;				
+		}	
+
+		echo '|success';				
     }
 	
 	public function delete_data(Request $request) {

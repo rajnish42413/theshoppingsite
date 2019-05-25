@@ -1644,8 +1644,9 @@ ul.inner_list_item {
     -moz-column-count: 2;
     column-count: 2;
 }
-ul.inner_list_item li{
-	
+ul.inner_list_item li {
+    float: left;
+    width: 50%!important;
 }
 ul.inner_list_item li a{ 
     display: inline-block;

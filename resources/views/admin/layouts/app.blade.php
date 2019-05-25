@@ -1,3 +1,8 @@
+<?php 
+use \App\Http\Controllers\DetailController;
+$menu_permissions = DetailController::get_menu_permissions();
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -174,7 +179,21 @@
       <!-- sidebar menu: : style can be found in sidebar.less -->
       <ul class="sidebar-menu" data-widget="tree">
         <li class="header">MAIN NAVIGATION</li>
-
+	<?php if(Auth::user()->is_super_admin == 1){?>
+         <li class="treeview <?php if($data['nav'] == 'menu_users'){echo 'active';}?>">
+          <a href="#">
+            <i class="fa fa-users"></i> <span>Users</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li class="<?php if($data['sub_nav'] == 'menu_users_add'){echo 'active';}?>"><a href="{{ route('users-add') }}"><i class="fa fa-plus"></i> Add</a></li>
+            <li class="<?php if($data['sub_nav'] == 'menu_users_list'){echo 'active';}?>"><a href="{{ route('users-list') }}"><i class="fa fa-list"></i> List</a></li>
+          </ul>
+        </li>
+	<?php } ?>
+	<?php if(Auth::user()->is_super_admin == 1 || in_array('banners',$menu_permissions)){?>	
         <li class="treeview <?php if($data['nav'] == 'menu_banners'){echo 'active';}?>">
           <a href="#">
             <i class="fa fa-tags"></i> <span>Banners</span>
@@ -187,7 +206,8 @@
             <li class="<?php if($data['sub_nav'] == 'menu_banners_list'){echo 'active';}?>"><a href="{{ route('banners-list') }}"><i class="fa fa-list"></i> List</a></li>
           </ul>
         </li>
-		
+	<?php } ?>
+	<?php if(Auth::user()->is_super_admin == 1 || in_array('navigation_menu',$menu_permissions)){?>		
         <li class="treeview <?php if($data['nav'] == 'menu_navigation_menu'){echo 'active';}?>">
           <a href="#">
             <i class="fa fa-tags"></i> <span>Navigation Menu</span>
@@ -200,7 +220,8 @@
             <li class="<?php if($data['sub_nav'] == 'menu_navigation_menu_list'){echo 'active';}?>"><a href="{{ route('navigation-menu-list') }}"><i class="fa fa-list"></i> List</a></li>
           </ul>
         </li>
-		
+	<?php } ?>
+			
 		
         <li class="treeview <?php if($data['nav'] == 'menu_categories'){echo 'active';}?>">
           <a href="#">
@@ -210,8 +231,12 @@
             </span>
           </a>
           <ul class="treeview-menu">
+			<?php if(Auth::user()->is_super_admin == 1 || in_array('parent_category_list',$menu_permissions)){?>			  
             <li class="<?php if($data['sub_nav'] == 'menu_parent_categories_list'){echo 'active';}?>"><a href="{{ route('parent-categories-list') }}"><i class="fa fa-list"></i> Parent Categories List</a></li>
-            <li class="<?php if($data['sub_nav'] == 'menu_categories_list'){echo 'active';}?>"><a href="{{ route('categories-list') }}"><i class="fa fa-list"></i> All Categories List</a></li>			
+			<?php } ?>
+			<?php if(Auth::user()->is_super_admin == 1 || in_array('category_list',$menu_permissions)){?>	
+            <li class="<?php if($data['sub_nav'] == 'menu_categories_list'){echo 'active';}?>"><a href="{{ route('categories-list') }}"><i class="fa fa-list"></i> All Categories List</a></li>	
+			<?php } ?>			
           </ul>
         </li>
 		
@@ -223,11 +248,16 @@
             </span>
           </a>
           <ul class="treeview-menu">
-			<li class="<?php if($data['sub_nav'] == 'menu_products_list'){echo 'active';}?>"><a href="{{ route('products-list') }}"><i class="fa fa-list"></i> Product List</a></li>		  
+			<?php if(Auth::user()->is_super_admin == 1 || in_array('product_list',$menu_permissions)){?>			  
+			<li class="<?php if($data['sub_nav'] == 'menu_products_list'){echo 'active';}?>"><a href="{{ route('products-list') }}"><i class="fa fa-list"></i> Product List</a></li>
+			<?php } ?>
+			<?php if(Auth::user()->is_super_admin == 1 || in_array('product_import',$menu_permissions)){?>				
             <li class="<?php if($data['sub_nav'] == 'menu_products_import'){echo 'active';}?>"><a href="{{ route('products-import') }}"><i class="fa fa-upload"></i> Import Products</a></li>
+			<?php } ?>
           </ul>
         </li>
-		
+
+<?php if(Auth::user()->is_super_admin == 1 || in_array('content_pages',$menu_permissions)){?>		
         <li class="treeview <?php if($data['nav'] == 'menu_front_pages'){echo 'active';}?>">
           <a href="#">
             <i class="fa fa-cog"></i> <span>Content Pages</span>
@@ -245,7 +275,8 @@
            
           </ul>
         </li>
-
+<?php } ?>
+<?php if(Auth::user()->is_super_admin == 1 || in_array('contact_enquiry',$menu_permissions)){?>
         <li class="treeview <?php if($data['nav'] == 'menu_enquiries'){echo 'active';}?>">
           <a href="#">
             <i class="fa fa-tags"></i> <span>Contact Enquiries</span>
@@ -257,7 +288,8 @@
             <li class="<?php if($data['sub_nav'] == 'menu_enquiries_list'){echo 'active';}?>"><a href="{{ route('enquiries-list') }}"><i class="fa fa-list"></i> List</a></li>
           </ul>
         </li>		
-		
+<?php } ?>
+<?php if(Auth::user()->is_super_admin == 1 || in_array('setting_site',$menu_permissions) || in_array('setting_social',$menu_permissions)){?>		
         <li class="treeview <?php if($data['nav'] == 'menu_settings'){echo 'active';}?>">
           <a href="#">
             <i class="fa fa-cog"></i> <span>Settings</span>
@@ -269,7 +301,7 @@
             <li class="<?php if($data['sub_nav'] == 'menu_settings_add'){echo 'active';}?>"><a href="{{ route('settings-edit') }}"><i class="fa fa-pencil"></i> Edit</a></li>
           </ul>
         </li>         
-		
+<?php } ?>		
       </ul>
     </section>
     <!-- /.sidebar -->

@@ -56,7 +56,7 @@
                 </div>				
                 <div class="form-group is_public" >
                
-                  <input type="checkbox" class="" id="is_public"   onchange="change_is_public(this);"  <?php if($row){ if($row->is_public == '1'){ echo 'checked'; } }?>>
+                  <input type="checkbox" class="" id="is_public" onchange="change_is_public(this);"  <?php if($row){ if($row->is_public == '1'){ echo 'checked'; } }?>>
 				  <input type="hidden" value="<?php if($row){ echo $row->is_public; }else{ echo '0';}?>" name="is_public" id="isPublic">
 				     <label for="is_public" >Show to Non-Logged Users?</label>
                 </div>					

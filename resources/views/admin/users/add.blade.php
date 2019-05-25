@@ -10,7 +10,7 @@
       </h1>
       <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li><a href="<?php echo env('APP_URL');?>categories-list"><?php echo $data['title'];?></a></li>
+        <li><a href="<?php echo env('APP_URL');?>users-list"><?php echo $data['title'];?></a></li>
         <li class="active"><?php echo $data['sub_title'];?></li>
       </ol>
     </section>
@@ -23,7 +23,7 @@
           <!-- general form elements -->
           <div class="box box-primary">
             <!-- form start -->
-            <form role="form" id="addForm">
+            <form role="form" id="addForm" enctype="multipart/form-data">
 			 {{csrf_field()}}
               <div class="box-body">
 				<div class="row">
@@ -32,45 +32,45 @@
 							<ul class="nav"></ul>
 						</div>
 					</div>
-				</div>				
+				</div>				  
                 <div class="form-group">
-                  <label for="name"><span class="text-danger">*</span> Category Name</label>
-                  <input type="text" class="form-control" id="name" name="name" placeholder="Category Name" value="<?php if($row){ echo $row->categoryName; }?>" >
+                  <label for="name">Name</label>
+                  <input type="text" class="form-control" id="name" name="name" placeholder="Enter Name" value="<?php if($row){ echo $row->name; }?>" >
                 </div>
-				
                 <div class="form-group">
-				 <label for="nav_menu_id"><span class="text-danger">*</span> Add on Navigation Menu</label>
-				<select type="text" class="form-control js-example-basic-single" id="nav_menu_id" name="nav_menu_id" >
-					<option value="" >--Select--</option>
-				<?php if($nav_menus && $nav_menus->count() > 0){
-					foreach($nav_menus as $nav){?>
-					<option value="<?php echo $nav->id;?>" <?php if($row){ if($row->nav_menu_id == $nav->id){echo 'selected'; }} ?> ><?php echo $nav->name;?></option>
-				<?php } } ?>
-				</select>
+                  <label for="email">Email</label>
+                  <input type="email" class="form-control" id="email" name="email" placeholder="Enter Email" value="<?php if($row){ echo $row->email; }?>" >
                 </div>
-				
+		
                 <div class="form-group">
-				 <label for="is_top_category"><span class="text-danger">*</span> Top Category on Homepage</label>
-				<select type="text" class="form-control" id="is_top_category" name="is_top_category" >
-					<option value="0" <?php if($row){ if($row->is_top_category == 0){echo 'selected'; }} ?> >No</option>
-					<option value="1" <?php if($row){ if($row->is_top_category == 1){echo 'selected'; }} ?> >Yes</option>
-				</select>
-                </div>
-
-                <div class="form-group">
-				 <label for="status"><span class="text-danger">*</span> Status</label>
-				<select type="text" class="form-control" id="status" name="status" >
-					<option value="1" <?php if($row){ if($row->status == 1){echo 'selected'; }} ?> >Active</option>				
-					<option value="0" <?php if($row){ if($row->status == 0){echo 'selected'; }} ?> >Deactive</option>
-				</select>
-                </div>
-			
-
-                <div class="form-group">
-                  <label for="file"><span class="text-danger">*</span> Image</label>
-					<input type="file" data-id="<?php if($row){echo $row->id;}?>" id="file" class="dropify" <?php if($row && !empty($row->image)){}else{ echo ' ';} ?>  name="file" data-default-file="<?php if($row){if(!empty($row->image)){  echo env("APP_URL").'/category_files/'.$row->image;} }?>" />				  
+                  <label for="file">Image</label>
+					<input type="file" data-id="<?php if($row){echo $row->id;}?>" id="file" class="dropify" <?php if($row && !empty($row->image)){}else{ echo ' ';} ?>  name="file" data-default-file="<?php if($row){if(!empty($row->image)){  echo env("APP_URL").'/user_profile_files/'.$row->image;} }?>" />				  
                   <input type="hidden" id="file_name" name="file_name" value="<?php if($row){ echo $row->image; }?>">
-                </div>				
+                </div>
+                <div class="form-group">
+                  <label for="active"><span class="text-danger">*</span> Status</label>
+                  <select type="text" class="form-control" id="active" name="active" placeholder="Status" >
+					<option value="1" <?php if($row){ if($row->active == 1){ echo 'selected';} }?> >Active</option>
+					<option value="0" <?php if($row){ if($row->active == 0){ echo 'selected';} }?> >Deactive</option>
+				  </select>
+                </div>	
+
+                <div class="form-group">
+				 <label for="menu_permissions"><span class="text-danger">*</span> Menu Permissions</label>
+				<select type="text" class="form-control js-example-basic-single" id="menu_permissions" name="menu_permissions[]" multiple>
+					<?php 
+					$user_menu_permissions = array();
+					if($row){
+						if($row->menu_permissions != ''){
+							$user_menu_permissions = explode(',',$row->menu_permissions);
+						}
+					}
+					if($menu_permissions && $menu_permissions->count() > 0){
+						foreach($menu_permissions as $mp){?>
+						<option value="<?php echo $mp->key_name;?>" <?php if(in_array($mp->key_name,$user_menu_permissions)){ echo 'selected';}?>><?php echo $mp->display_name;?></option>
+					<?php } } ?>
+				</select>
+                </div>
 				
               </div>
               <!-- /.box-body -->
@@ -95,22 +95,22 @@
 </script>  
 <script>
 
-var surl = '<?php echo route('categories-list');?>'; 
+var surl = '<?php echo route('users-list');?>'; 
 $("#addForm").submit(function(e){
-$('.wait_loader').show();	
-	e.preventDefault();
+	$('.wait_loader').show();	
 	$('.admin_errors.alert-danger').hide();
 	$('.admin_errors.alert-danger ul').html('');
+	e.preventDefault();
 	$("#sub_btn").html('please wait..'); 
 	$('.error').html('');
 	$.ajax({
 		type: "POST",
-		url: '<?php echo route('categories-save');?>',
+		url: '<?php echo route('users-save');?>',
 		data:  new FormData(this),
 		processData:false,
 		contentType:false,
 		cache:false,
-		datatype:"json",
+		datatype:"json",	
 		success: function(response)
 		{
 			$("#sub_btn").html('Submit'); 
@@ -128,19 +128,16 @@ $('.wait_loader').show();
 			}
 			 
 			else if(response == '|success'){
-
-				<?php if($row){ ?>
-					
+				<?php if($row){?>
 					$.notify({
 					  message: '<?php echo $data['title'];?> Updated Successfully!!' 
 					 },{ element: 'body', type: "success", allow_dismiss: true, offset: { x: 0, y: 60 }, delay: 1000 
 					});
-				<?php }else{ ?>
-					
+				<?php }else{?>
 					$.notify({
 					  message: '<?php echo $data['title'];?> Added Successfully!!' 
 					 },{ element: 'body', type: "success", allow_dismiss: true, offset: { x: 0, y: 60 }, delay: 1000 
-					 });
+					});				
 				<?php } ?>
 				
 			window.setTimeout(function() { window.location = surl }, 1000); 			
@@ -156,12 +153,12 @@ $('.wait_loader').show();
 				$('.admin_errors.alert-danger').show();
 				$('.admin_errors.alert-danger ul').append('<li>'+value+'</li>');
 			});
-		}		
+		}
 	});
 });
 
  </script>
-<script>
+ <script>
  function readURL(input) {
 
   if (input.files && input.files[0]) {

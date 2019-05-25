@@ -134,5 +134,16 @@ class DetailController extends Controller
 		}
 		//echo '<pre>'; print_r($nav_menus); die;
 		return $nav_menus;
-	}	
+	}
+
+	public static function get_menu_permissions(){
+		$menu_permissions = array();
+		$user = User::where('id',Auth::user()->id)->first();
+		if($user && $user->count() > 0){
+			if($user->menu_permissions!=''){
+				$menu_permissions = explode(',',$user->menu_permissions);
+			}
+		}
+		return $menu_permissions;
+	}
 }

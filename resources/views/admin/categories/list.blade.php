@@ -54,11 +54,13 @@
     </div>
     </form>	  
       <div class="row">
-        <div class="col-lg-2 col-lg-offset-9 col-xs-6 text-center">
+        <div class="col-lg-2 col-lg-offset-8 col-xs-6 text-center">
 		<span class="badge label label-primary" id="selected_count" style="display:none;"></span>		
 		</div>
-        <div class="col-lg-1 col-xs-6 text-center">
-		<a id="categories_delete_btn" class="btn btn-danger btn-sm"  onclick="delete_row('categoriesTable','categories-delete')" ><i class="fa fa-trash"></i> Delete</a>			
+        <div class="col-lg-2 col-xs-6 text-center">
+		<a id="categories_status_btn" class="btn btn-success btn-sm"  onclick="set_status_row('categoriesTable','categories-status-multiple','1')" ><i class="fa fa-check"></i> Active</a>			
+		<a id="categories_status_btn2" class="btn btn-danger btn-sm"  onclick="set_status_row('categoriesTable','categories-status-multiple','0')" ><i class="fa fa-remove"></i> Deactive</a>	
+	   
 		</div>		
 	  </div>
 	  <div class="row">

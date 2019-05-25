@@ -1,8 +1,5 @@
 <?php 
 use \App\Http\Controllers\DetailController;
- ?>
-<?php 
-
 $nav_menus = DetailController::get_main_nav_menus();
 $settings = DetailController::get_settings();
 $social_links = DetailController::get_social_links();

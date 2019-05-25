@@ -35,19 +35,19 @@
 				</div>				  
                 <div class="form-group">
                   <label for="name"><span class="text-danger">*</span> Name</label>
-                  <input type="text" class="form-control" id="name" name="name" placeholder="Enter Name" value="<?php if($row){ echo $row->name; }?>" required>
+                  <input type="text" class="form-control" id="name" name="name" placeholder="Enter Name" value="<?php if($row){ echo $row->name; }?>" >
                 </div>
                 <div class="form-group">
                   <label for="heading_title"><span class="text-danger">*</span> Heading</label>
-                  <input type="text" class="form-control" id="heading_title" name="heading_title" placeholder="Heading" value="<?php if($row){ echo $row->heading_title; }?>" required>
+                  <input type="text" class="form-control" id="heading_title" name="heading_title" placeholder="Heading" value="<?php if($row){ echo $row->heading_title; }?>" >
                 </div>
                 <div class="form-group">
                   <label for="description"><span class="text-danger">*</span> Description</label>
-                  <textarea rows="4" class="form-control" id="description" name="description" required ><?php if($row){ echo $row->description; }?></textarea>
+                  <textarea rows="4" class="form-control" id="description" name="description"><?php if($row){ echo $row->description; }?></textarea>
                 </div>	
                 <div class="form-group">
                   <label for="section_name"><span class="text-danger">*</span> Section</label>
-                  <select class="form-control js-example-basic-single" id="section_name" name="section_name" required>
+                  <select class="form-control js-example-basic-single" id="section_name" name="section_name">
 				<?php foreach($section_names as $sn){?>
 					<option value="<?php echo $sn->value;?>" <?php if($row){ if($row->section_name == $sn->value){ echo 'selected';} }?> ><?php echo ucwords($sn->label);?></option>
 				<?php } ?>

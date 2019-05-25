@@ -103,7 +103,8 @@ class NavigationMenuController extends Controller
     }	
 	
 	public function save_data(Request $request){
-/* 		$validator = Validator::make($request->all(), [
+		
+		$validator = $request->validate([
              'name' => 'required',			 		 		 
              'parent_id' => 'required',			 		 
              'link_name' => 'required',			 		  		 
@@ -112,56 +113,52 @@ class NavigationMenuController extends Controller
 			'name.required' => 'Name is required',
 			'parent_id.required' => 'Parent is required',
 			'link_name.required' => 'Link is required',
-		])->validate();	
+		]);		
 
-        if (isset($validator) && $validator->fails())
-        {
-            return response()->json(['errors'=>$validator->errors()->all()]);
-        }else{ */
-			$req   = $request->all();
-			$id = $req['id'];
-			$parent_id = $req['parent_id'];
-			$name = trim($req['name']);
-			$link_name = trim($req['link_name']);
-			$is_public = trim($req['is_public']);
-			$has_child = 0;
-			$is_child = 0;
-			if($parent_id != 0){
-				$is_child = 1;
+		$req   = $request->all();
+		$id = $req['id'];
+		$parent_id = $req['parent_id'];
+		$name = trim($req['name']);
+		$link_name = trim($req['link_name']);
+		$is_public = trim($req['is_public']);
+		$has_child = 0;
+		$is_child = 0;
+		if($parent_id != 0){
+			$is_child = 1;
+		}
+		$slug = $this->slugify($name);
+		$input=array(
+			'name'=> $name,
+			'parent_id' => $parent_id,
+			'slug' => $slug,
+			'has_child' => $has_child,
+			'is_child' => $is_child,
+			'is_public' => $is_public,
+			'link_name' => $link_name,
+			'updated_by' => Auth::user()->id,
+			'updated_at' => date('Y-m-d H:i:s'),
+		);
+		if($id!=''){
+			NavigationMenu::where('id',$id)->update($input);	
+		}else{
+			$input['created_by'] = Auth::user()->id;
+			$input['created_at'] = date('Y-m-d H:i:s');
+			$id = NavigationMenu::create($input)->id;				
+		}	
+		if($parent_id != 0){
+			$check = NavigationMenu::where('id',$parent_id)->first();
+			if($check->count()>0){
+				$input2['slug'] = "#";
+				$input2['has_child'] = 1;
+				NavigationMenu::where('id',$check->id)->update($input2);
 			}
-			$slug = $this->slugify($name);
-			$input=array(
-				'name'=> $name,
-				'parent_id' => $parent_id,
-				'slug' => $slug,
-				'has_child' => $has_child,
-				'is_child' => $is_child,
-				'is_public' => $is_public,
-				'link_name' => $link_name,
-				'updated_by' => Auth::user()->id,
-				'updated_at' => date('Y-m-d H:i:s'),
-			);
-			if($id!=''){
-				NavigationMenu::where('id',$id)->update($input);	
-			}else{
-				$input['created_by'] = Auth::user()->id;
-				$input['created_at'] = date('Y-m-d H:i:s');
-				$id = NavigationMenu::create($input)->id;				
-			}	
-			if($parent_id != 0){
-				$check = NavigationMenu::where('id',$parent_id)->first();
-				if($check->count()>0){
-					$input2['slug'] = "#";
-					$input2['has_child'] = 1;
-					NavigationMenu::where('id',$check->id)->update($input2);
-				}
-			}
-			echo '|success';				
-        //}
+		}
+		echo '|success';				
+
     }
 	
 	public function delete_data(Request $request) {
-		//echo 'ravi';die;
+
         if ($request->isMethod('post'))
         {
             $req    = $request->all();

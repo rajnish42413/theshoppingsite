@@ -172,53 +172,43 @@ class CategoriesController extends Controller
     }	
 	
 	public function save_data(Request $request){
-/* 		$validator = Validator::make($request->all(), [
-             'name' => 'required',			 		 	 		 		 		 
-			], 
+		
+		$validator = $request->validate([
+			'name' => 'required',
+		], 
 			$messages = [
 			'name.required' => 'Name is required',
-		])->validate();	
-
-        if (isset($validator) && $validator->fails())
-        {
-            return response()->json(['errors'=>$validator->errors()->all()]);
-        }else{ */
-			
-			$req   = $request->all();
-			$id = $req['id'];
-			$pre_fileName   ='';
-			if(isset($req['file'])){	
-				$file=$request->file('file');
-				$name=$file->getClientOriginalName();
-				$ext=$file->getClientOriginalExtension();
-				$pre_fileName= time().rand().'.'.$ext;
-				$file->move('category_files',$pre_fileName);
-			}elseif($req['file_name'] != ''){
-				$pre_fileName = $req['file_name'];
-			}else{
-				$m = json_encode(array('file'=>'Image is required.')); 
-				echo ($m."|0");	
-				exit;
-			}			
-
-			$input=array(
-				'categoryName'=> trim($req['name']),
-				'slug'=> $this->slugify(trim($req['name'])),
-				'nav_menu_id' => $req['nav_menu_id'],
-				'is_top_category' => $req['is_top_category'],
-				'status' => $req['status'],
-				'image' => $pre_fileName,
-				'updated_at' => date('Y-m-d H:i:s'),
-			);
-			if($id!=''){
-				Category::where('id',$id)->update($input);	
-			}else{
-				$id = Category::create($input)->id;				
-			}	
-
-			echo "|success";
+		]);
 		
-		//}
+		$req   = $request->all();
+		$id = $req['id'];
+		$pre_fileName   ='';
+		if(isset($req['file'])){	
+			$file=$request->file('file');
+			$name=$file->getClientOriginalName();
+			$ext=$file->getClientOriginalExtension();
+			$pre_fileName= time().rand().'.'.$ext;
+			$file->move('category_files',$pre_fileName);
+		}elseif($req['file_name'] != ''){
+			$pre_fileName = $req['file_name'];
+		}			
+
+		$input=array(
+			'categoryName'=> trim($req['name']),
+			'slug'=> $this->slugify(trim($req['name'])),
+			'nav_menu_id' => $req['nav_menu_id'],
+			'is_top_category' => $req['is_top_category'],
+			'status' => $req['status'],
+			'image' => $pre_fileName,
+			'updated_at' => date('Y-m-d H:i:s'),
+		);
+		if($id!=''){
+			Category::where('id',$id)->update($input);	
+		}else{
+			$id = Category::create($input)->id;				
+		}	
+
+		echo "|success";
     }
 	
 	public function delete_data(Request $request) {
@@ -279,6 +269,32 @@ class CategoriesController extends Controller
 		}
 		echo $output;		
 	}	
+	
+	public function status_update(Request $request) {
+		
+        if ($request->isMethod('post'))
+        {
+            $req = $request->all();
+			$statusId = $req['id'];
+			$status = $req['value'];
+			Category::where('id',$statusId)->update(array('status'=>$status));
+			echo 'success';
+		}
+    }
+	
+	public function status_multiple_update(Request $request) {
+		
+        if ($request->isMethod('post'))
+        {
+            $req    = $request->all();
+
+			$statusIds = explode(' ,',$req['ids']);
+			$status = $req['status'];
+			Category::whereIn('id',$statusIds)->update(array('status'=>$status));
+			echo 'success';
+		}
+    }	
+	
 	
 	public static function slugify($text){
 	  // replace non letter or digits by -

@@ -1,4 +1,117 @@
 $(document).ready(function() {
+	/*  usersTable */
+	
+    window.usersTable = $('#usersTable').DataTable({
+      "processing": true,
+      "serverSide": true,
+       "ordering": true,
+      "dom": '<l<t>ip>',
+        "ajax": 'searchajaxusers',
+
+        "columns": [
+            { "data": "id","orderable":false,"render": function(data, type, row, meta){ 
+			return '<input type="checkbox" name="id[]" value="'+ $('<div/>').text(data).html() + ' " >';
+			}},
+			{ "data": "name" },
+            { "data": "is_super_admin","render": function(data, type, row, meta){ 
+				if(data=='1'){
+					return 'Super Admin';
+				}
+				else if(data=='0'){
+					return 'Sub Admin';
+				}
+			}},				
+			{ "data": "email"},	
+            { "data": "active","render": function(data, type, row, meta){ 
+				if(data=='1'){
+					return '<button type="button" onclick="status_row_single('+row.id+',\'usersTable\',\'users-status\',\'0\')" class="btn btn-sm btn-success">Active</button>';
+				}
+				else if(data=='0'){
+					return '<button type="button" onclick="status_row_single('+row.id+',\'usersTable\',\'users-status\',\'1\')" class="btn btn-sm btn-danger">Deactive</button>';
+				}
+			}},		
+		   { "data": "id","orderable":false,"render": function(data, type, row, meta){ 
+			   return '<a href="users-edit/'+data+'"  class="btn btn-sm btn-info">Edit</a>&nbsp;&nbsp;<button type="button" onclick="delete_single_row('+data+',\'usersTable\',\'users-delete\')" class="btn btn-sm btn-danger">Delete</button>';
+
+		   }},	
+        ]
+		,"columnDefs": [ 
+		{
+		'targets': 0,
+         'searchable': false,
+         'orderable': false,
+		},
+		
+		],
+		'rowCallback': function(row, data, dataIndex){
+			var strVale = $('#checked_ids').val();
+			var rowId = data.id;
+			var arr = strVale.split(',');
+			arr = arr.map(Number);
+			//alert(rowId);
+           if($.inArray(rowId,arr) !== -1){
+			  $(row).find('input[type="checkbox"]').prop('checked', true);
+			}
+      }
+    });
+
+     $('#usersTable tbody').on('click', 'input[type="checkbox"]', function(e){ 
+        updateDataTableSelectAllCtrl(usersTable);
+		e.stopPropagation();
+		var ids = $('#checked_ids').val();
+		var nids = '';
+		
+		 if(this.checked){ 
+			if(ids.length == 0){
+				nids = $(this).val();
+			}else{
+				nids = $(this).val()+','+ids;
+			}
+			$('#checked_ids').val(nids);
+		}else{
+			var nlist = removeValue(ids,$(this).val());
+			$('#checked_ids').val(nlist);
+		}
+		var cvals = $('#checked_ids').val();
+		var arr = cvals.split(',');
+		if(cvals.length == 0){ 
+			$('#selected_count').hide();
+		}else{
+			$('#selected_count').html('Selected Count : '+arr.length);
+			$('#selected_count').show();
+		}
+    });
+   
+    $('#usersTable').on('click', 'tbody td, thead th:first-child', function(e){ 
+      $(this).parent().find('input[type="checkbox"]').trigger('click');
+	});
+   
+   $('#usersTable thead input[name="select_all"]', usersTable.table().container()).on('click', function(e){
+      if(this.checked){ 
+	  	  
+		$('#usersTable tbody input[type="checkbox"]:not(:checked)').trigger('click');
+      } else { 
+			$('#usersTable tbody input[type="checkbox"]:checked').trigger('click');
+	 }
+	e.stopPropagation();
+   });
+
+   // Handle table draw event
+   usersTable.on('draw', function(){
+      updateDataTableSelectAllCtrl(usersTable);
+   });
+	
+	
+   
+  
+	$("#usersfrm #filter_submit").on('click', function () {
+		$('#checked_ids').val('');
+		$('#selected_count').hide();
+        var name = $("#usersfrm #name").val();
+		window.usersTable.column(1).search(name).draw();      
+    });
+	
+	/* ./ usersTable */
 	
 	/*  navigationMenuTable */
 	
@@ -232,14 +345,14 @@ $(document).ready(function() {
 			{ "data": "cat4Name"},
             { "data": "status","render": function(data, type, row, meta){ 
 				if(data=='1'){
-					return '<span class="label label-success">Active</span>';
+					return '<button type="button" onclick="status_row_single('+row.id+',\'categoriesTable\',\'categories-status\',\'0\')" class="btn btn-sm btn-success">Active</button>';
 				}
 				else if(data=='0'){
-					return '<span class="label label-danger">Deactive</span>';
+					return '<button type="button" onclick="status_row_single('+row.id+',\'categoriesTable\',\'categories-status\',\'1\')" class="btn btn-sm btn-danger">Deactive</button>';
 				}
 			}},			
 		   { "data": "id","orderable":false,"render": function(data, type, row, meta){ 
-			   return '<a href="categories-edit/'+data+'"  class="btn btn-sm btn-info">Edit</a>&nbsp;&nbsp;<button type="button" onclick="delete_single_row('+data+',\'categoriesTable\',\'categories-delete\')" class="btn btn-sm btn-danger">Delete</button>';
+			   return '<a href="categories-edit/'+data+'"  class="btn btn-sm btn-info">Edit</a>';
 
 		   }},	
         ]
@@ -802,7 +915,10 @@ function delete_row(content,action){
 			$.notify({
 			  message: 'Successfully Deleted' 
 			 },{ element: 'body', type: "success", allow_dismiss: true, offset: { x: 0, y: 60 }, delay: 1000 
-			});			
+			});
+			if(content == 'usersTable'){
+				window.usersTable.draw();
+			}			
 			if(content == 'categoriesTable'){
 				window.categoriesTable.draw();
 			}
@@ -842,6 +958,9 @@ function delete_single_row(id,content,action){
 			  message: 'Successfully Deleted' 
 			 },{ element: 'body', type: "success", allow_dismiss: true, offset: { x: 0, y: 60 }, delay: 1000 
 			});	
+			if(content == 'usersTable'){
+				window.usersTable.draw();
+			}			
 			if(content == 'categoriesTable'){
 				window.categoriesTable.draw();
 			}
@@ -880,6 +999,9 @@ function status_row_single(id,content,action,value){
 			  message: 'Status Successfully Changed' 
 			 },{ element: 'body', type: "success", allow_dismiss: true, offset: { x: 0, y: 60 }, delay: 1000 
 			});	
+			if(content == 'usersTable'){
+				window.usersTable.draw();
+			}			
 			if(content == 'categoriesTable'){
 				window.categoriesTable.draw();
 			}
@@ -895,7 +1017,11 @@ function status_row_single(id,content,action,value){
 			if(content == 'enquiriesTable'){
 				window.enquiriesTable.draw();
 			}
-			$('#selected_count').hide();	
+			$('#selected_count').hide();
+			setTimeout(function(){ 
+				$('#checked_ids').val('');
+				$(content+' tbody input[type="checkbox"]').prop('checked', false);
+				}, 200);				
 		}
 		});
 	}
@@ -941,11 +1067,7 @@ function set_status_row(content,action,type){
 	
 
 	if(confirm("Are you sure you want to change status?")){
-/* 	var ids = [];
-	$.each($('#'+content+' tbody input[type="checkbox"]:checked'),function(index, rowId){
-		var id = $(this).val();
-		ids.push(id);
-	}); */
+
 	var ids = $("#checked_ids").val();	
 	$.ajax({
 		headers: {
@@ -956,24 +1078,35 @@ function set_status_row(content,action,type){
 		data: {'ids':ids,'status':type}, // serializes the form's elements.
 		success: function(res)
 		{  
+		var itemName = 'Items';
+			if(content == 'usersTable'){
+				itemName = 'Users';
+				window.usersTable.draw();
+			}		
 			if(content == 'productsTable'){
 				window.productsTable.draw();
-				setTimeout(function(){ 
-					$('#checked_ids').val('');
-					$(content+' tbody input[type="checkbox"]').prop('checked', false);
-					}, 1000);				
+				itemName = 'Products';
 			}
-				if(type == 1){
-					$.notify({
-					  message: 'Selected Items set Active successfully!' 
-					 },{ element: 'body', type: "success", allow_dismiss: true, offset: { x: 0, y: 60 }, delay: 1000 
-					});						
-				}else{
-					$.notify({
-					  message: 'Selected Items set Deactive successfully!' 
-					 },{ element: 'body', type: "success", allow_dismiss: true, offset: { x: 0, y: 60 }, delay: 1000 
-					});
-				}
+			if(content == 'categoriesTable'){
+				itemName = 'Categories';
+				window.categoriesTable.draw();
+			}
+			setTimeout(function(){ 
+				$('#checked_ids').val('');
+				$(content+' tbody input[type="checkbox"]').prop('checked', false);
+				}, 200);				
+			
+			if(type == 1){
+				$.notify({
+				  message: 'Selected '+itemName+' set Active successfully!' 
+				 },{ element: 'body', type: "success", allow_dismiss: true, offset: { x: 0, y: 60 }, delay: 1000 
+				});						
+			}else{
+				$.notify({
+				  message: 'Selected '+itemName+' set Deactive successfully!' 
+				 },{ element: 'body', type: "success", allow_dismiss: true, offset: { x: 0, y: 60 }, delay: 1000 
+				});
+			}
 			$("#selected_count").html('');
 			$("#selected_count").hide();
 		}
