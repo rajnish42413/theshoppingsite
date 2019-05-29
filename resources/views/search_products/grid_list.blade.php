@@ -22,7 +22,8 @@
 	<!-- Search Grid Start-->
 	<div class="sh_search_grid_wrap sh_float_width">
 		<div class="container">
-			<div class="row">
+			<div class="row productListing">
+				<?php if($categories){?>
 				<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
 				<?php if($products && $products->count() > 0){?>
 					<div class="sh_side_bar sh_float_width">
@@ -64,23 +65,29 @@
 						</div>
 					</div>
 					<?php } ?>
+					<?php if($categories){?>
 					<div class="sh_side_bar sh_float_width">
 						<div class="sh_side_bar_section sh_float_width">
 										
 							<div class="sh_side_widget sh_sidear_cat_menu sh_float_width">
-								<h4 class="sh_sidecat_heading">Categories</h4>						
-							<?php if($categories){?>
+								<h4 class="sh_sidecat_heading">Categories</h4>
 								<ul class="cat-list">								
 								<?php foreach($categories as $cat){?>
 									<li><a href="<?php echo env('APP_URL')."category/".$cat->slug;?>"><?php echo $cat->categoryName;?></a></li>
 								<?php } ?>
 								</ul>
-							<?php } ?>							
 							</div>						
 						</div>					
 					</div>
+					<?php } ?>				
 				</div>
+				<?php } ?>
+				<?php if(count($products) == 0 && count($categories) == 0){?>
+				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center mrgTop50">
+
+				<?php }else{ ?>				
 				<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+				<?php } ?>
 					<div class="sh_product_grid sh_float_width">
 					<?php if($products && $products->count() > 0){?>
 						<div class="sh_product_grid_top sh_float_width">

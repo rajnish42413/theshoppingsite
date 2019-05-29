@@ -2048,3 +2048,11 @@ form#filter_form .sh_side_widget.sh_cat_search_form.sh_float_width {
     width: 15px;
     margin-right: 5px;
 }
+
+.productListing {
+    min-height: 400px;
+}
+
+.productListing .mrgTop50 {
+    margin-top:50px;
+}

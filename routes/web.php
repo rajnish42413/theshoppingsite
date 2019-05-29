@@ -20,25 +20,11 @@ Route::any('/all-categories','HomeController@all_categories')->name('all-categor
 Route::any('/all-categories-ajax','HomeController@get_all_categories_ajax')->name('all-categories-ajax');
 Route::any('/search','HomeController@search_form')->name('search');
 
-//Cron Sandbox
-Route::any('/cron/by-keyword','CronController@byKeyword')->name('cron/by-keyword');
-Route::any('/cron/category','CronController@getCategory')->name('cron/category');
-Route::any('/cron/by-category/{id}','CronController@getProductsByCategory')->name('cron/by-category');
-Route::any('/cron/single-item/{id}','CronController@getSingleItem')->name('cron/single-item');
 
 //Cron Live
 Route::any('/cron/category-live','CronController@getCategory_live')->name('cron/category-live');
 Route::any('/cron/by-category-live/{id}','CronController@getProductsByCategory_live')->name('cron/by-category-live');
 Route::any('/cron/single-item-live/{id}','CronController@getSingleItem_live')->name('cron/single-item-live');
-
-Route::any('/cron/product-live/{id}','CronController@getProducts_live')->name('cron/product-live');
-
-//testing
-Route::any('/cron/test-single-item-live/{id}','CronController@testing_getSingleItem_live')->name('cron/test-single-item-live');
-Route::any('/cron/feedback/{id}','CronController@feedback_live')->name('cron/feedback');
-
-//By other method
-Route::any('/cron/item/{id}','CronController@getItem')->name('cron/item');
 
 
 Route::get('/user/verify/{token}', 'Auth\RegisterController@verifyUser');

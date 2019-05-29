@@ -52,7 +52,6 @@ class SettingsController extends Controller
 		$validator = $request->validate([
              'title' => 'required',			 		 		 		 		 
              'description' => 'required',			 		 
-             'section_name' => 'required',	
 		], 
 			$messages = [
 			'title.required' => 'Title is required',
