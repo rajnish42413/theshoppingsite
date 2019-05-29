@@ -13,6 +13,7 @@ use GuzzleHttp\Client;
 use App\Product;
 use App\Category;
 use App\Brand;
+use App\ApiSetting;
 
 class CronController extends Controller
 {
@@ -21,9 +22,27 @@ class CronController extends Controller
      *
      * @return void
      */
+	private $APP_ID;
+	private $DEV_ID;
+	private $CERT_ID;
+	private $TOKEN;
+	
     public function __construct()
     {
         //$this->middleware('auth');
+		$api_setting = ApiSetting::where('api_name','ebay')->first();
+		if($api_setting && $api_setting->count() > 0 && $api_setting->mode == 'production'){
+			$this->APP_ID = $api_setting->app_id.'avengers-rk';
+			$this->DEV_ID = $api_setting->developer_id;
+			$this->CERT_ID = $api_setting->certificate_id;
+			$this->TOKEN = $api_setting->token;
+		}else{
+			$this->APP_ID = env('EBAY_PROD_APP_ID');
+			$this->DEV_ID = env('EBAY_PROD_DEV_ID');
+			$this->CERT_ID = env('EBAY_PROD_CERT_ID');
+			$this->TOKEN = 'AgAAAA**AQAAAA**aAAAAA**uSDuXA**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6ANl4ahCpaKpQudj6x9nY+seQ**qQIGAA**AAMAAA**bViF7OtDG4VsXsrjZO/RqmSCF7p7uxhPJpL/bP10WAYuTRR4om+3bK5xbpycDdqFPx7WNAZrG/wP9yofjM2Gy0M3pjqqZLCW/jgrUyxk65Tmu/MHhvqYHtGiQCefiQJChOuZN5IDszlAlWN4U8CWUlMEQ6/r9jufz+lUImry1/YJilUew4gaMd972AFcQhqrDcBTSh8GUyPpUn7LmUoALT/YDTfAnidYzBZE6HHT1S9IAnQ/3dCdVEDHrDpVazVg6miMFngYDeDLmiwq1VWhBs2T3jGpEvGX5JaFDepvejvDhYM/x3XfhMr7ka7dTLF58fNOrbonIo9Yy9HX/qJS/Kdgq8dtbNgVznupoOaC+OE9+MyXww5CI8frTyIJWpY2Bfjvv6dV8LUWySWxVtWmgQlo0MXM9CRZALlOF9c4glzqmUjQVU6LIzNZCkBm2biMRE/tcORaJs7c/UCs0ff4eObs6a3U5YsgaBgOk88Fk5nfIWT90OVeQ4O5Z8aDUw63f9Ffa6PwTOxcCXMiboqrkK/paSekGdBooJCJPDMKIxy0jj2TQemSnHaznJN884LMUvbRl9iNyxgG+E8IT+ulyhwhulblBzy3PDRwMV7LSwPXqTCpfWV3PayOBK2z3N0TEeVemJe9CBGINKf9etW5U5XGsAqehMh4zwAPd1XXI0z2FygADztRa2NtXP7oZ2nThooJLdApD/2VOp7bwe/R4pF7LbyiFXYKQxABQWt/aW82tjgF/BogAO82hPTN0VMF';			
+		}
+			
     }
 
     /**
@@ -40,12 +59,14 @@ class CronController extends Controller
             'cache-control' => 'no-cache',
             'X-EBAY-API-COMPATIBILITY-LEVEL' => '861',
             'X-EBAY-API-SITEID' => '0',
-            'X-EBAY-API-DEV-NAME' => env('EBAY_PROD_DEV_ID'),
-            'X-EBAY-API-CERT-NAME' => env('EBAY_PROD_CERT_ID'),
-            'X-EBAY-API-APP-NAME' => env('EBAY_PROD_APP_ID'),
+            'X-EBAY-API-DEV-NAME' => $this->DEV_ID,
+            'X-EBAY-API-CERT-NAME' => $this->CERT_ID,
+            'X-EBAY-API-APP-NAME' => $this->APP_ID,
             'X-EBAY-API-CALL-NAME' => 'GetCategories',
             'Content-Type' => 'application/xml'
-        );
+        );			
+
+
         $client = new Client([ 'headers' => $headers]);
 		
         $body = '<?xml version="1.0" encoding="utf-8"?>
@@ -55,7 +76,7 @@ class CronController extends Controller
                 <ViewAllNodes>True</ViewAllNodes>
                 <LevelLimit>4</LevelLimit>
                  <RequesterCredentials>
-                 <eBayAuthToken>AgAAAA**AQAAAA**aAAAAA**uSDuXA**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6ANl4ahCpaKpQudj6x9nY+seQ**qQIGAA**AAMAAA**bViF7OtDG4VsXsrjZO/RqmSCF7p7uxhPJpL/bP10WAYuTRR4om+3bK5xbpycDdqFPx7WNAZrG/wP9yofjM2Gy0M3pjqqZLCW/jgrUyxk65Tmu/MHhvqYHtGiQCefiQJChOuZN5IDszlAlWN4U8CWUlMEQ6/r9jufz+lUImry1/YJilUew4gaMd972AFcQhqrDcBTSh8GUyPpUn7LmUoALT/YDTfAnidYzBZE6HHT1S9IAnQ/3dCdVEDHrDpVazVg6miMFngYDeDLmiwq1VWhBs2T3jGpEvGX5JaFDepvejvDhYM/x3XfhMr7ka7dTLF58fNOrbonIo9Yy9HX/qJS/Kdgq8dtbNgVznupoOaC+OE9+MyXww5CI8frTyIJWpY2Bfjvv6dV8LUWySWxVtWmgQlo0MXM9CRZALlOF9c4glzqmUjQVU6LIzNZCkBm2biMRE/tcORaJs7c/UCs0ff4eObs6a3U5YsgaBgOk88Fk5nfIWT90OVeQ4O5Z8aDUw63f9Ffa6PwTOxcCXMiboqrkK/paSekGdBooJCJPDMKIxy0jj2TQemSnHaznJN884LMUvbRl9iNyxgG+E8IT+ulyhwhulblBzy3PDRwMV7LSwPXqTCpfWV3PayOBK2z3N0TEeVemJe9CBGINKf9etW5U5XGsAqehMh4zwAPd1XXI0z2FygADztRa2NtXP7oZ2nThooJLdApD/2VOp7bwe/R4pF7LbyiFXYKQxABQWt/aW82tjgF/BogAO82hPTN0VMF</eBayAuthToken>
+                 <eBayAuthToken>'.$this->TOKEN.'</eBayAuthToken>
                  </RequesterCredentials>
                  </GetCategoriesRequest>';
         $response = $client->request('POST', 'https://api.ebay.com/ws/api.dll', [
@@ -135,6 +156,7 @@ class CronController extends Controller
 			echo 'error. category not found';
 			exit;
 		}
+		$myval = 1;
 		$search = array();
         $search[] = $cat_id; //parent category id
 		$parent_id = $cat_id;
@@ -154,9 +176,8 @@ class CronController extends Controller
 
         // Ask for the results to be sorted from high to low price.
         $request->sortOrder = 'CurrentPriceLowest';
-		//echo '<pre>'; print_r($request);die;
+	//	echo '<pre>'; print_r($request);die;
         $response = $service->findItemsByCategory($request);
-		
 		//echo $json = json_encode($response.true);die;
         // Output the response from the API.
         if ($response->ack !== 'Success') {
@@ -301,9 +322,9 @@ class CronController extends Controller
             'cache-control' => 'no-cache',
             'X-EBAY-API-COMPATIBILITY-LEVEL' => '861',
             'X-EBAY-API-SITEID' => '0',
-            'X-EBAY-API-DEV-NAME' => env('EBAY_PROD_DEV_ID'),
-            'X-EBAY-API-CERT-NAME' => env('EBAY_PROD_CERT_ID'),
-            'X-EBAY-API-APP-NAME' => env('EBAY_PROD_APP_ID'),
+            'X-EBAY-API-DEV-NAME' => $this->DEV_ID,
+            'X-EBAY-API-CERT-NAME' => $this->CERT_ID,
+            'X-EBAY-API-APP-NAME' => $this->APP_ID,
             'X-EBAY-API-CALL-NAME' => 'GetItem',
             'Content-Type' => 'application/xml'
         );
@@ -315,7 +336,7 @@ class CronController extends Controller
 				 <ItemID>'.$item_id.'</ItemID>
 				 <IncludeItemSpecifics>true</IncludeItemSpecifics>			 
                  <RequesterCredentials>
-                 <eBayAuthToken>AgAAAA**AQAAAA**aAAAAA**uSDuXA**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6ANl4ahCpaKpQudj6x9nY+seQ**qQIGAA**AAMAAA**bViF7OtDG4VsXsrjZO/RqmSCF7p7uxhPJpL/bP10WAYuTRR4om+3bK5xbpycDdqFPx7WNAZrG/wP9yofjM2Gy0M3pjqqZLCW/jgrUyxk65Tmu/MHhvqYHtGiQCefiQJChOuZN5IDszlAlWN4U8CWUlMEQ6/r9jufz+lUImry1/YJilUew4gaMd972AFcQhqrDcBTSh8GUyPpUn7LmUoALT/YDTfAnidYzBZE6HHT1S9IAnQ/3dCdVEDHrDpVazVg6miMFngYDeDLmiwq1VWhBs2T3jGpEvGX5JaFDepvejvDhYM/x3XfhMr7ka7dTLF58fNOrbonIo9Yy9HX/qJS/Kdgq8dtbNgVznupoOaC+OE9+MyXww5CI8frTyIJWpY2Bfjvv6dV8LUWySWxVtWmgQlo0MXM9CRZALlOF9c4glzqmUjQVU6LIzNZCkBm2biMRE/tcORaJs7c/UCs0ff4eObs6a3U5YsgaBgOk88Fk5nfIWT90OVeQ4O5Z8aDUw63f9Ffa6PwTOxcCXMiboqrkK/paSekGdBooJCJPDMKIxy0jj2TQemSnHaznJN884LMUvbRl9iNyxgG+E8IT+ulyhwhulblBzy3PDRwMV7LSwPXqTCpfWV3PayOBK2z3N0TEeVemJe9CBGINKf9etW5U5XGsAqehMh4zwAPd1XXI0z2FygADztRa2NtXP7oZ2nThooJLdApD/2VOp7bwe/R4pF7LbyiFXYKQxABQWt/aW82tjgF/BogAO82hPTN0VMF</eBayAuthToken>
+                 <eBayAuthToken>'.$this->TOKEN.'</eBayAuthToken>
                  </RequesterCredentials>
                  </GetItemRequest>';
         $response = $client->request('POST', 'https://api.ebay.com/ws/api.dll', [

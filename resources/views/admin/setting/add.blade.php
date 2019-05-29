@@ -34,6 +34,9 @@ $menu_permissions = DetailController::get_menu_permissions();
 			<?php if(Auth::user()->is_super_admin == 1 || in_array('setting_social',$menu_permissions) ){?>
               <li><a href="#social-settings" data-toggle="tab">Social</a></li>
 			<?php } ?>
+			<?php if(Auth::user()->is_super_admin == 1 || in_array('setting_api',$menu_permissions) ){?>
+              <li><a href="#api-settings" data-toggle="tab">API</a></li>
+			<?php } ?>			
             </ul>
             <div class="tab-content">
 			<?php if(Auth::user()->is_super_admin == 1 || in_array('setting_site',$menu_permissions) ){?>
@@ -85,7 +88,7 @@ $menu_permissions = DetailController::get_menu_permissions();
 				  <!-- /.box-body -->
 
 				  <div class="box-footer">
-				  <input type="hidden" name="id" id="id" value="<?php if($site){ echo $site->id; }?>" >
+				  <input type="hidden" name="id" value="<?php if($site){ echo $site->id; }?>" >
 					<button type="submit" class="btn btn-primary" id="sub_btn">Submit</button>
 				  </div>
 				</form>
@@ -137,7 +140,7 @@ $menu_permissions = DetailController::get_menu_permissions();
 												<input name="value[]" class="form-control value" value="<?php echo $social_link->value;?>">							
 										</td>	
 										<td>	
-											<select type="text" class="form-control status"  name="status[]" >
+											<select type="text" class=" form-control status"  name="status[]" >
 												<option value="1" <?php if($social_link){ if($social_link->status == 1){echo 'selected'; }} ?> >Active</option>
 												<option value="0" <?php if($social_link){ if($social_link->status == 0){echo 'selected'; }} ?> >Deactive</option>
 											</select>
@@ -176,6 +179,78 @@ $menu_permissions = DetailController::get_menu_permissions();
               </div>
               <!-- /.tab-pane -->
 		<?php } ?>
+			<?php if(Auth::user()->is_super_admin == 1 || in_array('setting_api',$menu_permissions) ){?>
+              <div class="tab-pane" id="api-settings">
+            <!-- form start -->
+				<form role="form" id="apiForm" enctype="multipart/form-data">
+				 {{csrf_field()}}
+				  <div class="box-body">
+					<div class="row">
+						<div class="col-sm-12">							
+							<div class="admin_errors alert alert-danger" style="display:none;">
+								<ul class="nav"></ul>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+					 <label for="api_name"><span class="text-danger">*</span> API</label>
+						<select type="text" class="form-control " id="api_name" name="api_name" >
+							<option value="ebay" <?php if($api_setting){ if($api_setting->api_name == 'ebay'){echo 'selected'; }} ?> >Ebay</option>
+					</select>
+					</div>
+					<div class="form-group">
+					 <label for="mode"><span class="text-danger">*</span> Mode</label>
+						<select type="text" class="form-control " id="mode" name="mode" >
+							<option value="sandbox" <?php if($api_setting){ if($api_setting->mode == 'sandbox'){echo 'selected'; }} ?> >Sandbox</option>
+							<option value="production" <?php if($api_setting){ if($api_setting->mode == 'production'){echo 'selected'; }} ?> >Production</option>
+					</select>
+					</div>					
+					<div class="form-group">
+					  <label for="app_id"><span class="text-danger font_12"> * </span>App ID</label>
+					  <div class="input-group">
+						<div class="input-group-addon"><i class="fa fa-edit"></i></div>
+						<input name="app_id" id="app_id" class="form-control" value="<?php if($api_setting){ echo $api_setting->app_id; } ?>" >
+					  </div>
+					  <div class="text-danger error font_12" id="app_id_error"></div>
+					</div>
+					<div class="form-group">
+					  <label for="developer_id"><span class="text-danger font_12"> * </span>Dev ID</label>
+					  <div class="input-group">
+						<div class="input-group-addon"><i class="fa fa-edit"></i></div>
+						<input name="developer_id" id="developer_id" class="form-control" value="<?php if($api_setting){ echo $api_setting->developer_id; } ?>" >
+					  </div>
+					  <div class="text-danger error font_12" id="developer_id_error"></div>
+					</div>
+					<div class="form-group">
+					  <label for="certificate_id"><span class="text-danger font_12"> * </span>Cert ID</label>
+					  <div class="input-group">
+						<div class="input-group-addon"><i class="fa fa-edit"></i></div>
+						<input name="certificate_id" id="certificate_id" class="form-control" value="<?php if($api_setting){ echo $api_setting->certificate_id; } ?>" >
+					  </div>
+					  <div class="text-danger error font_12" id="certificate_id_error"></div>
+					</div>					
+					
+					<div class="form-group">
+					  <label for="token"><span class="text-danger font_12"> * </span>Token</label>
+					  <div class="input-group">
+						<div class="input-group-addon"><i class="fa fa-edit"></i></div>
+						<textarea name="token" id="token" class="form-control" rows="8"><?php if($api_setting){ echo $api_setting->token; } ?></textarea>
+					  </div>
+					  <div class="text-danger error font_12" id="token_error"></div>
+					</div>					
+										
+				  </div>
+				  <!-- /.box-body -->
+
+				  <div class="box-footer">
+				  <input type="hidden" name="id" value="<?php if($api_setting){ echo $api_setting->id; }?>" >
+					<button type="submit" class="btn btn-primary" id="sub_btn3">Submit</button>
+				  </div>
+				</form>
+
+              </div>
+              <!-- /.tab-pane -->
+			<?php } ?>		
             </div>
             <!-- /.tab-content -->
           </div>
@@ -206,7 +281,7 @@ $menu_permissions = DetailController::get_menu_permissions();
 						<input name="value[]" class="form-control value" value="">							
 				</td>	
 				<td>	
-					<select type="text" class="form-control status"  name="status[]" >
+					<select type="text" class="form-control status "  name="status[]" >
 						<option value="1">Active</option>
 						<option value="0">Deactive</option>
 					</select>
@@ -220,7 +295,7 @@ $menu_permissions = DetailController::get_menu_permissions();
 			</tbody>
 		</table>
 	</div>
-	
+ 	
 <script>
 function add_row(){
 	var row = $("#row_data tbody").html();
@@ -251,6 +326,7 @@ function social_delete_row(e){
 }
 
 var surl = '<?php echo route('settings-edit');?>'; 
+//Site Settings
 $("#siteForm").submit(function(e){
 	$('.wait_loader').show();	
 	$('.admin_errors.alert-danger').hide();
@@ -355,6 +431,63 @@ $("#socialForm").submit(function(e){
 		},
 		error: function(data){
 			$("#sub_btn2").html('Submit');
+			var errors = data.responseJSON;
+			$(".wait_loader").hide();
+			console.log(errors.errors);
+			$.each(errors.errors, function(key, value){
+				$('.admin_errors.alert-danger').show();
+				$('.admin_errors.alert-danger ul').append('<li>'+value+'</li>');
+			});
+		}
+	});
+});
+
+//Api Settings
+$("#apiForm").submit(function(e){
+	$('.wait_loader').show();	
+	$('.admin_errors.alert-danger').hide();
+	$('.admin_errors.alert-danger ul').html('');
+	e.preventDefault();
+	$("#sub_btn3").html('please wait..'); 
+	$('.error').html('');
+	$.ajax({
+		type: "POST",
+		url: '<?php echo route('api-settings-save');?>',
+		data:  new FormData(this),
+		processData:false,
+		contentType:false,
+		cache:false,
+		datatype:"json",	
+		success: function(response)
+		{
+			$("#sub_btn3").html('Submit'); 
+			$('.wait_loader').hide();	
+			var result = response.split("|"); 
+			 if(result[0].length != 0){
+				var err = JSON.parse(result[0]);
+				var er = '';
+				$.each(err, function(k, v) {
+					if(k == 'file'){ 
+						$('.admin_errors.alert-danger').show();
+						$('.admin_errors.alert-danger ul').append('<li>'+v+'</li>');			 
+					} 
+				});
+			}
+			 
+			else if(response == '|success'){
+					
+					$.notify({
+					  message: 'Data Updated Successfully!!' 
+					 },{ element: 'body', type: "success", allow_dismiss: true, offset: { x: 0, y: 60 }, delay: 1000 
+					});
+				
+				
+			window.setTimeout(function() { location.reload(); }, 1000); 			
+		}
+
+		},
+		error: function(data){
+			$("#sub_btn3").html('Submit');
 			var errors = data.responseJSON;
 			$(".wait_loader").hide();
 			console.log(errors.errors);

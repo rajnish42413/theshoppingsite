@@ -116,7 +116,7 @@ if($PictureDetails != ''){
 							</div>
 							<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
 								<h4 class="sh_store_price">$<?php echo $product->current_price;?></h4>
-								<a class="sh_shop_btn" href="<?php echo $product->viewItemURL;?>">Shop Now <i class="icofont-rounded-right"></i></a>
+								<a class="sh_shop_btn" href="<?php echo $product->viewItemURL;?>" target="_blank">Shop Now <i class="icofont-rounded-right"></i></a>
 							</div>
 						</div>
 						<div class="sh_compare_price sh_float_width hide">          
@@ -199,7 +199,7 @@ if($PictureDetails != ''){
 													<td>
 														<div class="sh_tab_compare_total_price">
 															<h4>$<?php echo $product->current_price;?></h4>
-															<a class="sh_shop_btn" href="<?php echo $product->viewItemURL;?>">Shop Now <i class="icofont-rounded-right"></i></a>
+															<a class="sh_shop_btn" href="<?php echo $product->viewItemURL;?>" target="_blank">Shop Now <i class="icofont-rounded-right"></i></a>
 														</div>
 													</td>
 												</tr>

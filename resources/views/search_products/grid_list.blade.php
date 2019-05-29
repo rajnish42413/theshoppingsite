@@ -23,7 +23,6 @@
 	<div class="sh_search_grid_wrap sh_float_width">
 		<div class="container">
 			<div class="row productListing">
-				<?php if($categories){?>
 				<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
 				<?php if($products && $products->count() > 0){?>
 					<div class="sh_side_bar sh_float_width">
@@ -80,14 +79,8 @@
 						</div>					
 					</div>
 					<?php } ?>				
-				</div>
-				<?php } ?>
-				<?php if(count($products) == 0 && count($categories) == 0){?>
-				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center mrgTop50">
-
-				<?php }else{ ?>				
+				</div>			
 				<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-				<?php } ?>
 					<div class="sh_product_grid sh_float_width">
 					<?php if($products && $products->count() > 0){?>
 						<div class="sh_product_grid_top sh_float_width">
@@ -167,7 +160,7 @@
 												</ul>
 											</div>
 											<div class="sh_less_price_store sh_float_width text-left">
-												<a href="<?php echo $product->viewItemURL;?>"><img src="{{env('APP_URL')}}assets/images/ebay.png"></a>
+												<a href="<?php echo $product->viewItemURL;?>" target="_blank"><img src="{{env('APP_URL')}}assets/images/ebay.png"></a>
 											</div>
 									
 										</div>
@@ -193,7 +186,7 @@
 	</div>	
 	
 </div>	
-<script src="{{env('APP_URL')}}assets/js/rang_slider/rang.js"></script>
+<script src="{{env('APP_URL')}}assets/js/rang_slider/rang.js"  charset="UTF-8"></script>
 <script>
 
 $(window).on('load', function(){
@@ -249,8 +242,7 @@ function get_search_data(){
             to: <?php if($data['max_price'] != ''){echo $data['max_price'];} else{ echo '10000';}?>,
             type: 'double',
             prefix: '$',
-            prettify: false,
-            hasGrid: true,
+			grid: true,
 			onFinish: function (data) {
 				var priceMin = data.from;
 				var priceMax = data.to;

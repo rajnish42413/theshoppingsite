@@ -289,7 +289,7 @@ $menu_permissions = DetailController::get_menu_permissions();
           </ul>
         </li>		
 <?php } ?>
-<?php if(Auth::user()->is_super_admin == 1 || in_array('setting_site',$menu_permissions) || in_array('setting_social',$menu_permissions)){?>		
+<?php if(Auth::user()->is_super_admin == 1 || in_array('setting_site',$menu_permissions) || in_array('setting_social',$menu_permissions) || in_array('setting_api',$menu_permissions)){?>		
         <li class="treeview <?php if($data['nav'] == 'menu_settings'){echo 'active';}?>">
           <a href="#">
             <i class="fa fa-cog"></i> <span>Settings</span>

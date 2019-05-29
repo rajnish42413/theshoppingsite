@@ -317,7 +317,7 @@
             postfix: "",
             max_postfix: "",
             decorate_both: true,
-            values_separator: " â€” ",
+            values_separator: " - ",
 
             input_values_separator: ";",
 

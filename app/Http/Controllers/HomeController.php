@@ -223,7 +223,8 @@ class HomeController extends Controller
 		return view('all_categories_ajax',['cat_data'=>$cat_data])->render();
 	}
 	
-	public function search_list($slug, $brand=''){
+	public function search_list(Request $request,$slug, $brand=''){
+		$data['search_value'] =  $request->input('search');
 		$categories = array();
 		$products = array();
 		$brands = array();
@@ -628,48 +629,77 @@ class HomeController extends Controller
 	}	
 	
 	public function search_form(Request $request){
+		$base_url= env('APP_URL');
 		
-		$output = '';
-		$search_value = $request->input('search_value');
-		if($search_value != ''){		
+		if($request->isMethod('get') && $request->input('search_value') !=''){
+			$search_value = $request->input('search_value');
 			
-			$first = Category::select(DB::raw('categories.categoryName AS name, categories.slug AS pid , "category" AS type, "none" AS custom'))->where('categories.status',1)->where('categories.categoryName','like',"%$search_value%");
-			$second = Brand::select(DB::raw('brands.name AS name, brands.slug AS pid , "brand" AS type, categories.slug AS custom'))->Join('products',function ($join){$join->on('products.brand_id','=','brands.id'); })->Join('categories',function ($join){$join->on('categories.categoryId','=','products.categoryId'); })->where('brands.status',1)->where('brands.name','like',"%$search_value%")->groupBy('categories.categoryId');
-			$products = Product::select(DB::raw('products.title AS name, products.itemId AS pid, "product" AS type, "none" AS custom'))->where('products.status',1)->where('products.title','like',"%$search_value%");
+			$first = Brand::select(DB::raw('brands.name AS name, brands.slug AS pid , "brand" AS type, categories.slug AS custom'))->Join('products',function ($join){$join->on('products.brand_id','=','brands.id'); })->Join('categories',function ($join){$join->on('categories.categoryId','=','products.categoryId'); })->where('brands.status',1)->where('brands.name','like',"%$search_value%")->groupBy('categories.categoryId');
+			$categories = Category::select(DB::raw('categories.categoryName AS name, categories.slug AS pid , "category" AS type, "none" AS custom'))->where('categories.status',1)->where('categories.categoryName','like',"%$search_value%");
 			
-			$results = $products->union($first)->union($second)->limit(12)->get(); 
-			//$results = $products->union($first)->union($second)->toSql(); 
-			//echo $results;die;
-			$base_url=env('APP_URL');
+			$row = $categories->union($first)->limit(1)->first();
 			
-			if($results && $results->count() > 0){
-				$output .= '<div class="row"><div class="col-md-9">Search Suggestions:</div><div class="col-md-3"><button onclick="close_search()" class="btn btn-default btn-xs">Hide</button></div>';
+			if($row && $row->count() > 0){
 				
-				$output .= '<div class="row">';
-				$i=1;
-				foreach($results as $row){
-				//foreach start
+				$url = $base_url;
+				
 				if($row->type == 'category'){
-					$title = (strlen($row->name) > 30) ? substr($row->name,0,27).'...' : $row->name;
 					$url = $base_url.'category/'.$row->pid;
-					$output .= '<div class="col-md-6"><a class="btn-link" href="'.$url.'">'.$title.'</a></div>';
-				}elseif($row->type == 'product'){
-					$title = (strlen($row->name) > 30) ? substr($row->name,0,27).'...' : $row->name;
-					$url = $base_url.'product/'.$row->pid;
-					$output .= '<div class="col-md-6"><a class="btn-link" href="'.$url.'">'.$title.'</a></div>';
 				}elseif($row->type == 'brand'){
-					$title = (strlen($row->name) > 30) ? substr($row->name,0,27).'...' : $row->name;
 					$url = $base_url.'category/'.$row->custom.'/'.$row->pid;
-					$output .= '<div class="col-md-6"><a class="btn-link" href="'.$url.'">'.$title.'</a></div>';
-				} 
-
-				$i++;
-				//foreach end				
 				}
-				$output .= '</div>';
+				
+				return redirect($url.'?search='.$search_value);
+			}else{
+				return redirect($base_url);
 			}
+			
+		}elseif($request->isMethod('post')){
+			$output = '';
+			$search_value = $request->input('search_value');
+
+			if($search_value != ''){		
+				
+				$first = Category::select(DB::raw('categories.categoryName AS name, categories.slug AS pid , "category" AS type, "none" AS custom'))->where('categories.status',1)->where('categories.categoryName','like',"%$search_value%");
+				$second = Brand::select(DB::raw('brands.name AS name, brands.slug AS pid , "brand" AS type, categories.slug AS custom'))->Join('products',function ($join){$join->on('products.brand_id','=','brands.id'); })->Join('categories',function ($join){$join->on('categories.categoryId','=','products.categoryId'); })->where('brands.status',1)->where('brands.name','like',"%$search_value%")->groupBy('categories.categoryId');
+				$products = Product::select(DB::raw('products.title AS name, products.itemId AS pid, "product" AS type, "none" AS custom'))->where('products.status',1)->where('products.title','like',"%$search_value%");
+				
+				$results = $products->union($first)->union($second)->limit(12)->get(); 
+				//$results = $products->union($first)->union($second)->toSql(); 
+				//echo $results;die;
+				$base_url= env('APP_URL');
+				
+				if($results && $results->count() > 0){
+					$output .= '<div class="row"><div class="col-md-9">Search Suggestions:</div><div class="col-md-3"><button onclick="close_search()" class="btn btn-default btn-xs">Hide</button></div>';
+					
+					$output .= '<div class="row">';
+					$i=1;
+					foreach($results as $row){
+					//foreach start
+					if($row->type == 'category'){
+						$title = (strlen($row->name) > 30) ? substr($row->name,0,27).'...' : $row->name;
+						$url = $base_url.'category/'.$row->pid;
+						$output .= '<div class="col-md-6"><a class="btn-link" href="'.$url.'">'.$title.'</a></div>';
+					}elseif($row->type == 'product'){
+						$title = (strlen($row->name) > 30) ? substr($row->name,0,27).'...' : $row->name;
+						$url = $base_url.'product/'.$row->pid;
+						$output .= '<div class="col-md-6"><a class="btn-link" href="'.$url.'">'.$title.'</a></div>';
+					}elseif($row->type == 'brand'){
+						$title = (strlen($row->name) > 30) ? substr($row->name,0,27).'...' : $row->name;
+						$url = $base_url.'category/'.$row->custom.'/'.$row->pid;
+						$output .= '<div class="col-md-6"><a class="btn-link" href="'.$url.'">'.$title.'</a></div>';
+					} 
+
+					$i++;
+					//foreach end				
+					}
+					$output .= '</div>';
+				}
+			}
+			echo $output;		
+		}else{
+			return redirect($base_url);
 		}
-		echo $output;
 		
 	}
 	

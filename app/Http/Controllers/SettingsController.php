@@ -9,6 +9,7 @@ use Session;
 use App\User;
 use App\Setting;
 use App\SocialSetting;
+use App\ApiSetting;
 use Mail;
 
 
@@ -40,11 +41,13 @@ class SettingsController extends Controller
 		$data['sub_title'] = 'Update';
 		$data['link'] = '';		
 		$site = array();		
-		$social = array();
+		$social_links = array();
+		$api_setting = array();
 		$site = Setting::limit(1)->first();
 		$social_links = SocialSetting::orderBy('id','asc')->get();
+		$api_setting = ApiSetting::where('api_name','ebay')->first();
 	
-		return view('admin.setting.add',['data'=>$data,'site'=>$site,'social_links'=>$social_links]);
+		return view('admin.setting.add',['data'=>$data,'site'=>$site,'social_links'=>$social_links,'api_setting'=>$api_setting]);
     }	
 	
 	public function save_data(Request $request){
@@ -118,6 +121,49 @@ class SettingsController extends Controller
 			
 			}
 		}				
+
+		echo '|success';				
+    }
+	
+	public function save_data3(Request $request){
+		
+		$validator = $request->validate([
+             'app_id' => 'required',			 		 		 		 		 
+             'developer_id' => 'required',			 		 
+             'certificate_id' => 'required',			 		 
+             'token' => 'required',			 		 
+             'api_name' => 'required',
+             'mode' => 'required',
+		], 
+			$messages = [
+			'app_id.required' => 'App ID is required',
+			'developer_id.required' => 'Dev ID is required',
+			'certificate_id.required' => 'Cert ID is required',
+			'token.required' => 'Token is required',
+			'api_name.required' => 'API is required',
+			'mode.required' => 'Mode is required',
+		]);		
+
+		$req   = $request->all();
+		$id = $req['id'];
+		$app_id = $req['app_id'];
+		$developer_id = $req['developer_id'];
+		$certificate_id = $req['certificate_id'];
+		$token = $req['token'];
+		$api_name = $req['api_name'];
+		$mode = $req['mode'];
+		
+		$input=array(
+			'api_name'=> $api_name,
+			'mode'=> $mode,
+			'app_id'=> $app_id,
+			'developer_id'=> $developer_id,
+			'certificate_id'=> $certificate_id,
+			'token'=> $token,
+			'updated_at' => date('Y-m-d H:i:s'),
+		);
+		//echo '<pre>';print_r($input);die;
+			ApiSetting::where('id',$id)->update($input);	
 
 		echo '|success';				
     }

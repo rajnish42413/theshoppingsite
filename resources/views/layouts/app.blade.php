@@ -1,4 +1,5 @@
 <?php 
+
 use \App\Http\Controllers\DetailController;
 $nav_menus = DetailController::get_main_nav_menus();
 $settings = DetailController::get_settings();
@@ -52,10 +53,9 @@ $social_links = DetailController::get_social_links();
 				<!-- Search bar -->
 				<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 text-right">
 					<div class="sh_Search_bar sh_float_width">
-						<form id="searchForm">
-						{{ csrf_field() }}
-							<input type="text" name="search_value" oninput="get_search(this)" id="search_value" placeholder="Search" value="">
-							<button type="submit" id="search_btn">Search</button>
+						<form id="searchForm" method="GET" action="{{route('search')}}">
+							<input type="text" name="search_value" oninput="get_search(this)" id="search_value" placeholder="Search" value="<?php if(isset($data['search_value']) && $data['search_value']!=''){ echo $data['search_value'];}?>">
+							<button type="submit" id="search_btn">Search <i class="fa fa-spinner fa-spin searchLoader" style="display:none;"></i></button>
 						</form>
 					
 					</div>
@@ -105,7 +105,7 @@ $social_links = DetailController::get_social_links();
 				
 				<!-- Social -->
 				<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 pull-right">
-					<div class="sh_header_social_links sh_float_width text-right">
+					<div class="sh_header_social_links sh_float_width text-right" style="display:none;">
 					<?php if($social_links && $social_links->count() > 0){?>
 						<ul>
 						<?php foreach($social_links as $social){?>
@@ -130,8 +130,8 @@ $social_links = DetailController::get_social_links();
 	<div class="sh_footer_wrap sh_float_width">
 		<div class="container">
 			<div class="row">
-				<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-					<div class="sh_widgets sh_float_width">
+				<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12" style="display:none;">
+					<div class="sh_widgets sh_float_width" >
 						<h4>About</h4>
 						<p>Connor Turnbull is a part-time writer demmo the technology industry and part-time web designer from the United Kingdom. Connor previously wrote for bellway.</p>
 						<ul class="sh_social">
@@ -144,7 +144,7 @@ $social_links = DetailController::get_social_links();
 						</ul>
 					</div>
 				</div>
-				<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+				<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
 					<div class="sh_widgets sh_widgets_link sh_float_width">
 						<h4>useful Links</h4>
 						<ul>
@@ -182,7 +182,7 @@ $social_links = DetailController::get_social_links();
 		<div class="container">
 			<div class="row">
 				<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 pull-right text-right">
-					<div class="sh_copyright_section">
+					<div class="sh_copyright_section" style="display:none;">
 						<a href="javacript:void(0)"><img src="{{env('APP_URL')}}assets/images/payment.png"></a>
 					</div>
 				</div>
@@ -235,38 +235,37 @@ $social_links = DetailController::get_social_links();
 		// STYLE TOGGLE
 		$('.ex4').zoom({ on:'toggle' });
 	
-
-
-$("#searchForm").submit(function(e){
-	e.preventDefault();
-	var search_value = $('#search_value').val();
-	if(search_value != ''){
-		
-			$.ajax({
-			type: "POST",	 			
-			url: '<?php echo env('APP_URL') ?>search',
-			data:$( "#searchForm" ).serialize(),	
-			success: function(res)
-			{ 
-				if(res != ''){
-					$('#search_results').html(res);
-				}else{
-				
-					$('#search_results').html('<div class="row no-item"><div class="col-md-12"><span class="alert alert-danger">No Results Found.</span></div></div>');
-				}
-				$('#search_results').show();					
-			}
-		});	
-	}else{
-		$('#search_results').html('');
-		$('#search_results').hide();
-		return false;
-	}
-});
-
+var getSearch = null;
 function get_search(e){
 	if(e.value != ''){
-		$("#search_btn").click();
+		var search_value = e.value;
+		
+		if(search_value.length > 2){	
+			$('#search_results').hide();		
+			$(".searchLoader").show();
+	getSearch = $.ajax({
+				type: "POST",
+				headers:{'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')},
+				url: '<?php echo env('APP_URL') ?>search',
+				data:{'search_value':search_value},	
+				beforeSend : function()    {           
+					if(getSearch != null) {
+						getSearch.abort();
+					}
+				},				
+				success: function(res)
+				{ 
+					$(".searchLoader").hide();
+					if(res != ''){
+						$('#search_results').html(res);
+					}else{
+					
+						$('#search_results').html('<div class="row no-item"><div class="col-md-12"><span class="alert alert-danger">No Results Found.</span></div></div>');
+					}
+					$('#search_results').show();					
+				}
+			});
+		}		
 	}else{
 		$('#search_results').html('');
 		$('#search_results').hide();
@@ -278,6 +277,12 @@ function get_search(e){
 		$('#search_results').html('');
 		$('#search_results').hide();	
 }
+
+$("#searchForm").submit(function(e){
+ $(".searchLoader").show();
+ $('#search_results').hide();
+ getSearch.abort();
+});
 </script> 
 <script>
 $('#menu_header #pnProductNavContents a').click(function(){

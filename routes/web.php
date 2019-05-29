@@ -134,7 +134,8 @@ Route::group(['middleware'=>['Admin']],function(){
 	// Settings 
 	Route::any('settings-edit', 'SettingsController@add')->name('settings-edit');	
 	Route::any('settings-save', 'SettingsController@save_data')->name('settings-save');	
-	Route::any('social-settings-save', 'SettingsController@save_data2')->name('social-settings-save');		
+	Route::any('social-settings-save', 'SettingsController@save_data2')->name('social-settings-save');
+	Route::any('api-settings-save', 'SettingsController@save_data3')->name('api-settings-save');	
 	Route::any('social-settings-delete', 'SettingsController@social_link_delete')->name('social-settings-delete');	
 
 	// Users 
