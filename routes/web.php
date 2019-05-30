@@ -18,8 +18,8 @@ Auth::routes();
 Route::get('/home','HomeController@index')->name('home');
 Route::any('/all-categories','HomeController@all_categories')->name('all-categories');
 Route::any('/all-categories-ajax','HomeController@get_all_categories_ajax')->name('all-categories-ajax');
-Route::any('/search','HomeController@search_form')->name('search');
-
+Route::any('/get-search','HomeController@search_form')->name('get-search');
+Route::any('/search','HomeController@search_data')->name('search');
 
 //Cron Live
 Route::any('/cron/category-live','CronController@getCategory_live')->name('cron/category-live');

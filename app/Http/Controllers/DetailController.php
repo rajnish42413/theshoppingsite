@@ -146,4 +146,17 @@ class DetailController extends Controller
 		}
 		return $menu_permissions;
 	}
+	
+	public static function getStringBold($arr,$string){
+		if($arr){
+			$string = strtolower($string);
+			foreach($arr as $key) {
+				if(strpos($string,$key) !== FALSE) { 
+					$new_key  = '<b>'.ucwords($key).'</b>';
+					$string = str_replace($key, $new_key, $string);
+				}
+			}			
+		}
+		return $string;		
+	}
 }

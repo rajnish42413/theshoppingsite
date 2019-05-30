@@ -37,6 +37,19 @@ $social_links = DetailController::get_social_links();
 	<script src="{{env('APP_URL')}}assets/js/jquery.js"></script>	
 </head>
 <body>
+<div class="preloader">
+    <div class="thecube">
+        <!--<div class="loader"></div>-->
+        <h4>
+            <div class="lodind_img">
+                <img src="{{env('APP_URL')}}assets/images/favicon.png">
+                <div class="globe_border rotating"></div>
+                
+            </div>
+        </h4>
+    </div>
+</div>
+
 <?php if($settings){echo $settings->google_analytics;}?>
 <!-- Header Start -->
 <header>
@@ -54,7 +67,7 @@ $social_links = DetailController::get_social_links();
 				<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 text-right">
 					<div class="sh_Search_bar sh_float_width">
 						<form id="searchForm" method="GET" action="{{route('search')}}">
-							<input type="text" name="search_value" oninput="get_search(this)" id="search_value" placeholder="Search" value="<?php if(isset($data['search_value']) && $data['search_value']!=''){ echo $data['search_value'];}?>">
+							<input type="text" name="keyword" oninput="get_search(this)" id="keyword" placeholder="Search" value="<?php if(isset($data['keyword']) && $data['keyword']!=''){ echo $data['keyword'];}?>">
 							<button type="submit" id="search_btn">Search <i class="fa fa-spinner fa-spin searchLoader" style="display:none;"></i></button>
 						</form>
 					
@@ -195,6 +208,12 @@ $social_links = DetailController::get_social_links();
 		</div>
 	</div>	
 </footer>	
+<script>
+$(window).on("load", function() {
+    var preLoader = $('.preloader');
+    preLoader.addClass('loaderout').fadeToggle(3000);  
+});
+</script>
 <!--Main js file Style--> 
 <script src="{{env('APP_URL')}}assets/js/slider/owl.carousel.js"></script>
 <script src="{{env('APP_URL')}}assets/js/slider/index.js"></script>
@@ -238,16 +257,16 @@ $social_links = DetailController::get_social_links();
 var getSearch = null;
 function get_search(e){
 	if(e.value != ''){
-		var search_value = e.value;
+		var keyword = e.value;
 		
-		if(search_value.length > 2){	
+		if(keyword.length > 2){	
 			$('#search_results').hide();		
 			$(".searchLoader").show();
 	getSearch = $.ajax({
 				type: "POST",
 				headers:{'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')},
-				url: '<?php echo env('APP_URL') ?>search',
-				data:{'search_value':search_value},	
+				url: '<?php echo env('APP_URL') ?>get-search',
+				data:{'keyword':keyword},	
 				beforeSend : function()    {           
 					if(getSearch != null) {
 						getSearch.abort();
@@ -280,6 +299,7 @@ function get_search(e){
 
 $("#searchForm").submit(function(e){
  $(".searchLoader").show();
+ $(".preloader").fadeToggle();
  $('#search_results').hide();
  getSearch.abort();
 });
@@ -298,6 +318,7 @@ $('#menu_header #pnProductNavContents a').click(function(){
 });
 
 </script>
+
 
 </body>
 </html>

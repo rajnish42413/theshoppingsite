@@ -2056,3 +2056,274 @@ form#filter_form .sh_side_widget.sh_cat_search_form.sh_float_width {
 .productListing .mrgTop50 {
     margin-top:50px;
 }
+
+
+
+/*Loader*/
+.preloader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #f1f1f1f5;
+    z-index: 999999999;
+}
+.preloader.loaderout {
+    /*top: -300%;*/
+    -webkit-transition: all 1s ease-in-out;
+    -moz-transition: all 1s ease-in-out;
+    -o-transition: all 1s ease-in-out;
+    -ms-transition: all 1s ease-in-out;
+    transition: all 1s ease-in-out;
+}
+.thecube {
+    width: 100%;
+    height: 100vh;
+    position: relative;
+    top: 0;
+    left: 0;
+    margin-left: 0;
+    margin-top: 0;
+    text-align: center;
+    right: 0;
+    display: table;
+    vertical-align: middle;
+    text-align: center;
+}
+.lodind_img img {
+    width: 100px;
+    position: relative;
+    left: -3px;
+    top: 12px;
+}
+.lodind_img img.img-responsive {
+    width: 130px !important;
+    margin-top: -20px;
+    left: -4px;
+}
+.thecube h4 {
+    margin-top: 20px;
+    color: #fff;
+    display: table-cell;
+    vertical-align: middle;
+}
+.loader {
+    border: 4px solid #202020;
+    border-radius: 50%;
+    border-top: 4px solid;
+    border-bottom: 4px solid;
+    width: 50px;
+    height: 50px;
+    -webkit-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
+    display: inline-block;
+}
+.globe_border {
+    width: 130px;
+    height: 130px;
+    left: 0;
+    position: absolute;
+    z-index: -4;
+    top: -20px;
+    background-color: #ffffff;
+    box-shadow: -20px -20px 45px #fff;
+    border-radius: 50%;
+    right: 0;
+    margin: auto;
+    transform: rotate(360deg);
+    border-top: 7px solid #85be57;
+    border-bottom: 7px solid #85be57;
+    border-left: 7px solid #000;
+    border-right: 7px solid #000;
+}
+@-webkit-keyframes spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+    }
+}
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+.cssload-container {
+    display: block;
+    width: 100px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-left: -50px;
+    margin-top: -14px;
+}
+.cssload-loading i {
+    width: 19px;
+    height: 19px;
+    display: inline-block;
+    border-radius: 50%;
+
+}
+.cssload-loading i:first-child {
+    opacity: 0;
+    animation: cssload-loading-ani2 0.58s linear infinite;
+    -o-animation: cssload-loading-ani2 0.58s linear infinite;
+    -ms-animation: cssload-loading-ani2 0.58s linear infinite;
+    -webkit-animation: cssload-loading-ani2 0.58s linear infinite;
+    -moz-animation: cssload-loading-ani2 0.58s linear infinite;
+    transform: translate(-19px);
+    -o-transform: translate(-19px);
+    -ms-transform: translate(-19px);
+    -webkit-transform: translate(-19px);
+    -moz-transform: translate(-19px);
+}
+.cssload-loading i:nth-child(2),
+.cssload-loading i:nth-child(3) {
+    animation: cssload-loading-ani3 0.58s linear infinite;
+    -o-animation: cssload-loading-ani3 0.58s linear infinite;
+    -ms-animation: cssload-loading-ani3 0.58s linear infinite;
+    -webkit-animation: cssload-loading-ani3 0.58s linear infinite;
+    -moz-animation: cssload-loading-ani3 0.58s linear infinite;
+}
+.cssload-loading i:last-child {
+    animation: cssload-loading-ani1 0.58s linear infinite;
+    -o-animation: cssload-loading-ani1 0.58s linear infinite;
+    -ms-animation: cssload-loading-ani1 0.58s linear infinite;
+    -webkit-animation: cssload-loading-ani1 0.58s linear infinite;
+    -moz-animation: cssload-loading-ani1 0.58s linear infinite;
+}
+@keyframes cssload-loading-ani1 {
+    100% {
+        transform: translate(39px);
+        opacity: 0;
+    }
+}
+@-o-keyframes cssload-loading-ani1 {
+    100% {
+        -o-transform: translate(39px);
+        opacity: 0;
+    }
+}
+@-ms-keyframes cssload-loading-ani1 {
+    100% {
+        -ms-transform: translate(39px);
+        opacity: 0;
+    }
+}
+@-webkit-keyframes cssload-loading-ani1 {
+    100% {
+        -webkit-transform: translate(39px);
+        opacity: 0;
+    }
+}
+@-moz-keyframes cssload-loading-ani1 {
+    100% {
+        -moz-transform: translate(39px);
+        opacity: 0;
+    }
+}
+@keyframes cssload-loading-ani2 {
+    100% {
+        transform: translate(19px);
+        opacity: 1;
+    }
+}
+@-o-keyframes cssload-loading-ani2 {
+    100% {
+        -o-transform: translate(19px);
+        opacity: 1;
+    }
+}
+@-ms-keyframes cssload-loading-ani2 {
+    100% {
+        -ms-transform: translate(19px);
+        opacity: 1;
+    }
+}
+@-webkit-keyframes cssload-loading-ani2 {
+    100% {
+        -webkit-transform: translate(19px);
+        opacity: 1;
+    }
+}
+@-moz-keyframes cssload-loading-ani2 {
+    100% {
+        -moz-transform: translate(19px);
+        opacity: 1;
+    }
+}
+@keyframes cssload-loading-ani3 {
+    100% {
+        transform: translate(19px);
+    }
+}
+@-o-keyframes cssload-loading-ani3 {
+    100% {
+        -o-transform: translate(19px);
+    }
+}
+@-ms-keyframes cssload-loading-ani3 {
+    100% {
+        -ms-transform: translate(19px);
+    }
+}
+@-webkit-keyframes cssload-loading-ani3 {
+    100% {
+        -webkit-transform: translate(19px);
+    }
+}
+@-moz-keyframes cssload-loading-ani3 {
+    100% {
+        -moz-transform: translate(19px);
+    }
+}
+.lodind_img {
+    position: relative;
+    padding: 0px 0;
+}
+@-webkit-keyframes rotating /* Safari and Chrome */ {
+  from {
+    -webkit-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@keyframes rotating {
+  from {
+    -ms-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  to {
+    -ms-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+.rotating {
+  -webkit-animation: rotating 2s linear infinite;
+  -moz-animation: rotating 2s linear infinite;
+  -ms-animation: rotating 2s linear infinite;
+  -o-animation: rotating 2s linear infinite;
+  animation: rotating 2s linear infinite;
+}
+/*= End Loader Css
+=========================================*/
+
+h4.sh_prod_name b {
+    color: #85be57!important;
+}

@@ -628,43 +628,81 @@ class HomeController extends Controller
 		return $brands;
 	}	
 	
-	public function search_form(Request $request){
+	public function search_data(Request $request){ //get form submit
 		$base_url= env('APP_URL');
 		
-		if($request->isMethod('get') && $request->input('search_value') !=''){
-			$search_value = $request->input('search_value');
+		if($request->isMethod('get') && $request->input('keyword') !=''){
+			$keyword = array();
+			$data['keyword_array'] = $keyword = $this->getParts($request->input('keyword')); //array
+			//echo '<Pre>';print_r($keyword);die;
 			
-			$first = Brand::select(DB::raw('brands.name AS name, brands.slug AS pid , "brand" AS type, categories.slug AS custom'))->Join('products',function ($join){$join->on('products.brand_id','=','brands.id'); })->Join('categories',function ($join){$join->on('categories.categoryId','=','products.categoryId'); })->where('brands.status',1)->where('brands.name','like',"%$search_value%")->groupBy('categories.categoryId');
-			$categories = Category::select(DB::raw('categories.categoryName AS name, categories.slug AS pid , "category" AS type, "none" AS custom'))->where('categories.status',1)->where('categories.categoryName','like',"%$search_value%");
-			
-			$row = $categories->union($first)->limit(1)->first();
-			
-			if($row && $row->count() > 0){
-				
-				$url = $base_url;
-				
-				if($row->type == 'category'){
-					$url = $base_url.'category/'.$row->pid;
-				}elseif($row->type == 'brand'){
-					$url = $base_url.'category/'.$row->custom.'/'.$row->pid;
-				}
-				
-				return redirect($url.'?search='.$search_value);
-			}else{
-				return redirect($base_url);
-			}
-			
-		}elseif($request->isMethod('post')){
-			$output = '';
-			$search_value = $request->input('search_value');
+		$data['keyword'] =  $request->input('keyword'); //string
+		
+		$categories = array();
+		$products = array();
+		$brands = array();
+		$data['cat_breadcrumb'] = '';
+		$data['parent_category'] = '';	
+		$data['category'] = '';
+		$data['parent_cat_id'] = '0';	
+		$data['cat_id'] = '0';	
+		$data['parent_cat_slug'] = '';	
+		$data['cat_slug'] = '';			
+		$data['min_price']	= '';
+		$data['max_price'] = '';
+		$data['brand_id'] = '';
 
-			if($search_value != ''){		
+		$results = Product::select(DB::raw("products.*"))->where('products.status',1);
+		if($keyword){
+			$results = $results->where(function ($query) use($keyword) {
+				for($s = 0; $s < count($keyword); $s++){
+					//$query->orWhere('categories.categoryName','like',"%$keyword[$s]%");
+					$query->orWhere('products.title','like',"%$keyword[$s]%");
+				}      
+			});
+		}		
+		//$results = $results->limit(10);
+		$results = $results->get();
+		//echo $results;die;
+		
+		$data['nav'] = 'terms';
+		$data['meta_title'] = config('app.name')." :: Search Products";
+		$data['meta_keywords'] = config('app.name')." Search Products";
+		$data['meta_description'] = config('app.name')." Search Products";	
+		
+        return view('search_products/grid_list_search',['data'=>$data,'categories'=>$categories,'products'=>$results,'brands'=>$brands]);		
+			
+		}else{
+			return redirect($base_url);
+		}
+		
+	}
+
+	public function search_form(Request $request){ //multiple suggestions
+		$base_url= env('APP_URL');
+		$output = '';
+		if($request->isMethod('post')){
+
+			if($request->input('keyword') != ''){
 				
-				$first = Category::select(DB::raw('categories.categoryName AS name, categories.slug AS pid , "category" AS type, "none" AS custom'))->where('categories.status',1)->where('categories.categoryName','like',"%$search_value%");
-				$second = Brand::select(DB::raw('brands.name AS name, brands.slug AS pid , "brand" AS type, categories.slug AS custom'))->Join('products',function ($join){$join->on('products.brand_id','=','brands.id'); })->Join('categories',function ($join){$join->on('categories.categoryId','=','products.categoryId'); })->where('brands.status',1)->where('brands.name','like',"%$search_value%")->groupBy('categories.categoryId');
-				$products = Product::select(DB::raw('products.title AS name, products.itemId AS pid, "product" AS type, "none" AS custom'))->where('products.status',1)->where('products.title','like',"%$search_value%");
+				$str = $keyword = $this->getParts($request->input('keyword'));
 				
-				$results = $products->union($first)->union($second)->limit(12)->get(); 
+				$products = Product::select(DB::raw('products.title AS name, products.itemId AS pid, "product" AS type, "none" AS custom'))->where('products.status',1);
+				
+
+				if($keyword){
+					$products = $products->where(function ($query3) use($keyword) {
+						for($s = 0; $s < count($keyword); $s++){
+							$query3->orWhere('products.title','like',"%$keyword[$s]%");
+						}      
+					});
+				}				
+				
+				
+				$products = $products->groupBy('products.itemId'); 
+				$products = $products->limit(16); 
+				$results = $products->get(); 
+				
 				//$results = $products->union($first)->union($second)->toSql(); 
 				//echo $results;die;
 				$base_url= env('APP_URL');
@@ -674,35 +712,90 @@ class HomeController extends Controller
 					
 					$output .= '<div class="row">';
 					$i=1;
+					$keyword_array = array();
+					//echo '<pre>'; print_r($results);die;
 					foreach($results as $row){
-					//foreach start
-					if($row->type == 'category'){
-						$title = (strlen($row->name) > 30) ? substr($row->name,0,27).'...' : $row->name;
-						$url = $base_url.'category/'.$row->pid;
-						$output .= '<div class="col-md-6"><a class="btn-link" href="'.$url.'">'.$title.'</a></div>';
-					}elseif($row->type == 'product'){
-						$title = (strlen($row->name) > 30) ? substr($row->name,0,27).'...' : $row->name;
-						$url = $base_url.'product/'.$row->pid;
-						$output .= '<div class="col-md-6"><a class="btn-link" href="'.$url.'">'.$title.'</a></div>';
-					}elseif($row->type == 'brand'){
-						$title = (strlen($row->name) > 30) ? substr($row->name,0,27).'...' : $row->name;
-						$url = $base_url.'category/'.$row->custom.'/'.$row->pid;
-						$output .= '<div class="col-md-6"><a class="btn-link" href="'.$url.'">'.$title.'</a></div>';
-					} 
-
-					$i++;
-					//foreach end				
+						
+						$str = $row->name;
+						
+						//$k_val= $this->getSpecialParts($str);
+						
+						array_push($keyword_array,$str);
 					}
-					$output .= '</div>';
-				}
+					//echo '<pre>';print_R($keyword_array);die;
+					if($keyword_array){
+						$keyword_array = $this->array_flatten($keyword_array);
+						$keyword_array = array_values(array_unique($keyword_array));
+						if(count($keyword_array) > 12){
+							$keyword_array = array_slice($keyword_array,0,12);
+						}
+						foreach($keyword_array as $ka){
+							$title = (strlen($ka) > 26) ? substr($ka,0,23).'...' : $ka;
+							
+							$url = $base_url.'search?keyword='.urlencode($ka);
+							$output .= '<div class="col-md-6"><a class="btn-link" href="'.$url.'" title="'.$ka.'">'.$title.'</a></div>';
+						}
+					}					
+				}		
 			}
-			echo $output;		
-		}else{
-			return redirect($base_url);
 		}
-		
+		echo $output;
 	}
 	
+	
+	
+function getSpecialParts($string){
+      $stopWords = array('i','a','about','an','and','are','as','at','be','by','com','de','en','for','from','how','in','is','it','la','of','on','or','that','the','this','to','was','what','when','where','who','will','with','und','the','www','their','good','very');
+ 
+      $string = preg_replace('/\s\s+/i', '', $string); // replace whitespace
+      $string = trim($string); // trim the string
+      $string = preg_replace('/[^a-zA-Z0-9 -]/', '', $string); // only take alphanumerical characters, but keep the spaces and dashes too…
+      $string = strtolower($string); // make it lowercase
+ 
+      preg_match_all('/\b.*?\b/i', $string, $matchWords);
+      $matchWords = $matchWords[0];
+ 
+      foreach ( $matchWords as $key=>$item ) {
+          if ( $item == '' || in_array(strtolower($item), $stopWords) || strlen($item) <= 3 ) {
+              unset($matchWords[$key]);
+          }
+      }   
+      $wordCountArr = array();
+      if ( is_array($matchWords) ) {
+          foreach ( $matchWords as $key => $val ) {
+              $val = strtolower($val);
+              if ( isset($wordCountArr[$val]) ) {
+                  $wordCountArr[$val]++;
+              } else {
+                  $wordCountArr[$val] = 1;
+              }
+          }
+      }
+      arsort($wordCountArr);
+      $wordCountArr = array_slice($wordCountArr, 0, 10);
+	  
+	  $string_array = array();
+	  if($wordCountArr){
+		foreach($wordCountArr as $key => $value){
+			$string_array[] = $key;
+		}
+	  }
+		$arr = array();
+		$str =  implode(' ',$string_array);
+		$str = preg_replace("/[^A-Za-z0-9 ]/", '', $str);
+		$arr[] = $str;
+		$words = explode(" ", $str);
+		$count = count($words);
+
+		//echo implode(" ", array_slice($words, 0, $count)) . "<br>"; // first request
+		while (--$count) {
+			$arr[] =  implode(" ", array_slice($words, 0, $count));
+		}
+		return $arr;
+		
+}	
+
+
 	public function getCatBredcrumb($res){
 
 		$output = '';
@@ -735,4 +828,35 @@ class HomeController extends Controller
 		
 		return $output;
 	}
+	
+	public function getParts($str){
+		$arr = array();
+		$str = preg_replace("/[^A-Za-z0-9 ]/", '', $str);
+		$arr[] = $str;
+		$words = explode(" ", $str);
+		$count = count($words);
+		
+		while (--$count) {
+			$arr[] =  implode(" ", array_slice($words, 0, $count));
+		}
+		return $arr;
+	}
+	
+	
+	function array_flatten($array) { 
+	  if (!is_array($array)) { 
+		return FALSE; 
+	  } 
+	  $result = array(); 
+	  foreach ($array as $key => $value) { 
+		if (is_array($value)) { 
+		  $result = array_merge($result, array_flatten($value)); 
+		} 
+		else { 
+		  $result[$key] = $value; 
+		} 
+	  } 
+	  return $result; 
+	}	
+	
 }
