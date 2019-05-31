@@ -663,26 +663,11 @@ class HomeController extends Controller
 		if($keyword){
 			$results = $results->where(function ($query) use($keyword) {
 				for($s = 0; $s < count($keyword); $s++){
-					//$query->orWhere('categories.categoryName','like',"%$keyword[$s]%");
-					$query->orWhere('products.title','like',"%$keyword[$s]%");
+					//$query->orWhere('categories.categoryName','like',"$keyword[$s]%");
+					$query->orWhere('products.title','like',"$keyword[$s]%");
 				}      
 			});
 		}		
-		
-		$orderByRowCase = '';
-		if($keyword){
-			$orderByRowCase .= ' CASE ';
-			$r=1;
-			for($s = 0; $s < count($keyword); $s++){
-				$orderByRowCase .= ' WHEN `products`.`title` LIKE "%'.$keyword[$s].'%" then '.$r.' ';
-				$r++;
-			}
-			$orderByRowCase .= ' END'; 
-		} 
-		
-		if($orderByRowCase!=''){
-			$results = $results->orderByRaw($orderByRowCase);
-		}
 		$results = $results->limit(10);
 		$results = $results->get();
 		
@@ -747,8 +732,8 @@ class HomeController extends Controller
 		if($keyword){
 			$results = $results->where(function ($query) use($keyword) {
 				for($s = 0; $s < count($keyword); $s++){
-					//$query->orWhere('categories.categoryName','like',"%$keyword[$s]%");
-					$query->orWhere('products.title','like',"%$keyword[$s]%");
+					//$query->orWhere('categories.categoryName','like',"$keyword[$s]%");
+					$query->orWhere('products.title','like',"$keyword[$s]%");
 				}      
 			});
 		}	
@@ -776,9 +761,7 @@ class HomeController extends Controller
 			$sorting_p = 'desc';
 		}
 		
-		
 		$results = $results->orderBy($sorting_name,$sorting_p);
-				
 		$results = $results->limit($showing_result);
 		$results = $results->get();
 		//echo $results->toSql();die;
@@ -805,7 +788,7 @@ class HomeController extends Controller
 				if($keyword){
 					$products = $products->where(function ($query3) use($keyword) {
 						for($s = 0; $s < count($keyword); $s++){
-							$query3->orWhere('products.title','like',"%$keyword[$s]%");
+							$query3->orWhere('products.title','like',"$keyword[$s]%");
 						}      
 					});
 				}				
@@ -976,8 +959,8 @@ function getSpecialParts($string){
 		if($keyword){
 			$results = $results->where(function ($query) use($keyword) {
 				for($s = 0; $s < count($keyword); $s++){
-					//$query->orWhere('categories.categoryName','like',"%$keyword[$s]%");
-					$query->orWhere('products.title','like',"%$keyword[$s]%");
+					//$query->orWhere('categories.categoryName','like',"$keyword[$s]%");
+					$query->orWhere('products.title','like',"$keyword[$s]%");
 				}      
 			});
 		}
@@ -995,8 +978,8 @@ function getSpecialParts($string){
 		if($keyword){
 			$results = $results->where(function ($query) use($keyword) {
 				for($s = 0; $s < count($keyword); $s++){
-					//$query->orWhere('categories.categoryName','like',"%$keyword[$s]%");
-					$query->orWhere('products.title','like',"%$keyword[$s]%");
+					//$query->orWhere('categories.categoryName','like',"$keyword[$s]%");
+					$query->orWhere('products.title','like',"$keyword[$s]%");
 				}      
 			});
 		}

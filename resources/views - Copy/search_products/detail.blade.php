@@ -1,7 +1,3 @@
-<?php 
-use \App\Http\Controllers\DetailController;
-$settings = DetailController::get_settings();
-?>
 @extends('layouts.app')
 
 @section('content')
