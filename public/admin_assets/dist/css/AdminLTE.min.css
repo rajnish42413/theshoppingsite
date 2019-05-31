@@ -133,3 +133,6 @@
 .info-container_booking span:first-child {
     margin-left: 15px;
 }
+.logo-mini img {
+    width: 65%;
+}

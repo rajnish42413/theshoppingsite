@@ -7,6 +7,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Enquiry;
+use App\Setting;
 
 class EnquiryNew extends Mailable
 {
@@ -31,6 +32,12 @@ class EnquiryNew extends Mailable
      */
     public function build()
     {
-        return $this->to('shopergy_admin@yopmail.com')->subject(env('APP_NAME') . ' - New enquiry form Contact Us')->view('emails.enquirynew');
+		$settings = Setting::limit(1)->first();
+		if($settings && $settings->count() > 0){
+			$site_name = $settings->title;	
+		}else{
+			$site_name = env('APP_NAME');
+		}
+        return $this->to('shopergy_admin@yopmail.com')->subject($site_name . ' - New enquiry form Contact Us')->view('emails.enquirynew');
     }
 }

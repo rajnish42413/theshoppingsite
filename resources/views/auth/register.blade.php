@@ -1,3 +1,7 @@
+<?php 
+use \App\Http\Controllers\DetailController;
+$settings = DetailController::get_settings();
+?>
 @extends('auth.layouts.app')
 
 @section('auth_content')
@@ -71,7 +75,7 @@
 
 				<!-- /.mt-2 -->
 				<div class="mt-3">
-					Already have an Shopergy account? <a href="{{ route('login') }}">Log in</a>
+					Already have an <?php if($settings){ echo $settings->title;} ?> account? <a href="{{ route('login') }}">Log in</a>
 				</div>
 				<!-- /.mt-2 -->
 			</div>

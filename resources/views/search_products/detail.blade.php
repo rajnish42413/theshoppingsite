@@ -898,7 +898,7 @@ if($product->Variations != ''){
 					<div class="sh_rated_product_sec sh_float_width">
 						<img src="{{env('APP_URL')}}assets/images/product_view/shopergy.png">
 						<div class="sh_rated_product_text sh_float_width">
-							<h4>Shopergy</h4>
+							<h4><?php if($settings){ echo $settings->title;} ?></h4>
 							<ul>
 								<li><span class="fa fa-star"></span></li>
 								<li><span class="fa fa-star"></span></li>

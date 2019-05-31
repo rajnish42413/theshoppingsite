@@ -30,14 +30,11 @@
 						<div class="sh_side_bar_section sh_float_width">
 						<form id="filter_form" action="" method="post">
 						{{ csrf_field() }}
+							<input type="hidden" id="keyword" value="<?php echo $data['keyword'];?>" name="keyword" />
 							<input type="hidden" id="sorting_type" value="1" name="sorting_type" />
 							<input type="hidden" id="showing_result" value="10" name="showing_result" />
 							<input type="hidden" id="parent_cat_id" value="<?php echo $data['parent_cat_id'];?>" name="parent_cat_id" />
-							<input type="hidden" id="cat_id" value="<?php echo $data['cat_id'];?>" name="cat_id" />
-							<div class="sh_side_widget sh_cat_search_form sh_float_width">
-							<h4 class="sh_sidecat_heading">Filter By Name</h4>
-									<input type="text" class="form-control" id="pro_name" name="pro_name" placeholder="Search" value="" oninput="get_product_name(this)">
-							</div>							
+							<input type="hidden" id="cat_id" value="<?php echo $data['cat_id'];?>" name="cat_id" />					
 
 							<div class="sh_side_widget sh_sidear_cat_price_filter sh_float_width">
 								<h4 class="sh_sidecat_heading">Filter By Price</h4>
@@ -181,7 +178,7 @@
 						</div>
 						
 					<?php if($products && $products->count() >= 10){?>
-						<div class="load_more" style="display:none;">
+						<div class="load_more">
 							<div class="col-lg-12 text-center"><button onclick="load_more(this)" class="sh_btn btn btn-block" type="button">Load More <i class="fa fa-spin fa-spinner hide"></i></button></div>
 						</div>
 					<?php } ?>
@@ -219,7 +216,7 @@ function get_search_data(){
 	 $('#products-view').hide();
 	$.ajax({
 			type: "POST",	 			
-			url: '<?php echo env('APP_URL') ?>get-products-ajax',
+			url: '<?php echo env('APP_URL') ?>get-products-search-ajax',
 			data:$( "#filter_form" ).serialize(),	
 			success: function(res)
 			{ 

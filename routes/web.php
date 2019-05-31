@@ -49,7 +49,7 @@ Route::get('category/{id}/{brand}', 'HomeController@search_list')->name('categor
 Route::get('product/{id}', 'HomeController@product_detail')->name('product');
 Route::get('brand/{id}', 'HomeController@search_by_brands')->name('brand');
 Route::post('get-products-ajax', 'HomeController@get_products_ajax')->name('get-products-ajax');
-
+Route::post('get-products-search-ajax', 'HomeController@get_products_search_ajax')->name('get-products-search-ajax');
 
 /*Admin Routes*/
 

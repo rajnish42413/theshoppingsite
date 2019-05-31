@@ -201,7 +201,7 @@ $social_links = DetailController::get_social_links();
 				</div>
 				<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 pull-left">
 					<div class="sh_copyright_section">
-						<p>Copyright &copy; 2019 - All Right Reserved.</p>
+						<p>Copyright &copy; 2019 <?php if($settings){ echo $settings->title;} ?> - All Right Reserved.</p>
 					</div>
 				</div>
 			</div>

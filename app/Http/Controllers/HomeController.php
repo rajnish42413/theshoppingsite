@@ -17,6 +17,7 @@ use App\Banner;
 use App\FrontPageSetting;
 use App\FaqData;
 use App\ContactInfo;
+use App\Setting;
 
 use App\Contracts\EnquiryServiceContract;
 use App\Mail\EnquiryNew;
@@ -124,8 +125,14 @@ class HomeController extends Controller
     }
 	
 	public function all_categories(){
+		$settings = Setting::limit(1)->first();
 		$data['nav'] = 'all_categories';
-		$data['meta_title'] = env('app_name')." :: All Categories";
+		if($settings && $settings->count() > 0){
+			$data['meta_title'] = $settings->title." :: All Categories";
+		}else{
+			$data['meta_title'] = env('app_name')." :: All Categories";
+		}
+		
 		$data['meta_keywords']= "All Categories";
 		$data['meta_description'] = "All Categories";;		
 		$cat_data = array();
@@ -399,7 +406,7 @@ class HomeController extends Controller
 		
 		return $products;
 	}
-	
+
 	public function get_products_ajax(Request $request){
 		$sorting_name = 'products.current_price';
 		$sorting_p = 'asc';	
@@ -651,20 +658,40 @@ class HomeController extends Controller
 		$data['min_price']	= '';
 		$data['max_price'] = '';
 		$data['brand_id'] = '';
-
+					
 		$results = Product::select(DB::raw("products.*"))->where('products.status',1);
 		if($keyword){
 			$results = $results->where(function ($query) use($keyword) {
 				for($s = 0; $s < count($keyword); $s++){
-					//$query->orWhere('categories.categoryName','like',"%$keyword[$s]%");
-					$query->orWhere('products.title','like',"%$keyword[$s]%");
+					//$query->orWhere('categories.categoryName','like',"$keyword[$s]%");
+					$query->orWhere('products.title','like',"$keyword[$s]%");
 				}      
 			});
 		}		
-		//$results = $results->limit(10);
+		$results = $results->limit(10);
 		$results = $results->get();
-		//echo $results;die;
 		
+		$data['min_price'] = $this->getMinPriceByProductName($keyword);
+		$data['max_price'] = $this->getMaxPriceByProductName($keyword);
+		
+		if($results && $results->count() > 0){
+			$cat_ids = array();
+			$brand_ids = array();
+			foreach($results as $row){
+				$cat_ids[] = $row->parentCategoryId;
+				$brand_ids[] = $row->brand_id;
+			}
+			if($cat_ids){ 
+				$cat_ids = array_values(array_unique($cat_ids)); 
+				$categories = Category::whereIn('parentId',$cat_ids)->get();
+			}
+			
+			if($brand_ids){ 
+				$brand_ids = array_values(array_unique($brand_ids));
+				$brands = Brand::whereIn('id',$brand_ids)->get();			
+			}		
+			
+		}
 		$data['nav'] = 'terms';
 		$data['meta_title'] = config('app.name')." :: Search Products";
 		$data['meta_keywords'] = config('app.name')." Search Products";
@@ -678,6 +705,74 @@ class HomeController extends Controller
 		
 	}
 
+
+	public function get_products_search_ajax(Request $request){
+		$keyword = array();
+		$data['keyword_array'] = $keyword = $this->getParts($request->input('keyword')); //array
+		$data['keyword'] =  $request->input('keyword'); //string
+		
+		$sorting_name = 'products.current_price';
+		$sorting_p = 'asc';	
+		$brands_array = array();
+		
+		$parent_cat_id = $request->input('parent_cat_id');
+		$brands_array = $request->input('brands');
+		
+		//echo '<pre>'; print_r($brands_array); die;
+		$cat_id = $request->input('cat_id');
+		$pro_name = trim($request->input('pro_name'));
+		$start_price = $request->input('dpriceMin');
+		$end_price = $request->input('dpriceMax');
+		$showing_result = $request->input('showing_result');
+		$sorting_type = $request->input('sorting_type');
+	
+		$results = array();
+
+		$results = Product::select(DB::raw("products.*"))->where('products.status',1);
+		if($keyword){
+			$results = $results->where(function ($query) use($keyword) {
+				for($s = 0; $s < count($keyword); $s++){
+					//$query->orWhere('categories.categoryName','like',"$keyword[$s]%");
+					$query->orWhere('products.title','like',"$keyword[$s]%");
+				}      
+			});
+		}	
+
+		if($start_price!='' && $end_price!=''){
+			$results = $results->where('products.current_price','>=',$start_price);
+			$results = $results->where('products.current_price','<',$end_price);
+		}
+		
+		if($pro_name !=''){
+			$results = $results->where('products.title','like',"%" .$pro_name. "%");
+		}
+		
+		if($brands_array){
+			$results = $results->whereIn('products.brand_id', $brands_array);
+		}
+		if($sorting_type == '1'){
+			$sorting_name = 'products.current_price';
+			$sorting_p = 'asc';
+		}elseif($sorting_type == '2'){
+			$sorting_name = 'products.current_price';
+			$sorting_p = 'desc';
+		}elseif($sorting_type == '3'){
+			$sorting_name = 'products.id';
+			$sorting_p = 'desc';
+		}
+		
+		$results = $results->orderBy($sorting_name,$sorting_p);
+		$results = $results->limit($showing_result);
+		$results = $results->get();
+		//echo $results->toSql();die;
+		if($results && $results->count() > 0){			
+			echo view('search_products/ajax_grid_list_search',['products'=>$results])->render();				
+		}else{
+			echo '0';
+		} 		
+	}
+	
+	
 	public function search_form(Request $request){ //multiple suggestions
 		$base_url= env('APP_URL');
 		$output = '';
@@ -693,7 +788,7 @@ class HomeController extends Controller
 				if($keyword){
 					$products = $products->where(function ($query3) use($keyword) {
 						for($s = 0; $s < count($keyword); $s++){
-							$query3->orWhere('products.title','like',"%$keyword[$s]%");
+							$query3->orWhere('products.title','like',"$keyword[$s]%");
 						}      
 					});
 				}				
@@ -859,4 +954,41 @@ function getSpecialParts($string){
 	  return $result; 
 	}	
 	
+	public function getMaxPriceByProductName($keyword){					
+		$results = Product::select(DB::raw("CEIL(MAX(current_price)) as price"))->where('products.status',1);
+		if($keyword){
+			$results = $results->where(function ($query) use($keyword) {
+				for($s = 0; $s < count($keyword); $s++){
+					//$query->orWhere('categories.categoryName','like',"$keyword[$s]%");
+					$query->orWhere('products.title','like',"$keyword[$s]%");
+				}      
+			});
+		}
+		$results = $results->first();
+		
+		if($results && $results->count() > 0 && $results->price != null){
+			return $results->price;
+		}else{
+			return '';
+		}		
+	}
+	
+	public function getMinPriceByProductName($keyword){					
+		$results = Product::select(DB::raw("FLOOR(MIN(current_price)) as price"))->where('products.status',1);
+		if($keyword){
+			$results = $results->where(function ($query) use($keyword) {
+				for($s = 0; $s < count($keyword); $s++){
+					//$query->orWhere('categories.categoryName','like',"$keyword[$s]%");
+					$query->orWhere('products.title','like',"$keyword[$s]%");
+				}      
+			});
+		}
+		$results = $results->first();
+		
+		if($results && $results->count() > 0 && $results->price != null){
+			return $results->price;
+		}else{
+			return '';
+		}		
+	}		
 }

@@ -1,5 +1,6 @@
 <?php 
 use \App\Http\Controllers\DetailController;
+$settings = DetailController::get_settings();
 $menu_permissions = DetailController::get_menu_permissions();
 ?>
 
@@ -9,7 +10,7 @@ $menu_permissions = DetailController::get_menu_permissions();
   <link rel="icon" href="{{env('APP_URL')}}/assets/images/favicon.png">
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>{{ config('app.name') }} Admin | <?php echo $data['title'];?></title>
+  <title><?php if($settings){ echo $settings->title;} ?> Admin | <?php echo $data['title'];?></title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -117,9 +118,9 @@ $menu_permissions = DetailController::get_menu_permissions();
     <!-- Logo -->
     <a href="{{env('APP_URL')}}admin" class="logo">
       <!-- mini logo for sidebar mini 50x50 pixels -->
-      <span class="logo-mini"><b>SHOP</b></span>
+      <span class="logo-mini"><img src="{{env('APP_URL')}}assets/images/favicon.png"/></span>
       <!-- logo for regular state and mobile devices -->
-      <span class="logo-lg"><b>{{ config('app.name') }} </b></span>
+      <span class="logo-lg"><b><?php if($settings){ echo $settings->title;} ?></b></span>
     </a>
     <!-- Header Navbar: style can be found in header.less -->
     <nav class="navbar navbar-static-top">
@@ -313,7 +314,7 @@ $menu_permissions = DetailController::get_menu_permissions();
     <div class="pull-right hidden-xs hide">
       <b>Version</b> 2.4.0
     </div>
-    <strong>Copyright &copy; 2018 <a href="{{ route('home') }}">{{ config('app.name') }}</a>.</strong> All rights
+    <strong>Copyright &copy; 2019 <a href="{{ route('home') }}"><?php if($settings){ echo $settings->title;} ?></a> - </strong> All rights
     reserved.
   </footer>
 
