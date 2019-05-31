@@ -683,12 +683,12 @@ class HomeController extends Controller
 		if($orderByRowCase!=''){
 			$results = $results->orderByRaw($orderByRowCase);
 		}
-		$results = $results->limit(10);
+		$results = $results->limit(30);
 		$results = $results->get();
 		
 		$data['min_price'] = $this->getMinPriceByProductName($keyword);
 		$data['max_price'] = $this->getMaxPriceByProductName($keyword);
-		
+		//echo $results->count();die;
 		if($results && $results->count() > 0){
 			$cat_ids = array();
 			$brand_ids = array();
