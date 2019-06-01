@@ -43,6 +43,11 @@ class DetailController extends Controller
 	}
 	
 	
+	public static function get_parent_categories(){
+		$row = Category::where('status',1)->where('parentId',0)->get();
+		return $row;
+	}
+	
 	public static function get_social_links(){
 		$row = SocialSetting::where('status',1)->get();
 		return $row;

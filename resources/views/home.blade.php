@@ -114,7 +114,7 @@
 					
 						<div class="item">
 							<div class="sh_top_product_section sh_float_width">
-								<a href="<?php echo env('APP_URL')."product/".$tp->itemId;?>"><img src="<?php echo $galleryURL;?>"></a>
+								<a href="<?php echo env('APP_URL')."product/".$tp->slug;?>"><img src="<?php echo $galleryURL;?>"></a>
 								<div class="sh_top_prod_name">
 									<h2><span>From</span>$<?php echo $tp->current_price;?></h2>
 									
@@ -168,7 +168,7 @@
 								<div class="sh_deal_offer">
 									<span>-<?php echo rand(5,30);?>%</span>
 								</div>
-								<a href="<?php echo env('APP_URL')."product/".$d->itemId;?>">
+								<a href="<?php echo env('APP_URL')."product/".$d->slug;?>">
 								<img src="<?php echo $dealgalleryURL;?>">
 								</a>
 								<div class="sh_top_deals_name">

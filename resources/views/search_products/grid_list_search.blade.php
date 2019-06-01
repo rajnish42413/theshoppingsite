@@ -31,6 +31,7 @@
 						<form id="filter_form" action="" method="post">
 						{{ csrf_field() }}
 							<input type="hidden" id="keyword" value="<?php echo $data['keyword'];?>" name="keyword" />
+							<input type="hidden" id="search_category" value="<?php echo $data['search_category'];?>" name="cat" />
 							<input type="hidden" id="sorting_type" value="1" name="sorting_type" />
 							<input type="hidden" id="showing_result" value="10" name="showing_result" />
 							<input type="hidden" id="parent_cat_id" value="<?php echo $data['parent_cat_id'];?>" name="parent_cat_id" />
@@ -139,7 +140,7 @@
 							?>
 						
 							<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-								<a href="{{ env('APP_URL')}}product/<?php echo $product->itemId;?>">
+								<a href="{{ env('APP_URL')}}product/<?php echo $product->slug;?>">
 									<div class="sh_grid_product_section sh_float_width">
 									<?php if($product->Quantity == 0){?>
 										<div class="out_of_stock">
@@ -196,7 +197,7 @@
 $(window).on('load', function(){
      $('#listLoading').hide();
      $('#products-view').show();
-     $('.load_more').hide();
+     $('.load_more').show();
 });
 
 function product_sorting(e){
@@ -222,12 +223,18 @@ function get_search_data(){
 			{ 
 				$('.load_more').show();
 				$('#listLoading').hide();
-				$('.load_more i').addClass('hide');
-				if(res != '0'){
-					$('#products-view').html(res);
-				}else{
+				$('.load_more i').addClass('hide');	
+				
+				var result = res.split("|");
+				
+				 if(result[0] == 0){
 					$('.load_more').hide();
 					$('#products-view').html('<h3 class="alert alert-danger"><i class="fa fa-exclamation-triangle"></i> No Items Found For This Criteria.</h3>');
+				}else if(result[0] > 0 && result[1] < 10){
+					$('#products-view').html(result[1]);
+					$('.load_more').hide();
+				}else if(result[0] >= 10){
+					$('#products-view').html(result[1]);
 				}
 				$('#products-view').show();					
 			}

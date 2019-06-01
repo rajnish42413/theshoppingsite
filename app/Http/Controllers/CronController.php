@@ -193,6 +193,12 @@ class CronController extends Controller
 
 					$input['itemId'] =  $product->itemId;
 					$input['title'] =  $product->title;
+					
+					$slug = $this->slugify($product->title);
+					$slug = $this->check_slug_product($slug);
+					
+					$inut['slug'] = $slug;
+					
 					$input['globalId'] =  $product->globalId;
 					
 					$catID  =  $product->primaryCategory->categoryId;
@@ -408,5 +414,30 @@ class CronController extends Controller
 		}
 		return $slug;
 	}
+	
+	function check_slug_product($slug){
+		$rand = time().rand(10,99);
+		$slug_check = Product::where('slug',$slug)->first();
+		if($slug_check && $slug_check->count() > 0){
+			$slug = $slug_check->slug.'-'.$rand;
+			return $slug;
+		}
+		return $slug;
+	}	
+	
+	public function create_product_slug(){
+		$products = Product::where('status',1)->orderBy('id','asc')->get();
+		if($products && $products->count() > 0){
+			foreach($products as $p){
+				if($p->title !=''){
+					$slug = $this->slugify($p->title);
+					$slug = $this->check_slug_product($slug);
+					$input = array('slug'=>$slug);
+					//echo '<pre>'; print_r($input);die;
+					Product::where('id',$p->id)->update($input);
+				}
+			}
+		}
+	}	
 	
 }

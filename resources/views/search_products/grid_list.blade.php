@@ -135,7 +135,7 @@
 							?>
 						
 							<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-								<a href="{{ env('APP_URL')}}product/<?php echo $product->itemId;?>">
+								<a href="{{ env('APP_URL')}}product/<?php echo $product->slug;?>">
 									<div class="sh_grid_product_section sh_float_width">
 									<?php if($product->Quantity == 0){?>
 										<div class="out_of_stock">

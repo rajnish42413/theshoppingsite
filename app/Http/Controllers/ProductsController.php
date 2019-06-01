@@ -208,6 +208,10 @@ class ProductsController extends Controller
 				$category = trim($importData_arr[$i][1]);	// category
 				$parent_category = trim($importData_arr[$i][2]);	// parent_category
 				$title = trim($importData_arr[$i][3]);	// title
+				
+				$pslug = $this->slugify($title);
+				$pslug = $this->check_slug_product($pslug);
+					
 				$price = trim($importData_arr[$i][4]);	// price
 				$currency = trim($importData_arr[$i][5]);	// currency
 				$brand = trim($importData_arr[$i][6]);	// brand
@@ -215,6 +219,7 @@ class ProductsController extends Controller
 				$payment_method = trim($importData_arr[$i][8]);	// payment_method
 				$quantity = trim($importData_arr[$i][9]);	// quantity
 				$description = trim($importData_arr[$i][10]);	// description
+				$merchant = trim($importData_arr[$i][11]);	// description
 				$brand_id = 0;
 				if($brand !=''){
 					$input2 = array(
@@ -231,12 +236,32 @@ class ProductsController extends Controller
 						$brand_id = Brand::create($input2)->id;
 					}
 					
-				} 
+				}
+
+				$merchant_id = 1; //default for ebay
+				if($merchant !=''){
+					$input2 = array(
+						'name' => $merchant,
+						'slug' => $this->slugify($merchant),
+						'updated_at' => date('Y-m-d H:i:s'),
+					);
+					$merchant_check = Merchant::where('slug',$input2['slug'])->first();
+					if($merchant_check && $merchant_check->count() > 0){
+						$merchant_id = $merchant_check->id;
+						Merchant::where('id',$merchant_id)->update($input2);
+					}else{
+						$input2['updated_at'] = date('Y-m-d H:i:s');
+						$merchant_id = Merchant::create($input2)->id;
+					}
+					
+				}				
+				
 				$input = array(
 					'itemId'=> $itemId,
 					'categoryId'=> $category,
 					'parentCategoryId'=> $parent_category,
 					'title' => $title,
+					'slug' => $pslug,
 					'current_price' => $price,
 					'current_price_currency' => $currency,
 					'PaymentMethods' => $payment_method,
@@ -244,6 +269,7 @@ class ProductsController extends Controller
 					'Description' => $description,
 					'viewItemURL' => $item_url,
 					'brand_id' => $brand_id,
+					'merchant_id' => $merchant_id,
 					'updated_at' => date('Y-m-d H:i:s'),
 				);
 				echo '<pre>'; print_r($input); echo '</pre>';
@@ -427,6 +453,15 @@ class ProductsController extends Controller
 
 	  return $text;
 	}
-	
+
+	function check_slug_product($slug){
+		$rand = time().rand(10,99);
+		$slug_check = Product::where('slug',$slug)->first();
+		if($slug_check && $slug_check->count() > 0){
+			$slug = $slug_check->slug.'-'.$rand;
+			return $slug;
+		}
+		return $slug;
+	}	
 	
 }

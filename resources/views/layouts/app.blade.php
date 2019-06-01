@@ -4,6 +4,7 @@ use \App\Http\Controllers\DetailController;
 $nav_menus = DetailController::get_main_nav_menus();
 $settings = DetailController::get_settings();
 $social_links = DetailController::get_social_links();
+$parent_categories = DetailController::get_parent_categories();
 ?>
 
 <!DOCTYPE html>
@@ -34,7 +35,9 @@ $social_links = DetailController::get_social_links();
 	<link rel="stylesheet" type="text/css" href="{{env('APP_URL')}}assets/css/responsive.css" />
 	<!-- Favicon Link -->
 	<link rel="shortcut icon" type="image/png" href="{{env('APP_URL')}}assets/images/favicon.png" />
-	<script src="{{env('APP_URL')}}assets/js/jquery.js"></script>	
+	<script src="{{env('APP_URL')}}assets/js/jquery.js"></script>
+	<link href="{{env('APP_URL')}}admin_assets/plugins/select2/select2.min.css" rel="stylesheet" />
+	<script src="{{env('APP_URL')}}admin_assets/plugins/select2/select2.min.js"></script>	
 </head>
 <body>
 <div class="preloader">
@@ -56,7 +59,7 @@ $social_links = DetailController::get_social_links();
 	<div class="sh_top_header_wrap sh_float_width">
 		<div class="container">
 			<div class="row">
-				<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+				<div class="col-lg-3 col-md-3 col-sm-4 col-xs-4">
 					<div class="sh_header_navbar sh_float_width">
 						<div class="sh_logo_wrap">
 							<a class="sh_logo" href="{{env('APP_URL')}}"><img src="{{env('APP_URL')}}assets/images/<?php if($settings){echo $settings->logo;}?>" alt="logo"></a>
@@ -64,10 +67,17 @@ $social_links = DetailController::get_social_links();
 					</div>
 				</div>
 				<!-- Search bar -->
-				<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 text-right">
+				<div class="col-lg-9 col-md-9 col-sm-8 col-xs-8 text-right">
 					<div class="sh_Search_bar sh_float_width">
 						<form id="searchForm" method="GET" action="{{route('search')}}">
 							<input type="text" name="keyword" oninput="get_search(this)" id="keyword" placeholder="Search" value="<?php if(isset($data['keyword']) && $data['keyword']!=''){ echo $data['keyword'];}?>">
+							<select name="cat" id="search_category" class="js-example-basic-single">
+								<option value="">All Categories</option>
+						<?php if($parent_categories && $parent_categories->count() > 0){
+								foreach($parent_categories as $cat){?>
+								<option value="<?php echo $cat->categoryId;?>" <?php if(isset($data['search_category']) && $data['search_category'] == $cat->categoryId){ echo 'selected'; }?>><?php echo $cat->categoryName;?></option>
+						<?php } } ?>
+							</select>
 							<button type="submit" id="search_btn">Search <i class="fa fa-spinner fa-spin searchLoader" style="display:none;"></i></button>
 						</form>
 					
@@ -223,6 +233,9 @@ $(window).on("load", function() {
 
 <script src="{{env('APP_URL')}}assets/js/product_zoom/jquery.zoom.min.js"></script>
 <script src="{{env('APP_URL')}}assets/js/product_zoom/slick.min.js"></script>
+<script>
+    $('.js-example-basic-single').select2();
+</script>
 <script>
 
 /*-------- Product Zoom and Slider -----------*/

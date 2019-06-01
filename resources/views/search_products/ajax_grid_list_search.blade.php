@@ -1,3 +1,4 @@
+<?php use \App\Http\Controllers\DetailController;?>
 					<?php if($products){
 						
 						foreach($products as $product){?>
@@ -11,14 +12,19 @@
 									$galleryURL = $pic_det->GalleryURL;
 								}
 							}
+							if($data['keyword_array']){
+								$title = DetailController::getStringBold($data['keyword_array'],$product->title);
+							}else{
+								$title = $product->title;
+							}							
 							?>
 						
 							<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-								<a href="{{ env('APP_URL')}}product/<?php echo $product->itemId;?>">
+								<a href="{{ env('APP_URL')}}product/<?php echo $product->slug;?>">
 									<div class="sh_grid_product_section sh_float_width">
 										<span class="hide sh_new_prod">New</span>
 										<img class="grid_prd" src="<?php echo $galleryURL;?>">
-										<h4 class="sh_prod_name"><?php echo $product->title;?></h4>
+										<h4 class="sh_prod_name"><?php echo $title;?></h4>
 										<div class="sh_about_prod">
 											<div class="sh_product_price">$<?php echo $product->current_price;?></div>
 											<div class="sh_product_review">

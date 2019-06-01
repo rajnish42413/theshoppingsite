@@ -14,8 +14,12 @@
 Route::get('/','HomeController@index')->name('home');
 
 Auth::routes();
+//temporary
+Route::get('/cron/product-slug','CronController@create_product_slug')->name('cron/product-slug');
+
 
 Route::get('/home','HomeController@index')->name('home');
+
 Route::any('/all-categories','HomeController@all_categories')->name('all-categories');
 Route::any('/all-categories-ajax','HomeController@get_all_categories_ajax')->name('all-categories-ajax');
 Route::any('/get-search','HomeController@search_form')->name('get-search');

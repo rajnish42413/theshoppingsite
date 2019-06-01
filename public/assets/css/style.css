@@ -2327,3 +2327,35 @@ form#filter_form .sh_side_widget.sh_cat_search_form.sh_float_width {
 h4.sh_prod_name b {
     color: #85be57!important;
 }
+
+#searchForm #search_category {
+   position:relative;
+}
+
+
+
+
+#search_category + .select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: 40px !important;
+	text-align: left!important;
+}
+#search_category + .select2-container--default .select2-selection--single {
+    border: 0 !important;
+    border-radius: 0 !important;
+    border-left: 1px solid #aaa !important;
+    min-height: 40px !important;
+    line-height: 42px !important;
+}
+#search_category + .select2-container {
+    width: calc(40% - 85px) !important;
+    float: left !important;
+    border: 0px !important;
+    border-radius: 0px !important;
+}
+#search_category + .select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 40px !important;
+    text-align: left!important;
+}
+.sh_Search_bar input {
+    float: left;
+}

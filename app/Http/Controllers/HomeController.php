@@ -297,7 +297,7 @@ class HomeController extends Controller
 	
 	//search_by_brands
 	
-	public function product_detail(Request $request,$id){
+	public function product_detail(Request $request,$slug){
 
 		$data['nav'] = 'terms';
 		$data['meta_title'] = config('app.name')." :: Product Detail";
@@ -307,9 +307,9 @@ class HomeController extends Controller
 		$data['category'] = "-";		
 		$product = array();
 		$categories = array();
-		if($id != ''){
+		if($slug != ''){
 
-			$product = Product::select(DB::raw("products.*, categories.categoryName as categoryName, c2.categoryName as parentCategoryName"))->Join('categories',function ($join){$join->on('categories.categoryId','=','products.categoryId'); })->Join('categories as c2',function ($join){$join->on('c2.categoryId','=','products.parentCategoryId'); })->where('products.itemId',$id)->where('products.status',1)->first();
+			$product = Product::select(DB::raw("products.*, categories.categoryName as categoryName, c2.categoryName as parentCategoryName"))->Join('categories',function ($join){$join->on('categories.categoryId','=','products.categoryId'); })->Join('categories as c2',function ($join){$join->on('c2.categoryId','=','products.parentCategoryId'); })->where('products.slug',$slug)->where('products.status',1)->first();
 					
 			if($product && $product->count() > 0){
 				$data['parent_category'] = $product->parentCategoryName;	
@@ -637,13 +637,14 @@ class HomeController extends Controller
 	
 	public function search_data(Request $request){ //get form submit
 		$base_url= env('APP_URL');
-		
+		$data['search_category'] = '';
 		if($request->isMethod('get') && $request->input('keyword') !=''){
 			$keyword = array();
 			$data['keyword_array'] = $keyword = $this->getParts($request->input('keyword')); //array
 			//echo '<Pre>';print_r($keyword);die;
 			
 		$data['keyword'] =  $request->input('keyword'); //string
+		$data['search_category'] = $scat =  $request->input('cat'); //string
 		
 		$categories = array();
 		$products = array();
@@ -660,6 +661,10 @@ class HomeController extends Controller
 		$data['brand_id'] = '';
 					
 		$results = Product::select(DB::raw("products.*"))->where('products.status',1);
+		if($scat != ''){
+			$results = $results->where('products.catID1',$scat);
+		}
+		
 		if($keyword){
 			$results = $results->where(function ($query) use($keyword) {
 				for($s = 0; $s < count($keyword); $s++){
@@ -683,7 +688,7 @@ class HomeController extends Controller
 		if($orderByRowCase!=''){
 			$results = $results->orderByRaw($orderByRowCase);
 		}
-		$results = $results->limit(30);
+		$results = $results->limit(10);
 		$results = $results->get();
 		
 		$data['min_price'] = $this->getMinPriceByProductName($keyword);
@@ -696,9 +701,12 @@ class HomeController extends Controller
 				$cat_ids[] = $row->parentCategoryId;
 				$brand_ids[] = $row->brand_id;
 			}
-			if($cat_ids){ 
-				$cat_ids = array_values(array_unique($cat_ids)); 
-				$categories = Category::whereIn('parentId',$cat_ids)->get();
+			
+			if($scat == ''){
+				if($cat_ids){ 
+					$cat_ids = array_values(array_unique($cat_ids)); 
+					$categories = Category::whereIn('parentId',$cat_ids)->get();
+				}
 			}
 			
 			if($brand_ids){ 
@@ -706,7 +714,15 @@ class HomeController extends Controller
 				$brands = Brand::whereIn('id',$brand_ids)->get();			
 			}		
 			
+		}			
+		
+		if($scat != ''){
+			$categories = array();
+			$categories = Category::where('status',1)->where('parentId',$scat)->get();
 		}
+			
+			
+
 		$data['nav'] = 'terms';
 		$data['meta_title'] = config('app.name')." :: Search Products";
 		$data['meta_keywords'] = config('app.name')." Search Products";
@@ -725,6 +741,7 @@ class HomeController extends Controller
 		$keyword = array();
 		$data['keyword_array'] = $keyword = $this->getParts($request->input('keyword')); //array
 		$data['keyword'] =  $request->input('keyword'); //string
+		$data['search_category'] =  $scat = $request->input('cat'); //string
 		
 		$sorting_name = 'products.current_price';
 		$sorting_p = 'asc';	
@@ -744,6 +761,10 @@ class HomeController extends Controller
 		$results = array();
 
 		$results = Product::select(DB::raw("products.*"))->where('products.status',1);
+		if($scat != ''){
+			$results = $results->where('products.catID1',$scat);
+		}
+				
 		if($keyword){
 			$results = $results->where(function ($query) use($keyword) {
 				for($s = 0; $s < count($keyword); $s++){
@@ -783,9 +804,12 @@ class HomeController extends Controller
 		$results = $results->get();
 		//echo $results->toSql();die;
 		if($results && $results->count() > 0){			
-			echo view('search_products/ajax_grid_list_search',['products'=>$results])->render();				
+		$count = $results->count();
+			$output =  view('search_products/ajax_grid_list_search',['products'=>$results,'data'=>$data])->render();
+			echo $count.'|'.$output;
 		}else{
-			echo '0';
+			$output = '0|';
+			echo $output;
 		} 		
 	}
 	
@@ -1007,5 +1031,6 @@ function getSpecialParts($string){
 		}else{
 			return '';
 		}		
-	}		
+	}	
+
 }
