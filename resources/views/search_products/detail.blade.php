@@ -75,39 +75,47 @@ if($PictureDetails != ''){
 	<div class="sh_product_view_img_wrap sh_float_width">
 		<div class="container">
 			<div class="row">
-				<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+				<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
 					<div class="sh_product_view_img sh_float_width">
 						<div class="slider-wrapper">
-							<div class="slider-for">
-							<?php 
-							if($pic_array){
-							foreach($pic_array as $pic){?>
-								<div class="slider-for__item ex1" data-src="<?php echo $pic; ?>">
-									<img src="<?php echo $pic; ?>" alt="" />
-								</div>
-							<?php } }else{?>
-								<div class="slider-for__item ex1" data-src="<?php echo $single_pic;?>">
-									<img src="<?php echo $single_pic;?>" alt="" />
-								</div>							
-							<?php }?>							
-
-
-							</div>
-							<div class="slider-nav">
-							<?php 
-							if($pic_array){
-							foreach($pic_array as $pic){?>
-								<div class="slider-nav__item">
-									<img src="<?php echo $pic; ?>" alt="" />
-								</div>
-								
-							<?php } }else{?>
-								<div class="slider-nav__item">
-									<img src="<?php echo $single_pic;?>" alt="" />
-								</div>								
-							<?php }?>
+							<div class="col-lg-3 col-md-3 col-sm-4 col-xs-4">
 							
+								<div class="slider-nav">
+								<?php 
+								if($pic_array){
+								foreach($pic_array as $pic){?>
+									<div class="slider-nav__item">
+										<img src="<?php echo $pic; ?>" alt="" />
+									</div>
+									
+								<?php } }else{?>
+									<div class="slider-nav__item">
+										<img src="<?php echo $single_pic;?>" alt="" />
+									</div>								
+								<?php }?>
+								
+								</div>
 							</div>
+							
+							<div class="col-lg-9 col-md-9 col-sm-8 col-xs-8">
+								<div class="slider-for">
+								<?php 
+								if($pic_array){
+								foreach($pic_array as $pic){?>
+									<div class="slider-for__item ex1" data-src="<?php echo $pic; ?>">
+										<img class="sh_view_img" src="<?php echo $pic; ?>" alt="" />
+									</div>
+								<?php } }else{?>
+									<div class="slider-for__item ex1" data-src="<?php echo $single_pic;?>">
+										<img src="<?php echo $single_pic;?>" alt="" />
+									</div>							
+								<?php }?>							
+
+
+								</div>
+							</div>
+							
+							
 						</div>
 					</div>
 				</div>

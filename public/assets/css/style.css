@@ -718,7 +718,7 @@ ul.sh_sub_category li {
 	transition: all 0.5s;
 }
 h4.sh_prod_name {
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 600;
     text-align: center;
     margin: 15px 0;
@@ -729,9 +729,11 @@ h4.sh_prod_name {
 .sh_product_price {
     width: 50%;
     float: left;
-    color: #015249;
-	text-align: left;
+    color: rgb(1, 82, 73);
+    text-align: left;
     font-weight: 600;
+    font-size: 12px;
+    line-height: 2.2;
 }
 .sh_product_review {
     float: left;
@@ -739,9 +741,9 @@ h4.sh_prod_name {
 	text-align: right;
 }
 .sh_product_review ul li {
-    display: inline-block;
-    font-size: 12px;
-	color: #ffb136;
+   display: inline-block;
+    font-size: 8px;
+    color: rgb(255, 177, 54);
 }
 span.sh_new_prod {
     position: absolute;
@@ -1383,7 +1385,34 @@ ul.sh_review_color {
   border-top: none;
   margin-top: 0;
 }
-
+/******************** Fix search Product View *******************/
+.sh_prod_name {
+    -webkit-line-clamp: 2;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    height: 40px;
+    text-align: left;
+    word-break: break-all;
+    overflow: hidden;
+}
+.sh_custom_width {
+    width: 20%;
+}
+.slick-slide img {
+    margin: auto;
+}
+.slider-nav__item.slick-slide img {
+    width: 100%;
+    height: 120px;
+}
+.slider-nav__item.slick-slide {
+    width: 100% !important;
+	margin-bottom: 15px;
+}
+img.sh_view_img {
+    max-height: 430px;
+}
 
 /*======================== Contact Page ===========================*/
 .sh_contact_section_wrap {
@@ -1487,12 +1516,12 @@ ul.sh_review_color {
 }
 
 .sh_grid_product_section.sh_float_width .grid_prd {
-    height: 200px!important;
-        width: auto;
+    height: 100px!important;
+    width: auto;
 }
 
 .sh_grid_product_section.sh_float_width {
-    min-height: 450px!important;
+    /* min-height: 450px!important; */
     width: 100%;
 }
 
@@ -1878,6 +1907,8 @@ a.pn-ProductNav_Link {
 }
 
 
+
+
 /*new css*/
 
 .dropdown:hover .dropdown-content{
@@ -2092,10 +2123,10 @@ form#filter_form .sh_side_widget.sh_cat_search_form.sh_float_width {
     text-align: center;
 }
 .lodind_img img {
-    width: 100px;
     position: relative;
-    left: -3px;
-    top: 12px;
+    left: -10px;
+    top: 15px;
+    margin: auto;
 }
 .lodind_img img.img-responsive {
     width: 130px !important;
