@@ -221,7 +221,7 @@ $parent_categories = DetailController::get_parent_categories();
 <script>
 $(window).on("load", function() {
     var preLoader = $('.preloader');
-    preLoader.addClass('loaderout').fadeToggle(3000);  
+    preLoader.addClass('loaderout').fadeToggle(500);  
 });
 </script>
 <!--Main js file Style--> 

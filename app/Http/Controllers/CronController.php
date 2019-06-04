@@ -12,6 +12,7 @@ use \DTS\eBaySDK\Finding\Types;
 use GuzzleHttp\Client;
 use App\Product;
 use App\Category;
+use App\EbayCronCategory;
 use App\Brand;
 use App\ApiSetting;
 
@@ -151,7 +152,7 @@ class CronController extends Controller
         }
     }
 
-    function getProductsByCategory_live(Request $request,$cat_id) {
+    function getProductsByCategory_live(Request $request,$cat_id) { //not use now
 		if($cat_id == ''){
 			echo 'error. category not found';
 			exit;
@@ -197,7 +198,7 @@ class CronController extends Controller
 					$slug = $this->slugify($product->title);
 					$slug = $this->check_slug_product($slug);
 					
-					$inut['slug'] = $slug;
+					$input['slug'] = $slug;
 					
 					$input['globalId'] =  $product->globalId;
 					
@@ -246,7 +247,7 @@ class CronController extends Controller
 					$input['topRatedListing'] =  $product->topRatedListing;	
 					$input['updated_at'] =  date('Y-m-d H:i:s');
 						
-					//echo '<Pre>'; print_r($input); echo '</pre>';
+					echo '<Pre>'; print_r($input); echo '</pre>';
  					$item_detail = array();
 					$item_detail = $this->getSingleItem_live($input['itemId']); //API CALL
 					
@@ -286,7 +287,10 @@ class CronController extends Controller
 						Product::create($input)->id;	
 					}  	
 				}
-				//die('<br>OK');
+				
+				$ebay_cat = array('status'=>1,'updated_at'=>date('Y-m-d H:i:s'));
+				
+				EbayCronCategory::where('status',0)->where('categoryId',$cat_id)->update($ebay_cat);
 				echo 'success';
 			} 
 
@@ -426,7 +430,7 @@ class CronController extends Controller
 	}	
 	
 	public function create_product_slug(){
-		$products = Product::where('status',1)->orderBy('id','asc')->get();
+		$products = Product::where('status',1)->where('slug','')->orderBy('id','asc')->get();
 		if($products && $products->count() > 0){
 			foreach($products as $p){
 				if($p->title !=''){
@@ -439,5 +443,149 @@ class CronController extends Controller
 			}
 		}
 	}	
-	
+//Live it is working	
+	public function by_category_ebay(){
+		$ebay_category = EbayCronCategory::where('status',0)->orderBy('id','asc')->limit(1)->first();
+		if($ebay_category && $ebay_category->count() > 0){
+			$cat_id = (string)$ebay_category->categoryId;
+			$myval = 1;
+			$search = array();
+			$search[] = $cat_id; //parent category id
+			$parent_id = $cat_id;
+			$ebay_service = new EbayServices();
+			
+			$service = $ebay_service->createFinding();
+			
+			// Assign the keywords.
+			$request = new Types\FindItemsByCategoryRequest();
+			
+			$request->categoryId =  $search;
+
+			// Ask for the first 25 items.
+			$request->paginationInput = new Types\PaginationInput();
+			$request->paginationInput->entriesPerPage = 100000;
+			$request->paginationInput->pageNumber = 1;
+
+			// Ask for the results to be sorted from high to low price.
+			$request->sortOrder = 'CurrentPriceLowest';
+		//	echo '<pre>'; print_r($request);die;
+			$response = $service->findItemsByCategory($request);
+			//echo $json = json_encode($response.true);die;
+			// Output the response from the API.
+			if ($response->ack !== 'Success') {
+				echo 'no data found';
+			} else {
+				$products = $response->searchResult->item;
+				//echo '<pre>'; print_r($products);die;
+				if($products){
+					foreach($products as $product){
+
+						$check = array();					
+						$check = Product::where('itemId',$product->itemId)->first(); 
+
+						$input['itemId'] =  $product->itemId;
+						$input['title'] =  $product->title;
+						
+						$slug = $this->slugify($product->title);
+						$slug = $this->check_slug_product($slug);
+						
+						$input['slug'] = $slug;
+						//echo '<Pre>'; print_r($input); echo '</pre>';
+						$input['globalId'] =  $product->globalId;
+						
+						$catID  =  $product->primaryCategory->categoryId;
+						
+						$input['categoryId'] = $catID;			
+						
+						$input['parentCategoryId'] = $this->getParentID($catID);
+						
+						$catID1 = $catID;
+						$catID2 = $this->getParentID($catID1);
+						$catID3 = $this->getParentID($catID2);
+						$catID4 = $this->getParentID($catID3);
+						
+						$catLevel = array();
+						$catLevel = $this->getCatLevel($catID1,$catID2,$catID3,$catID4);
+						if($catLevel){
+							$input['catID1'] = $catLevel['L1'];
+							$input['catID2'] = $catLevel['L2'];
+							$input['catID3'] = $catLevel['L3'];
+							$input['catID4'] = $catLevel['L4'];
+						}else{
+							$input['catID1'] = $input['categoryId'];
+							$input['catID2'] = $input['parentCategoryId'];
+							$input['catID3'] = 0;
+							$input['catID4'] = 0;						
+						}
+						
+						$input['galleryURL'] =  $product->galleryURL;
+						$input['viewItemURL'] =  $product->viewItemURL;									
+						$input['autoPay'] =  $product->autoPay;
+						$input['postalCode'] =  $product->postalCode;
+						$input['location'] =  $product->location;
+						$input['country'] =  $product->country;
+						$input['shippingInfo'] =  json_encode($product->shippingInfo);
+						$input['current_price'] =  $product->sellingStatus->currentPrice->value;
+						$input['current_price_currency'] =  $product->sellingStatus->currentPrice->currencyId;
+						$input['converted_current_price'] =  $product->sellingStatus->convertedCurrentPrice->value;
+						$input['converted_current_price_currency'] =  $product->sellingStatus->convertedCurrentPrice->currencyId;					
+						$input['sellingState'] =  $product->sellingStatus->sellingState;
+						$input['selling_time_left'] =  $product->sellingStatus->timeLeft;
+						$input['listingInfo'] =  json_encode($product->listingInfo);
+						$input['returnsAccepted'] =  $product->returnsAccepted;
+						$input['return_condition'] =  json_encode($product->condition);
+						$input['isMultiVariationListing'] =  $product->isMultiVariationListing;
+						$input['topRatedListing'] =  $product->topRatedListing;	
+						$input['updated_at'] =  date('Y-m-d H:i:s');
+							
+						
+						$item_detail = array();
+						$item_detail = $this->getSingleItem_live($input['itemId']); //API CALL
+						
+						if($item_detail){
+							$input['PaymentMethods'] =  $item_detail['PaymentMethods'];	//string
+							$input['Quantity'] = $item_detail['Quantity']; //string						
+							$input['Description'] = $item_detail['Description']; //string
+							$input['Seller'] = $item_detail['Seller']; //json
+							$input['PictureDetails'] = $item_detail['PictureDetails']; //json
+							$input['ItemSpecifics'] = $item_detail['ItemSpecifics']; //json
+							$input['SellingStatus'] = $item_detail['SellingStatus']; //json
+							$input['ShippingDetails'] = $item_detail['ShippingDetails']; //json
+							$input['Variations'] = $item_detail['Variations']; //json
+													
+							if($item_detail['Brand'] != ''){
+								$input3['name'] = $item_detail['Brand'];
+								$input3['slug'] = $this->slugify($item_detail['Brand']);
+								$input3['updated_at'] =  date('Y-m-d H:i:s');
+								
+								$brand_check = Brand::where('slug',$input3['slug'])->first();
+								
+								if($brand_check && $brand_check->count() > 0){
+									
+									Brand::where('id',$brand_check['id'])->update($input3);	
+									$input['brand_id'] = $brand_check['id'];
+								}else{
+									$input3['created_at'] =  date('Y-m-d H:i:s');
+									$input['brand_id'] = Brand::create($input3)->id;
+								}
+							}
+						}
+						
+						if($check && $check->count() > 0){
+							Product::where('itemId',$product->itemId)->update($input);	
+						}else{
+							$input['created_at'] =  date('Y-m-d H:i:s');
+							Product::create($input)->id;	
+						}  	
+					}
+					
+					$ebay_cat = array('status'=>1,'updated_at'=>date('Y-m-d H:i:s'));
+					
+					EbayCronCategory::where('status',0)->where('categoryId',$cat_id)->update($ebay_cat);
+					echo 'success';
+				} 
+
+			}
+		}
+	}
 }

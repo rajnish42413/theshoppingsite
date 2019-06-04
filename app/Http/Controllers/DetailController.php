@@ -153,15 +153,16 @@ class DetailController extends Controller
 	}
 	
 	public static function getStringBold($arr,$string){
-		if($arr){
-			$string = strtolower($string);
+		if($arr){		
+ 			$new_string = strtolower($string);
 			foreach($arr as $key) {
-				if(strpos($string,$key) !== FALSE) { 
+				$xkey = strtolower(trim($key));
+				if(strpos($new_string,$xkey) !== FALSE) { 
 					$new_key  = '<b>'.ucwords($key).'</b>';
-					$string = str_replace($key, $new_key, $string);
+					return preg_replace("/\p{L}*?".preg_quote($xkey)."\p{L}*/ui", "<b>$0</b>", $string);
 				}
-			}			
+			} 			
 		}
-		return $string;		
+		
 	}
 }

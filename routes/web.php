@@ -29,6 +29,7 @@ Route::any('/search','HomeController@search_data')->name('search');
 Route::any('/cron/category-live','CronController@getCategory_live')->name('cron/category-live');
 Route::any('/cron/by-category-live/{id}','CronController@getProductsByCategory_live')->name('cron/by-category-live');
 Route::any('/cron/single-item-live/{id}','CronController@getSingleItem_live')->name('cron/single-item-live');
+Route::any('/cron/product-by-category-ebay','CronController@by_category_ebay')->name('product-by-category-ebay');
 
 
 Route::get('/user/verify/{token}', 'Auth\RegisterController@verifyUser');
