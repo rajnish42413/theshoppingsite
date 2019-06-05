@@ -76,12 +76,21 @@ $menu_permissions = DetailController::get_menu_permissions();
 					</div>
 					
 					<div class="form-group">
-					  <label for="google_analytics"><span class="text-danger font_12"> * </span>Google Analytics</label>
+					  <label for="google_analytics"><span class="text-danger font_12"> * </span>Google Analytics(Header)</label>
 					  <div class="input-group">
 						<div class="input-group-addon"><i class="fa fa-edit"></i></div>
 						<textarea name="google_analytics" id="google_analytics" class="form-control" rows="8"><?php if($site){ echo $site->google_analytics; } ?></textarea>
 					  </div>
 					  <div class="text-danger error font_12" id="google_analytics_error"></div>
+					</div>
+
+					<div class="form-group">
+					  <label for="google_analytics2"><span class="text-danger font_12"> * </span>Google Analytics(Body)</label>
+					  <div class="input-group">
+						<div class="input-group-addon"><i class="fa fa-edit"></i></div>
+						<textarea name="google_analytics2" id="google_analytics2" class="form-control" rows="8"><?php if($site){ echo $site->google_analytics2; } ?></textarea>
+					  </div>
+					  <div class="text-danger error font_12" id="google_analytics2_error"></div>
 					</div>					
 										
 				  </div>

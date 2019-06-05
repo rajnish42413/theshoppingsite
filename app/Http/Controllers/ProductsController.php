@@ -6,15 +6,21 @@ use Validator;
 use Auth;
 use DB;
 use Session;
+
+use App\Merchant;
 use App\User;
 use App\Category;
 use App\Product;
 use App\Brand;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Log;
+use App\Imports\ItemsImport;
+use Maatwebsite\Excel\Facades\Excel;
 use Mail;
-require realpath('excel-export/vendor/autoload.php') ;
+//require realpath('excel-export/vendor/autoload.php') ;
 
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;	
+//use PhpOffice\PhpSpreadsheet\Spreadsheet;
+//use PhpOffice\PhpSpreadsheet\Writer\Xlsx;	
 	
 class ProductsController extends Controller
 {
@@ -34,6 +40,27 @@ class ProductsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+	 
+	 public function export_testing(){
+		return Excel::download(new UsersExport, 'users.xlsx');	 
+	 }
+	 
+	 public function import_testing(){
+		return Excel::download(new UsersExport, 'users.xlsx');	 
+	 }
+	 
+	public function importProcess(Request $request){
+		if (Input::hasFile('file'))
+        { 
+			$req    = $request->all();	
+			$path = Input::file('file')->getRealPath();
+			Excel::import(new ItemsImport,request()->file('file'));	
+			echo 'success';
+						
+		}
+		
+	 }
+	 
     public function index()
     { 
 		$data['nav'] = 'menu_products';
@@ -174,8 +201,12 @@ class ProductsController extends Controller
 	
 	public function import_save_data(Request $request){
 		
+		
 		$req   = $request->all();
 		$pre_fileName   ='';
+		
+		
+		
 		if(isset($req['file'])){	
 			$file_data = $request->file('file');
 			$name = $file_data->getClientOriginalName();

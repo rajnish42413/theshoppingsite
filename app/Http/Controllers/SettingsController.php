@@ -66,6 +66,7 @@ class SettingsController extends Controller
 		$description = $req['description'];
 		$title = $req['title'];
 		$google_analytics = $req['google_analytics'];
+		$google_analytics2 = $req['google_analytics2'];
 		$pre_fileName   ='';
 		if(isset($req['file'])){	
 			$file=$request->file('file');
@@ -85,6 +86,7 @@ class SettingsController extends Controller
 			'description'=> $description,
 			'title'=> $title,
 			'google_analytics'=> $google_analytics,
+			'google_analytics2'=> $google_analytics2,
 			'logo'=> $pre_fileName,
 			'updated_at' => date('Y-m-d H:i:s'),
 		);

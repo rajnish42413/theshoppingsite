@@ -1,7 +1,8 @@
-<?php use \App\Http\Controllers\DetailController;?>
+<?php //use \App\Http\Controllers\DetailController;?>
 @extends('layouts.app')
 
 @section('content')
+
 <!--Main Wrapper Start-->
 <div class="sh_main_wrap sh_float_width">
 	<!--Breadcurm Start-->
@@ -33,6 +34,7 @@
 							<input type="hidden" id="keyword" value="<?php echo $data['keyword'];?>" name="keyword" />
 							<input type="hidden" id="search_category" value="<?php echo $data['search_category'];?>" name="cat" />
 							<input type="hidden" id="sorting_type" value="1" name="sorting_type" />
+							<input type="hidden" id="offset_val" value="" name="offset_val" />
 							<input type="hidden" id="showing_result" value="10" name="showing_result" />
 							<input type="hidden" id="parent_cat_id" value="<?php echo $data['parent_cat_id'];?>" name="parent_cat_id" />
 							<input type="hidden" id="cat_id" value="<?php echo $data['cat_id'];?>" name="cat_id" />					
@@ -54,7 +56,7 @@
 								<h4 class="sh_sidecat_heading">Filter By Brand</h4>
 								<ul class="my-brands">
 							<?php foreach($brands as $brand){?>
-									<li><input type="checkbox" name="brands[]" class="pro_brands checkmark" value="<?php echo $brand->id;?>" onchange="get_search_data()" <?php if($data['brand_id']!= '' && $data['brand_id'] == $brand->id){ echo 'checked'; }?>><?php echo $brand->name;?></li>	
+									<li><input type="checkbox" name="brands[]" class="pro_brands checkmark" value="<?php echo $brand->id;?>" onchange="get_search_data(0)" <?php if($data['brand_id']!= '' && $data['brand_id'] == $brand->id){ echo 'checked'; }?>><?php echo $brand->name;?></li>	
 							<?php } ?>
 								</ul>
 							</div>
@@ -131,11 +133,11 @@
 									$galleryURL = $pic_det->GalleryURL;
 								}
 							}
-							if($data['keyword_array']){
-								$title = DetailController::getStringBold($data['keyword_array'],$product->title);
-							}else{
+							//if($data['keyword_array']){
+								//$title = DetailController::getStringBold($data['keyword_array'],$product->title);
+							//}else{
 								$title = $product->title;
-							}
+							//}
 							
 							?>
 						
@@ -203,16 +205,18 @@ $(window).on('load', function(){
 function product_sorting(e){
 	var x = e.value;
 	$("#filter_form #sorting_type").val(x);
-	get_search_data();
+	$("#filter_form #offset_val").val('');
+	get_search_data(0);
 }
 
 function showing_result(e){
 	var y = e.value;
 	$("#filter_form #showing_result").val(y);
-	get_search_data();
+	$("#filter_form #offset_val").val('');
+	get_search_data(0);
 }
 
-function get_search_data(){
+function get_search_data(x){
 	$('#listLoading').show();
 	 $('#products-view').hide();
 	$.ajax({
@@ -231,10 +235,19 @@ function get_search_data(){
 					$('.load_more').hide();
 					$('#products-view').html('<h3 class="alert alert-danger"><i class="fa fa-exclamation-triangle"></i> No Items Found For This Criteria.</h3>');
 				}else if(result[0] > 0 && result[1] < 10){
-					$('#products-view').html(result[1]);
+					
+					if(x ==0){
+						$('#products-view').html(result[1]);
+					}else{
+						$('#products-view').append(result[1]);
+					}					
 					$('.load_more').hide();
 				}else if(result[0] >= 10){
-					$('#products-view').html(result[1]);
+					if(x ==0){
+						$('#products-view').html(result[1]);
+					}else{
+						$('#products-view').append(result[1]);
+					}	
 				}
 				$('#products-view').show();					
 			}
@@ -259,23 +272,23 @@ function get_search_data(){
 				var priceMax = data.to;
 				$("#dpriceMinVal").val(priceMin);
 				$("#dpriceMaxVal").val(priceMax);		
-				setTimeout(function(){ get_search_data(); }, 500);
+				setTimeout(function(){ $("#filter_form #offset_val").val(''); get_search_data(0); }, 100);
 			},
         });
     }
 	 
 
 function get_product_name(e){
-	setTimeout(function(){ get_search_data(); }, 500);
+	setTimeout(function(){ $("#filter_form #offset_val").val(''); get_search_data(0); }, 100);
 }
 
 function load_more(e){
 	$('.load_more i').removeClass('hide');
+	var y = 0;
 	var z = parseInt($("#filter_form #showing_result").val());
-	var a = parseInt($("#showing_result_data").val());
-	z = z + a;
-	$("#filter_form #showing_result").val(z);
-	setTimeout(function(){ get_search_data(); }, 500);
+	y = z + y;	
+	$("#filter_form #offset_val").val(y);
+	setTimeout(function(){ get_search_data(1); }, 100);
 }
 	
 </script>	

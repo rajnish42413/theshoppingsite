@@ -1,4 +1,4 @@
-<?php use \App\Http\Controllers\DetailController;?>
+<?php //use \App\Http\Controllers\DetailController;?>
 					<?php if($products){
 						
 						foreach($products as $product){?>
@@ -12,11 +12,11 @@
 									$galleryURL = $pic_det->GalleryURL;
 								}
 							}
-							if($data['keyword_array']){
-								$title = DetailController::getStringBold($data['keyword_array'],$product->title);
-							}else{
+							//if($data['keyword_array']){
+								//$title = DetailController::getStringBold($data['keyword_array'],$product->title);
+							//}else{
 								$title = $product->title;
-							}							
+							//}							
 							?>
 						
 							<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 sh_custom_width">

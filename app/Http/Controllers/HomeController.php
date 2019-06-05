@@ -616,100 +616,106 @@ class HomeController extends Controller
 	}	
 	
 	public function search_data(Request $request){ //get form submit
+	
 		$base_url= env('APP_URL');
 		$data['search_category'] = '';
+		$my_cat_id = '';
+		
 		if($request->isMethod('get') && $request->input('keyword') !=''){
 			$keyword = array();
-			$data['keyword_array'] = $keyword = $this->getParts($request->input('keyword')); //array
-			//echo '<Pre>';print_r($keyword);die;
+			$data['keyword_array'] = $keyword = $this->getParts($request->input('keyword')); 
+
+			$data['keyword'] =  $request->input('keyword'); //string
+			$data['search_category'] = $scat =  $request->input('cat'); //string slug
 			
-		$data['keyword'] =  $request->input('keyword'); //string
-		$data['search_category'] = $scat =  $request->input('cat'); //string
-		
-		$categories = array();
-		$products = array();
-		$brands = array();
-		$data['cat_breadcrumb'] = '';
-		$data['parent_category'] = '';	
-		$data['category'] = '';
-		$data['parent_cat_id'] = '0';	
-		$data['cat_id'] = '0';	
-		$data['parent_cat_slug'] = '';	
-		$data['cat_slug'] = '';			
-		$data['min_price']	= '';
-		$data['max_price'] = '';
-		$data['brand_id'] = '';
-					
-		$results = Product::select(DB::raw("products.*"))->where('products.status',1);
-		if($scat != ''){
-			$results = $results->where('products.catID1',$scat);
-		}
-		
-		if($keyword){
-			$results = $results->where(function ($query) use($keyword) {
-				for($s = 0; $s < count($keyword); $s++){
-					//$query->orWhere('categories.categoryName','like',"%$keyword[$s]%");
-					$query->orWhere('products.title','like',"%$keyword[$s]%");
-				}      
-			});
-		}		
-		
-		$orderByRowCase = '';
-		if($keyword){
-			$orderByRowCase .= ' CASE ';
-			$r=1;
-			for($s = 0; $s < count($keyword); $s++){
-				$orderByRowCase .= ' WHEN `products`.`title` LIKE "%'.$keyword[$s].'%" then '.$r.' ';
-				$r++;
-			}
-			$orderByRowCase .= ' END'; 
-		} 
-		
-		if($orderByRowCase!=''){
-			$results = $results->orderByRaw($orderByRowCase);
-		}
-		$results = $results->limit(10);
-		$results = $results->get();
-		
-		$data['min_price'] = $this->getMinPriceByProductName($keyword);
-		$data['max_price'] = $this->getMaxPriceByProductName($keyword);
-		//echo $results->count();die;
-		if($results && $results->count() > 0){
-			$cat_ids = array();
-			$brand_ids = array();
-			foreach($results as $row){
-				$cat_ids[] = $row->parentCategoryId;
-				$brand_ids[] = $row->brand_id;
-			}
+			$cat_value = Category::where('status',1)->where('categories.slug',$scat)->first();
 			
-			if($scat == ''){
-				if($cat_ids){ 
-					$cat_ids = array_values(array_unique($cat_ids)); 
-					$categories = Category::whereIn('parentId',$cat_ids)->get();
-				}
-			}
-			
-			if($brand_ids){ 
-				$brand_ids = array_values(array_unique($brand_ids));
-				$brands = Brand::whereIn('id',$brand_ids)->get();			
+			if($cat_value && $cat_value->count() > 0){	
+				$my_cat_id = $cat_value->categoryId;
 			}		
 			
-		}			
-		
-		if($scat != ''){
 			$categories = array();
-			$categories = Category::where('status',1)->where('parentId',$scat)->get();
-		}
+			$products = array();
+			$brands = array();
+			$data['cat_breadcrumb'] = '';
+			$data['parent_category'] = '';	
+			$data['category'] = '';
+			$data['parent_cat_id'] = '0';	
+			$data['cat_id'] = '0';	
+			$data['parent_cat_slug'] = '';	
+			$data['cat_slug'] = '';			
+			$data['min_price']	= '';
+			$data['max_price'] = '';
+			$data['brand_id'] = '';
+						
+			$results = Product::select(DB::raw("products.*"))->where('products.status',1);
 			
+			if($my_cat_id!=''){
+					$results = $results->where('products.catID1',$my_cat_id);
+				}
 			
+			if($keyword){
+				$results = $results->where(function ($query) use($keyword) {
+					for($s = 0; $s < count($keyword); $s++){
+						//$query->orWhere('categories.categoryName','like',"%$keyword[$s]%");
+						$query->orWhere('products.title','like',"%$keyword[$s]%");
+					}      
+				});
+			}		
+			
+/* 			$orderByRowCase = '';
+			if($keyword){
+				$orderByRowCase .= ' CASE ';
+				$r=1;
+				for($s = 0; $s < count($keyword); $s++){
+					$orderByRowCase .= ' WHEN `products`.`title` LIKE "%'.$keyword[$s].'%" then '.$r.' ';
+					$r++;
+				}
+				$orderByRowCase .= ' END'; 
+			} 
+			
+			if($orderByRowCase!=''){
+				$results = $results->orderByRaw($orderByRowCase);
+			} */
+			//$results = $results->orderBy('products.current_price','asc');
+			$results = $results->limit(10);
+			$results = $results->get();
+			
+			$data['min_price'] = $this->getMinPriceByProductName($keyword);
+			$data['max_price'] = $this->getMaxPriceByProductName($keyword);
 
-		$data['nav'] = 'terms';
-		$data['meta_title'] = config('app.name')." :: Search Products";
-		$data['meta_keywords'] = config('app.name')." Search Products";
-		$data['meta_description'] = config('app.name')." Search Products";	
-		
-        return view('search_products/grid_list_search',['data'=>$data,'categories'=>$categories,'products'=>$results,'brands'=>$brands]);		
+			if($my_cat_id != ''){
+				$categories = Category::where('status',1)->where('parentId',$my_cat_id)->get();
+			}
 			
+			if($results && $results->count() > 0){
+				$cat_ids = array();
+				$brand_ids = array();
+				foreach($results as $row){
+					$cat_ids[] = $row->parentCategoryId;
+					$brand_ids[] = $row->brand_id;
+				}
+				
+				if($scat == ''){
+					if($cat_ids){ 
+						$cat_ids = array_values(array_unique($cat_ids)); 
+						$categories = Category::whereIn('parentId',$cat_ids)->get();		
+					}
+				}
+				
+				if($brand_ids){ 
+					$brand_ids = array_values(array_unique($brand_ids));
+					$brands = Brand::whereIn('id',$brand_ids)->get();
+				}		
+			}			
+
+			$data['nav'] = 'terms';
+			$data['meta_title'] = config('app.name')." :: Search Products";
+			$data['meta_keywords'] = config('app.name')." Search Products";
+			$data['meta_description'] = config('app.name')." Search Products";	
+			
+			return view('search_products/grid_list_search',['data'=>$data,'categories'=>$categories,'products'=>$results,'brands'=>$brands]);		
+				
 		}else{
 			return redirect($base_url);
 		}
@@ -718,11 +724,17 @@ class HomeController extends Controller
 
 
 	public function get_products_search_ajax(Request $request){
+	
 		$keyword = array();
+		$my_cat_id = '';
 		$data['keyword_array'] = $keyword = $this->getParts($request->input('keyword')); //array
 		$data['keyword'] =  $request->input('keyword'); //string
 		$data['search_category'] =  $scat = $request->input('cat'); //string
+		$cat_value = Category::where('status',1)->where('categories.slug',$scat)->first();
 		
+		if($cat_value && $cat_value->count() > 0){	
+			$my_cat_id = $cat_value->categoryId;
+		}		
 		$sorting_name = 'products.current_price';
 		$sorting_p = 'asc';	
 		$brands_array = array();
@@ -736,13 +748,13 @@ class HomeController extends Controller
 		$start_price = $request->input('dpriceMin');
 		$end_price = $request->input('dpriceMax');
 		$showing_result = $request->input('showing_result');
+		$offset_val = $request->input('offset_val');
 		$sorting_type = $request->input('sorting_type');
 	
 		$results = array();
-
 		$results = Product::select(DB::raw("products.*"))->where('products.status',1);
-		if($scat != ''){
-			$results = $results->where('products.catID1',$scat);
+		if($my_cat_id != ''){
+			$results = $results->where('products.catID1',$my_cat_id);
 		}
 				
 		if($keyword){
@@ -756,7 +768,7 @@ class HomeController extends Controller
 
 		if($start_price!='' && $end_price!=''){
 			$results = $results->where('products.current_price','>=',$start_price);
-			$results = $results->where('products.current_price','<',$end_price);
+			$results = $results->where('products.current_price','<=',$end_price);
 		}
 		
 		if($pro_name !=''){
@@ -779,10 +791,12 @@ class HomeController extends Controller
 		
 		
 		$results = $results->orderBy($sorting_name,$sorting_p);
-				
+		if($offset_val!='' && $offset_val >= 10){
+			$results = $results->offset($offset_val);
+		}				
 		$results = $results->limit($showing_result);
 		$results = $results->get();
-		//echo $results->toSql();die;
+
 		if($results && $results->count() > 0){			
 		$count = $results->count();
 			$output =  view('search_products/ajax_grid_list_search',['products'=>$results,'data'=>$data])->render();
@@ -976,7 +990,7 @@ function getSpecialParts($string){
 	}	
 	
 	public function getMaxPriceByProductName($keyword){					
-		$results = Product::select(DB::raw("CEIL(MAX(current_price)) as price"))->where('products.status',1);
+		$results = Product::select(DB::raw("CEIL(current_price) as price"))->where('products.status',1);
 		if($keyword){
 			$results = $results->where(function ($query) use($keyword) {
 				for($s = 0; $s < count($keyword); $s++){
@@ -985,6 +999,7 @@ function getSpecialParts($string){
 				}      
 			});
 		}
+		$results = $results->orderBy('products.current_price','desc')->limit(1);
 		$results = $results->first();
 		
 		if($results && $results->count() > 0 && $results->price != null){
@@ -995,7 +1010,7 @@ function getSpecialParts($string){
 	}
 	
 	public function getMinPriceByProductName($keyword){					
-		$results = Product::select(DB::raw("FLOOR(MIN(current_price)) as price"))->where('products.status',1);
+		$results = Product::select(DB::raw("FLOOR(current_price) as price"))->where('products.status',1);
 		if($keyword){
 			$results = $results->where(function ($query) use($keyword) {
 				for($s = 0; $s < count($keyword); $s++){
@@ -1004,12 +1019,13 @@ function getSpecialParts($string){
 				}      
 			});
 		}
+		$results = $results->orderBy('products.current_price','asc')->limit(1);
 		$results = $results->first();
-		
+	
 		if($results && $results->count() > 0 && $results->price != null){
 			return $results->price;
 		}else{
-			return '';
+			return 0;
 		}		
 	}	
 

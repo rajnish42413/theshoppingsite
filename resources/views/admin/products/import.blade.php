@@ -134,11 +134,11 @@ $('.wait_loader').show();
 	var file = input.files[0];
 	var excelfile = file.type;
 	//alert(file.type);
-	var match =  ['text/csv','application/vnd.ms-excel'];
-	// 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-	if(!((excelfile==match[0]) || (excelfile==match[1]))){
+	var match =  ['text/csv','application/vnd.ms-excel','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
+	 
+	if(!(excelfile==match[0] || excelfile==match[1] || excelfile==match[2])){
 		$.notify({
-		  message: 'CSV File format is wrong.' 
+		  message: 'CSV/Excel File format is wrong.' 
 		 },{ element: 'body', type: "danger", allow_dismiss: true, offset: { x: 20, y: 60 }, delay: 500 
 		 });
 		$("#file").val('');

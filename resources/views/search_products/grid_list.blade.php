@@ -271,10 +271,7 @@ function load_more(e){
 	var y = 0;
 	var z = parseInt($("#filter_form #showing_result").val());
 	y = z + y;	
-	//var a = parseInt($("#showing_result_data").val());
-	//z = z + a;
 	$("#filter_form #offset_val").val(y);
-	//$("#filter_form #showing_result").val(z);
 	setTimeout(function(){ get_search_data(1); }, 500);
 }
 	

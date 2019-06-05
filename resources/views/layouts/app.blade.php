@@ -38,6 +38,7 @@ $parent_categories = DetailController::get_parent_categories();
 	<script src="{{env('APP_URL')}}assets/js/jquery.js"></script>
 	<link href="{{env('APP_URL')}}admin_assets/plugins/select2/select2.min.css" rel="stylesheet" />
 	<script src="{{env('APP_URL')}}admin_assets/plugins/select2/select2.min.js"></script>	
+<?php if($settings){echo $settings->google_analytics;}?>	
 </head>
 <body>
 <div class="preloader">
@@ -53,7 +54,7 @@ $parent_categories = DetailController::get_parent_categories();
     </div>
 </div>
 
-<?php if($settings){echo $settings->google_analytics;}?>
+<?php if($settings){echo $settings->google_analytics2;}?>
 <!-- Header Start -->
 <header>
 	<div class="sh_top_header_wrap sh_float_width">
@@ -70,12 +71,12 @@ $parent_categories = DetailController::get_parent_categories();
 				<div class="col-lg-9 col-md-9 col-sm-8 col-xs-8 text-right">
 					<div class="sh_Search_bar sh_float_width">
 						<form id="searchForm" method="GET" action="{{route('search')}}">
-							<input type="text" name="keyword" oninput="get_search(this)" id="keyword" placeholder="Search" value="<?php if(isset($data['keyword']) && $data['keyword']!=''){ echo $data['keyword'];}?>">
+							<input type="text" name="keyword"  id="keyword" placeholder="Search" value="<?php if(isset($data['keyword']) && $data['keyword']!=''){ echo $data['keyword'];}?>">
 							<select name="cat" id="search_category" class="js-example-basic-single">
 								<option value="">All Categories</option>
 						<?php if($parent_categories && $parent_categories->count() > 0){
 								foreach($parent_categories as $cat){?>
-								<option value="<?php echo $cat->categoryId;?>" <?php if(isset($data['search_category']) && $data['search_category'] == $cat->categoryId){ echo 'selected'; }?>><?php echo $cat->categoryName;?></option>
+								<option value="<?php echo $cat->slug;?>" <?php if(isset($data['search_category']) && $data['search_category'] == $cat->slug){ echo 'selected'; }?>><?php echo $cat->categoryName;?></option>
 						<?php } } ?>
 							</select>
 							<button type="submit" id="search_btn">Search <i class="fa fa-spinner fa-spin searchLoader" style="display:none;"></i></button>
@@ -314,7 +315,7 @@ $("#searchForm").submit(function(e){
  $(".searchLoader").show();
  $(".preloader").fadeToggle();
  $('#search_results').hide();
- getSearch.abort();
+ //getSearch.abort();
 });
 </script> 
 <script>

@@ -179,7 +179,8 @@ return [
         App\Providers\RouteServiceProvider::class,
        // crocodicstudio\crudbooster\CRUDBoosterServiceProvider::class,
 		App\Providers\HotelApiServiceProvider::class,
-		App\Providers\EnquiryServiceProvider::class,		
+		App\Providers\EnquiryServiceProvider::class,
+		Maatwebsite\Excel\ExcelServiceProvider::class,		
 
     ],
 
@@ -229,7 +230,8 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-		'Ebay' => Hkonnet\LaravelEbay\Facade\Ebay::class,		
+		'Ebay' => Hkonnet\LaravelEbay\Facade\Ebay::class,
+		'Excel' => Maatwebsite\Excel\Facades\Excel::class,		
 
     ],
 
