@@ -14,7 +14,7 @@ use App\Product;
 use App\Brand;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Log;
-use App\Imports\ItemsImport;
+use App\Imports\ProductsImport;
 use Maatwebsite\Excel\Facades\Excel;
 use Mail;
 //require realpath('excel-export/vendor/autoload.php') ;
@@ -54,8 +54,8 @@ class ProductsController extends Controller
         { 
 			$req    = $request->all();	
 			$path = Input::file('file')->getRealPath();
-			Excel::import(new ItemsImport,request()->file('file'));	
-			echo 'success';
+			Excel::import(new ProductsImport,request()->file('file'));	
+			echo '|success';
 						
 		}
 		
@@ -295,6 +295,8 @@ class ProductsController extends Controller
 					'slug' => $pslug,
 					'current_price' => $price,
 					'current_price_currency' => $currency,
+					'converted_current_price' => $price,
+					'converted_current_price_currency' => $currency,						
 					'PaymentMethods' => $payment_method,
 					'Quantity' => $quantity,
 					'Description' => $description,

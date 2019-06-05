@@ -23,8 +23,17 @@ if($PictureDetails != ''){
 	}
 }
 
+if($merchant && $merchant->count() > 0){
+	if($merchant->image != ''){
+		$merchant_img = $merchant->image;
+	}
+	$merchant_title = $merchant->name;
 
-?>
+}else{
+	$merchant_img = 'default.png';
+	$merchant_title = '';
+}
+							?>
 <!--Main Wrapper Start-->
 <div class="sh_main_wrap sh_float_width">
 	<!--Breadcurm Start-->
@@ -124,7 +133,7 @@ if($PictureDetails != ''){
 						<h3 class="sh_best_price">Best Price: $<?php echo $product->current_price;?></h3>
 						<div class="sh_compare_price sh_float_width">          
 							<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-								<img src="{{env('APP_URL')}}assets/images/store_ebay.png" alt="ebay">
+								<img src="{{env('APP_URL')}}merchant_files/<?php echo $merchant_img;?>" alt="<?php echo $merchant_title;?>">
 							</div>
 							<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
 								<h4 class="sh_store_price">$<?php echo $product->current_price;?></h4>
@@ -133,7 +142,7 @@ if($PictureDetails != ''){
 						</div>
 						<div class="sh_compare_price sh_float_width hide">          
 							<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-								<img src="{{env('APP_URL')}}assets/images/store_amazon.png" alt="ebay">
+								<img src="{{env('APP_URL')}}merchant_files/<?php echo $merchant_img;?>" alt="<?php echo $merchant_title;?>">
 							</div>
 							<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
 								<h4 class="sh_store_price">$1009,99</h4>
@@ -186,7 +195,7 @@ if($PictureDetails != ''){
 												<tr>
 													<td>
 														<div class="sh_tab_compare_img">
-															<img src="{{env('APP_URL')}}assets/images/comapre_store/ebay.png">
+															<img src="{{env('APP_URL')}}merchant_files/<?php echo $merchant_img;?>" title="<?php echo $merchant_title;?>">
 															<p class="hide">1212454 Reviews</p>
 														</div>
 													</td>

@@ -18,6 +18,7 @@ use App\FrontPageSetting;
 use App\FaqData;
 use App\ContactInfo;
 use App\Setting;
+use App\Merchant;
 
 use App\Contracts\EnquiryServiceContract;
 use App\Mail\EnquiryNew;
@@ -319,14 +320,28 @@ class HomeController extends Controller
 		$categories = array();
 		if($slug != ''){
 
-			$product = Product::select(DB::raw("products.*, categories.categoryName as categoryName, c2.categoryName as parentCategoryName"))->Join('categories',function ($join){$join->on('categories.categoryId','=','products.categoryId'); })->Join('categories as c2',function ($join){$join->on('c2.categoryId','=','products.parentCategoryId'); })->where('products.slug',$slug)->where('products.status',1)->first();
+			$product = Product::select(DB::raw("products.*"))->where('products.slug',$slug)->where('products.status',1)->first();
 					
 			if($product && $product->count() > 0){
-				$data['parent_category'] = $product->parentCategoryName;	
-				$data['category'] = $product->categoryName;
+
+				$category = Category::where('categoryId',$product->categoryId)->first();
+				if($category && $category->count() > 0){
+					$data['category'] = $category->categoryName;	
+				}else{
+					$data['category'] = '';
+				}
+				$parent_category = Category::where('categoryId',$product->parentCategoryId)->first();
+				if($parent_category && $parent_category->count() > 0){
+					$data['parent_category'] = $parent_category->categoryName;	
+				}else{
+					$data['parent_category'] = '';
+				}				
+				
 				$categories = $this->get_categories($product->parentCategoryId);
 				
-				return view('search_products/detail',['data'=>$data,'categories'=>$categories,'product'=>$product]);				
+				$merchant = Merchant::where('id',$product->merchant_id)->first();
+				
+				return view('search_products/detail',['data'=>$data,'categories'=>$categories,'product'=>$product,'merchant'=>$merchant]);				
 			}else{
 			return redirect(env('APP_URL'));
 		}
@@ -677,7 +692,7 @@ class HomeController extends Controller
 			if($orderByRowCase!=''){
 				$results = $results->orderByRaw($orderByRowCase);
 			} */
-			//$results = $results->orderBy('products.current_price','asc');
+			$results = $results->orderBy('products.current_price','asc');
 			$results = $results->limit(10);
 			$results = $results->get();
 			
@@ -795,7 +810,7 @@ class HomeController extends Controller
 			$results = $results->offset($offset_val);
 		}				
 		$results = $results->limit($showing_result);
-		$results = $results->get();
+		 $results = $results->get();
 
 		if($results && $results->count() > 0){			
 		$count = $results->count();

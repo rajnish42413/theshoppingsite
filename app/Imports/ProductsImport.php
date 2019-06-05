@@ -2,14 +2,14 @@
 
 namespace App\Imports;
 
-use App\Item;
+use App\Product;
 use App\Brand;
 use App\Merchant;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithBatchInserts;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
 
-class ItemsImport implements ToModel, WithBatchInserts, WithChunkReading
+class ProductsImport implements ToModel, WithBatchInserts, WithChunkReading
 {
     /**
     * @param array $row
@@ -81,7 +81,7 @@ class ItemsImport implements ToModel, WithBatchInserts, WithChunkReading
 				
 			} 
 
-			$item_check = Item::where('itemId',$itemId)->get();
+			$item_check = Product::where('itemId',$itemId)->get();
 			if($item_check && $item_check->count() > 0){
 				$uinput = array(
 					'merchant_id'     => $merchant_id,				
@@ -100,9 +100,9 @@ class ItemsImport implements ToModel, WithBatchInserts, WithChunkReading
 					'description'    => $description,
 					'updated_at'    => date('Y-m-d H:i:s')				
 				);
-				Item::where('itemId',$itemId)->update($uinput);
+				Product::where('itemId',$itemId)->update($uinput);
 			}else{
-				return new Item([
+				return new Product([
 					'merchant_id' => $merchant_id,
 					'itemId'     => $itemId,
 					'title'     => $title,
@@ -164,7 +164,7 @@ class ItemsImport implements ToModel, WithBatchInserts, WithChunkReading
 	
 	function check_slug_product($slug){
 		$rand = time().rand(10,99);
-		$slug_check = Item::where('slug',$slug)->first();
+		$slug_check = Product::where('slug',$slug)->first();
 		if($slug_check && $slug_check->count() > 0){
 			$slug = $slug_check->slug.'-'.$rand;
 			return $slug;
