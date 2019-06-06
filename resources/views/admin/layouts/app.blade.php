@@ -222,7 +222,6 @@ $menu_permissions = DetailController::get_menu_permissions();
           </ul>
         </li>
 	<?php } ?>
-			
 		
         <li class="treeview <?php if($data['nav'] == 'menu_categories'){echo 'active';}?>">
           <a href="#">
@@ -257,7 +256,21 @@ $menu_permissions = DetailController::get_menu_permissions();
 			<?php } ?>
           </ul>
         </li>
-
+	<?php if(Auth::user()->is_super_admin == 1 || in_array('merchants',$menu_permissions)){?>				
+        <li class="treeview <?php if($data['nav'] == 'menu_merchants'){echo 'active';}?>">
+          <a href="#">
+            <i class="fa fa-briefcase"></i> <span>Merchants</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li class="<?php if($data['sub_nav'] == 'menu_merchants_add'){echo 'active';}?>"><a href="{{ route('merchants-add') }}"><i class="fa fa-plus"></i> Add</a></li>
+            <li class="<?php if($data['sub_nav'] == 'menu_merchants_list'){echo 'active';}?>"><a href="{{ route('merchants-list') }}"><i class="fa fa-list"></i> List</a></li>
+          </ul>
+        </li>
+	<?php } ?>
+	
 <?php if(Auth::user()->is_super_admin == 1 || in_array('content_pages',$menu_permissions)){?>		
         <li class="treeview <?php if($data['nav'] == 'menu_front_pages'){echo 'active';}?>">
           <a href="#">

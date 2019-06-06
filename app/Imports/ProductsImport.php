@@ -8,9 +8,12 @@ use App\Merchant;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithBatchInserts;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
+use Maatwebsite\Excel\Concerns\Importable;
+use Maatwebsite\Excel\Concerns\WithValidation;
 
-class ProductsImport implements ToModel, WithBatchInserts, WithChunkReading
+class ProductsImport implements ToModel, WithBatchInserts, WithChunkReading, WithValidation
 {
+	 use Importable;
     /**
     * @param array $row
     *
@@ -125,6 +128,96 @@ class ProductsImport implements ToModel, WithBatchInserts, WithChunkReading
 
 		}
     }
+	
+    public function rules(): array
+    {
+		$err_array = array();
+		$errors = [
+
+             '0' => function($attribute, $value, $onFailure) {
+				 if($value != 'item_id'){
+					  if ($value == '') {
+						  $onFailure($attribute.' value is required.');
+					  }					 
+					  if (strlen($value) > 20) {
+						   $onFailure($attribute.' value can up to 20 characters long.');
+					  }
+				}
+              },
+             '1' => function($attribute, $value, $onFailure) {
+				 if($value != 'merchant'){
+					  if ($value == '') {
+						   $onFailure($attribute.' value is required.');
+					  }						 
+					  if (strlen($value) > 20) {
+						   $onFailure($attribute.' value can up to 20 characters long.');
+					  }
+				}
+              },
+             '4' => function($attribute, $value, $onFailure) {
+				 if($value != 'title'){
+					  if ($value == '') {
+						   $onFailure($attribute.' '.$value.' is required.');
+					  }						 
+				}
+              },
+             '5' => function($attribute, $value, $onFailure) {
+				 if($value != 'price'){
+					  if ($value == '') {
+						   $onFailure($attribute.' value is required.');
+					  }						 
+					  if (!is_numeric($value)) {
+						   $onFailure($attribute.' value must be a number.');
+					  }
+				}
+              },
+             '8' => function($attribute, $value, $onFailure) {
+				 if($value != 'item_url'){
+					  if ($value == '') {
+						   $onFailure($attribute.' value is required.');
+					  }						 
+					  if (!filter_var($value, FILTER_VALIDATE_URL)) {
+						   $onFailure($attribute.' value must be a valid url.');
+					  }
+				}
+              },
+             '9' => function($attribute, $value, $onFailure) {
+				 if($value != 'quantity'){
+					  if ($value == '') {
+						   $onFailure($attribute.' value is required.');
+					  }						 
+					  if (!is_numeric($value)) {
+						   $onFailure($attribute.' value must be a number.');
+					  }
+				}
+              },
+             '11' => function($attribute, $value, $onFailure) {
+				 if($value != 'product_image'){
+					  if ($value == '') {
+						   $onFailure($attribute.' value is required.');
+					  }			
+					  if (!filter_var($value, FILTER_VALIDATE_URL)) {
+						   $onFailure($attribute.' value must be a valid image address.');
+					  }
+				}
+              }			  
+        ];
+
+        return $errors;
+    }
+
+	public function customValidationAttributes()
+	{
+		return [
+		'0' => 'item_id',
+		'1' => 'merchant',
+		'4' => 'title',
+		'5' => 'price',
+		'8' => 'item_url',
+		'9' => 'quantity',
+		'11' => 'product_image',
+		];
+	}	
 	
     public function batchSize(): int
     {

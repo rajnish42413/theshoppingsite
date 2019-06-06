@@ -114,6 +114,14 @@ Route::group(['middleware'=>['Admin']],function(){
 	Route::any('navigation-menu-save', 'NavigationMenuController@save_data')->name('navigation-menu-save');	
 	Route::any('navigation-menu-delete', 'NavigationMenuController@delete_data')->name('navigation-menu-delete');
 	
+	// Merchants 
+	Route::get('merchants-list', 'MerchantsController@index')->name('merchants-list');	
+	Route::get('searchajaxmerchants', 'MerchantsController@ajax_list')->name('searchajaxmerchants');	
+	Route::any('merchants-add', 'MerchantsController@add')->name('merchants-add');	
+	Route::any('merchants-edit/{id?}', 'MerchantsController@add');	
+	Route::any('merchants-save', 'MerchantsController@save_data')->name('merchants-save');	
+	Route::any('merchants-delete', 'MerchantsController@delete_data')->name('merchants-delete');
+	
 	// Banners 
  	Route::get('banners-list', 'BannersController@index')->name('banners-list');	
 	Route::get('searchajaxbanners', 'BannersController@ajax_list')->name('searchajaxbanners');	
