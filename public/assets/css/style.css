@@ -1224,7 +1224,7 @@ ul.sh_review_color {
     padding-bottom: 30px;
 }
 .sh_less_price_store img {
-    width: 30%;
+    width: 50%;
 }
 /*======================== 404 error Page ===========================*/
 .sh_error_wrapper {
@@ -1521,7 +1521,7 @@ img.sh_view_img {
 }
 
 .sh_grid_product_section.sh_float_width {
-    /* min-height: 450px!important; */
+    min-height: 265px;
     width: 100%;
 }
 

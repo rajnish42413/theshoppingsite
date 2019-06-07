@@ -105,11 +105,11 @@ class MerchantsController extends Controller
 		$req   = $request->all();
 		$id = $req['id'];
 		$is_unique = '|unique:merchants';
-		$name = trim($req['name']);	
+		$merchant_name = trim($req['name']);	
  		$merchant_check = Merchant::where('id',$id)->first();
 		
 		if($merchant_check && $merchant_check->count() > 0){
-			if(strtolower($merchant_check->name) == strtolower($req['name'])){
+			if(strtolower($merchant_check->name) == strtolower($merchant_name)){
 				$is_unique = '';
 			}
 		} 
@@ -120,13 +120,13 @@ class MerchantsController extends Controller
 			$messages = [
 			'name.required' => 'Name is required',
 		]);		
-
+		$slug = $this->slugify($merchant_name);
 		$pre_fileName   ='';
 		if(isset($req['file'])){	
 			$file=$request->file('file');
 			$name=$file->getClientOriginalName();
 			$ext=$file->getClientOriginalExtension();
-			$pre_fileName= time().rand().'.'.$ext;
+			$pre_fileName= $slug.'.'.$ext;
 			$file->move('merchant_files',$pre_fileName);
 		}elseif($req['file_name'] != ''){
 			$pre_fileName = $req['file_name'];
@@ -136,9 +136,9 @@ class MerchantsController extends Controller
 			exit;
 		}		
 
-		$slug = $this->slugify($name);
+		
 		$input= array(
-			'name'=> $name,
+			'name'=> $merchant_name,
 			'image' => $pre_fileName,
 			'slug' => $slug,
 			'updated_at' => date('Y-m-d H:i:s'),

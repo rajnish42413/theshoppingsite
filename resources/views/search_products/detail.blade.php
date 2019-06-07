@@ -296,9 +296,9 @@ if($product->ItemSpecifics!=''){
 <?php 
 if($product->Variations != ''){
 	$p_variations = json_decode($product->Variations);
-	$variations = $p_variations->Variation;
-	if($variations){
-		//echo '<pre>'; print_R($variations); '</pre>';
+	if(isset($p_variations->Variation)){
+		$variations = $p_variations->Variation;
+		if($variations){
 ?>								
 									
 									<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -366,7 +366,7 @@ if($product->Variations != ''){
 									<?php } ?>
 										</div>
 									</div>
-<?php } } ?>									
+	<?php } } } ?>									
 									<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 hide">
 										<div class="sh_product_description_sec sh_float_width">
 											<h4>Technical</h4>

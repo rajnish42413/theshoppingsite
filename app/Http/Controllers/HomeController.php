@@ -375,7 +375,7 @@ class HomeController extends Controller
 			$id = '0';
 		}
 		$showing_result = 10;
-		$results = Product::select(DB::raw("products.*"))->where('products.status',1);
+		$results = Product::select(DB::raw("products.*,merchants.image as merchant_image"))->leftJoin('merchants',function ($join){$join->on('products.merchant_id','=','merchants.id'); })->where('products.status',1);
 		
 		if($level == 1){
 			$results = $results->where('products.catID1',$id);
@@ -390,7 +390,7 @@ class HomeController extends Controller
 		if($brand_id!= ''){
 			$results = $results->where('products.brand_id',$brand_id);
 		}		
-
+		$results = $results->groupBy('products.id');
 		$results = $results->orderBy('products.current_price','asc');
 		$results = $results->limit($showing_result);
 		$results = $results->get();
@@ -424,7 +424,7 @@ class HomeController extends Controller
 			$cat_check = Category::where('categoryId',$parent_cat_id)->first();
 			$level = $cat_check->catLevel;
 			
-			$results = Product::select(DB::raw("products.*"))->where('products.status',1);
+			$results = Product::select(DB::raw("products.*,merchants.image as merchant_image"))->leftJoin('merchants',function ($join){$join->on('products.merchant_id','=','merchants.id'); })->where('products.status',1);
 
 			if($level == 1){
 				$results = $results->where('products.catID1',$parent_cat_id);
@@ -475,7 +475,7 @@ class HomeController extends Controller
 			$sorting_name = 'products.id';
 			$sorting_p = 'desc';
 		}
-		
+		$results = $results->groupBy('products.id');
 		$results = $results->orderBy($sorting_name,$sorting_p);
 		if($offset_val!='' && $offset_val >= 10){
 			$results = $results->offset($offset_val);
@@ -663,7 +663,7 @@ class HomeController extends Controller
 			$data['max_price'] = '';
 			$data['brand_id'] = '';
 						
-			$results = Product::select(DB::raw("products.*"))->where('products.status',1);
+			$results = Product::select(DB::raw("products.*,merchants.image as merchant_image"))->leftJoin('merchants',function ($join){$join->on('products.merchant_id','=','merchants.id'); })->where('products.status',1);
 			
 			if($my_cat_id!=''){
 					$results = $results->where('products.catID1',$my_cat_id);
@@ -692,6 +692,7 @@ class HomeController extends Controller
 			if($orderByRowCase!=''){
 				$results = $results->orderByRaw($orderByRowCase);
 			} */
+			$results = $results->groupBy('products.id');
 			$results = $results->orderBy('products.current_price','asc');
 			$results = $results->limit(10);
 			$results = $results->get();
@@ -767,7 +768,7 @@ class HomeController extends Controller
 		$sorting_type = $request->input('sorting_type');
 	
 		$results = array();
-		$results = Product::select(DB::raw("products.*"))->where('products.status',1);
+		$results = Product::select(DB::raw("products.*,merchants.image as merchant_image"))->leftJoin('merchants',function ($join){$join->on('products.merchant_id','=','merchants.id'); })->where('products.status',1);
 		if($my_cat_id != ''){
 			$results = $results->where('products.catID1',$my_cat_id);
 		}
@@ -804,7 +805,7 @@ class HomeController extends Controller
 			$sorting_p = 'desc';
 		}
 		
-		
+		$results = $results->groupBy('products.id');
 		$results = $results->orderBy($sorting_name,$sorting_p);
 		if($offset_val!='' && $offset_val >= 10){
 			$results = $results->offset($offset_val);

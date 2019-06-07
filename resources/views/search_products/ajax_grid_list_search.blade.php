@@ -16,7 +16,12 @@
 								//$title = DetailController::getStringBold($data['keyword_array'],$product->title);
 							//}else{
 								$title = $product->title;
-							//}							
+							//}		
+							if($product->merchant_image!=''){
+								$merchant_image = $product->merchant_image;
+							}else{
+								$merchant_image = 'default.png';
+							}							
 							?>
 						
 							<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 sh_custom_width">
@@ -37,7 +42,7 @@
 												</ul>
 											</div>
 											<div class="sh_less_price_store sh_float_width text-left">
-												<a href="javacript:void(0)"><img src="{{env('APP_URL')}}assets/images/ebay.png"></a>
+												<a href="javacript:void(0)"><img src="{{env('APP_URL')}}merchant_files/<?php echo $merchant_image;?>"></a>
 											</div>
 									
 										</div>
