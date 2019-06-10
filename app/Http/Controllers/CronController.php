@@ -108,9 +108,7 @@ class CronController extends Controller
 				$cat_check = Category::where('categoryId',$input['categoryId'])->first();
 				
 				if($cat_check && $cat_check->count() > 0){
-					$cat_check->id;
-					Category::where('categoryId',$input['categoryId'])->update($input);	
-											
+					Category::where('categoryId',$input['categoryId'])->update($input);		
 				}else{
 					$input['created_at'] =  date('Y-m-d H:i:s');
 					Category::create($input)->id;	
@@ -153,11 +151,12 @@ class CronController extends Controller
     }
 
     function getProductsByCategory_live(Request $request,$cat_id) { //not use now
+	die("not used");
 		if($cat_id == ''){
 			echo 'error. category not found';
 			exit;
 		}
-		$myval = 1;
+
 		$search = array();
         $search[] = $cat_id; //parent category id
 		$parent_id = $cat_id;
@@ -185,7 +184,7 @@ class CronController extends Controller
             echo 'no data found';
         } else {
             $products = $response->searchResult->item;
-			//echo '<pre>'; print_r($products);die;
+			echo '<pre>'; print_r($products);die;
  			if($products){
 				foreach($products as $product){
 
@@ -363,7 +362,29 @@ class CronController extends Controller
 			$detail['Quantity'] = (string)$item->Quantity;
 			$detail['Description'] = (string)$item->Description;
 			$detail['Seller'] = json_encode((array)$item->Seller); //for json
-			$detail['PictureDetails'] = json_encode((array)$item->PictureDetails); //for json
+			
+			$pic_array = array();
+			$gallery_images = '';
+			$product_image = '';
+			
+			$pic_det = (array)$item->PictureDetails;
+			if($pic_det && isset($pic_det->PhotoDisplay) && $pic_det->PhotoDisplay == 'PicturePack'){
+				$pic_detail = $pic_det->PictureURL;
+				if(is_array($pic_detail)){
+					$pic_array = $pic_detail;
+					if($pic_array){
+						$product_image = $pic_array[0];
+						$gallery_images = implode(',',$pic_array);
+					}
+				}else{
+					$product_image = $pic_detail;
+					$gallery_images = $product_image;
+				}
+				
+			}
+	
+			$detail['product_image'] = $product_image; //string;
+			$detail['gallery_images'] = $gallery_images; //string;
 			$detail['ItemSpecifics'] = json_encode((array)$item->ItemSpecifics);
 			$detail['SellingStatus'] = json_encode((array)$item->SellingStatus);
 			$detail['ShippingDetails'] = json_encode((array)$item->ShippingDetails);
@@ -387,7 +408,7 @@ class CronController extends Controller
 	  $text = preg_replace('~[^\pL\d]+~u', '-', $text);
 
 	  // transliterate
-	  $text = iconv('utf-8', 'us-ascii//TRANSLIT', $text);
+	  $text = iconv('utf-8', 'utf-8//TRANSLIT', $text);
 
 	  // remove unwanted characters
 	  $text = preg_replace('~[^-\w]+~', '', $text);
@@ -444,148 +465,181 @@ class CronController extends Controller
 		}
 	}	
 //Live it is working	
-	public function by_category_ebay(){
-		$ebay_category = EbayCronCategory::where('status',0)->orderBy('id','asc')->limit(1)->first();
-		if($ebay_category && $ebay_category->count() > 0){
-			$cat_id = (string)$ebay_category->categoryId;
-			$myval = 1;
-			$search = array();
-			$search[] = $cat_id; //parent category id
-			$parent_id = $cat_id;
-			$ebay_service = new EbayServices();
+	public function by_category_ebay($pageNo = 1,$perPage = 100, $cat_id = 0 ){
+		EbayCronCategory::where('today_date','<',date('Y-m-d'))->update(array('today_date'=>date('Y-m-d'),'status'=>0));//date checking and updating
+		
+		if($cat_id == 0){
+			$ebay_category = EbayCronCategory::where('status',0)->where('today_date',date('Y-m-d'))->orderBy('id','asc')->limit(1)->first();
+			if($ebay_category && $ebay_category->count() > 0){
+				$cat_id = (string)$ebay_category->categoryId;			
+			}			
+		}
+
+		$search = array();
+		$search[] = $cat_id; //parent category id
+		$parent_id = $cat_id;
+		$ebay_service = new EbayServices();
+		
+		$service = $ebay_service->createFinding();
+		
+		// Assign the keywords.
+		$request = new Types\FindItemsByCategoryRequest();
+		
+		$request->categoryId =  $search;
+
+		// Ask for the first 25 items.
+		$request->paginationInput = new Types\PaginationInput();
+		$request->paginationInput->entriesPerPage = $perPage;
+		$request->paginationInput->pageNumber = $pageNo;
+
+		// Ask for the results to be sorted from high to low price.
+		$request->sortOrder = 'CurrentPriceLowest';
+	
+		$response = $service->findItemsByCategory($request);
 			
-			$service = $ebay_service->createFinding();
-			
-			// Assign the keywords.
-			$request = new Types\FindItemsByCategoryRequest();
-			
-			$request->categoryId =  $search;
+		//echo $json = json_encode($response.true);die;
+		// Output the response from the API.
+		if($response->ack !== 'Success') {
+			echo 'no data found';
+		}else{
+			$pageNo = $response->paginationOutput->pageNumber;
+			$totalPages = $response->paginationOutput->totalPages;
+			$perPage = $response->paginationOutput->entriesPerPage;
 
-			// Ask for the first 25 items.
-			$request->paginationInput = new Types\PaginationInput();
-			$request->paginationInput->entriesPerPage = 100000;
-			$request->paginationInput->pageNumber = 1;
+			$products = $response->searchResult->item;
+			//echo '<pre>'; print_r($response->paginationOutput);echo '<hr>';
+			if($products){
+ 				foreach($products as $product){
 
-			// Ask for the results to be sorted from high to low price.
-			$request->sortOrder = 'CurrentPriceLowest';
-		//	echo '<pre>'; print_r($request);die;
-			$response = $service->findItemsByCategory($request);
-			//echo $json = json_encode($response.true);die;
-			// Output the response from the API.
-			if ($response->ack !== 'Success') {
-				echo 'no data found';
-			} else {
-				$products = $response->searchResult->item;
-				//echo '<pre>'; print_r($products);die;
-				if($products){
-					foreach($products as $product){
-
-						$check = array();					
-						$check = Product::where('itemId',$product->itemId)->first(); 
-
-						$input['itemId'] =  $product->itemId;
-						$input['title'] =  $product->title;
-						
-						$slug = $this->slugify($product->title);
-						$slug = $this->check_slug_product($slug);
-						
-						$input['slug'] = $slug;
-						//echo '<Pre>'; print_r($input); echo '</pre>';
-						$input['globalId'] =  $product->globalId;
-						
-						$catID  =  $product->primaryCategory->categoryId;
-						
-						$input['categoryId'] = $catID;			
-						
-						$input['parentCategoryId'] = $this->getParentID($catID);
-						
-						$catID1 = $catID;
-						$catID2 = $this->getParentID($catID1);
-						$catID3 = $this->getParentID($catID2);
-						$catID4 = $this->getParentID($catID3);
-						
-						$catLevel = array();
-						$catLevel = $this->getCatLevel($catID1,$catID2,$catID3,$catID4);
-						if($catLevel){
-							$input['catID1'] = $catLevel['L1'];
-							$input['catID2'] = $catLevel['L2'];
-							$input['catID3'] = $catLevel['L3'];
-							$input['catID4'] = $catLevel['L4'];
-						}else{
-							$input['catID1'] = $input['categoryId'];
-							$input['catID2'] = $input['parentCategoryId'];
-							$input['catID3'] = 0;
-							$input['catID4'] = 0;						
-						}
-						
-						$input['galleryURL'] =  $product->galleryURL;
-						$input['viewItemURL'] =  $product->viewItemURL;									
-						$input['autoPay'] =  $product->autoPay;
-						$input['postalCode'] =  $product->postalCode;
-						$input['location'] =  $product->location;
-						$input['country'] =  $product->country;
-						$input['shippingInfo'] =  json_encode($product->shippingInfo);
-						$input['current_price'] =  $product->sellingStatus->currentPrice->value;
-						$input['current_price_currency'] =  $product->sellingStatus->currentPrice->currencyId;
-						$input['converted_current_price'] =  $product->sellingStatus->convertedCurrentPrice->value;
-						$input['converted_current_price_currency'] =  $product->sellingStatus->convertedCurrentPrice->currencyId;					
-						$input['sellingState'] =  $product->sellingStatus->sellingState;
-						$input['selling_time_left'] =  $product->sellingStatus->timeLeft;
-						$input['listingInfo'] =  json_encode($product->listingInfo);
-						$input['returnsAccepted'] =  $product->returnsAccepted;
-						$input['return_condition'] =  json_encode($product->condition);
-						$input['isMultiVariationListing'] =  $product->isMultiVariationListing;
-						$input['topRatedListing'] =  $product->topRatedListing;	
-						$input['updated_at'] =  date('Y-m-d H:i:s');
+					$check = array();					
+					$check = Product::where('itemId',$product->itemId)->first(); 
+					
+					if($check && $check->count() > 0){
+						$exp_date = date('Y-m-d H:i:s',strtotime(' + 2 day', strtotime($check->updated_at)));
+						$current_date = date('Y-m-d H:i:s');
+						if($current_date < $exp_date){
+							continue;
 							
-						
-						$item_detail = array();
-						$item_detail = $this->getSingleItem_live($input['itemId']); //API CALL
-						
-						if($item_detail){
-							$input['PaymentMethods'] =  $item_detail['PaymentMethods'];	//string
-							$input['Quantity'] = $item_detail['Quantity']; //string						
-							$input['Description'] = $item_detail['Description']; //string
-							$input['Seller'] = $item_detail['Seller']; //json
-							$input['PictureDetails'] = $item_detail['PictureDetails']; //json
-							$input['ItemSpecifics'] = $item_detail['ItemSpecifics']; //json
-							$input['SellingStatus'] = $item_detail['SellingStatus']; //json
-							$input['ShippingDetails'] = $item_detail['ShippingDetails']; //json
-							$input['Variations'] = $item_detail['Variations']; //json
-													
-							if($item_detail['Brand'] != ''){
-								$input3['name'] = $item_detail['Brand'];
-								$input3['slug'] = $this->slugify($item_detail['Brand']);
-								$input3['updated_at'] =  date('Y-m-d H:i:s');
-								
-								$brand_check = Brand::where('slug',$input3['slug'])->first();
-								
-								if($brand_check && $brand_check->count() > 0){
-									
-									Brand::where('id',$brand_check['id'])->update($input3);	
-									$input['brand_id'] = $brand_check['id'];
-								}else{
-									$input3['created_at'] =  date('Y-m-d H:i:s');
-									$input['brand_id'] = Brand::create($input3)->id;
-								}
-							}
 						}
-						
-						if($check && $check->count() > 0){
-							Product::where('itemId',$product->itemId)->update($input);	
-						}else{
-							$input['created_at'] =  date('Y-m-d H:i:s');
-							Product::create($input)->id;	
-						}  	
+					}
+
+					$input['itemId'] =  $product->itemId;
+					$input['title'] =  $product->title;
+					
+					$slug = $this->slugify($product->title);
+					$slug = $this->check_slug_product($slug);
+					
+					$input['slug'] = $slug;
+					//echo '<Pre>'; print_r($input); echo '</pre>';
+					$input['globalId'] =  $product->globalId;
+					
+					$catID  =  $product->primaryCategory->categoryId;
+					
+					$input['categoryId'] = $catID;			
+					
+					$input['parentCategoryId'] = $this->getParentID($catID);
+					
+					$catID1 = $catID;
+					$catID2 = $this->getParentID($catID1);
+					$catID3 = $this->getParentID($catID2);
+					$catID4 = $this->getParentID($catID3);
+					
+					$catLevel = array();
+					$catLevel = $this->getCatLevel($catID1,$catID2,$catID3,$catID4);
+					if($catLevel){
+						$input['catID1'] = $catLevel['L1'];
+						$input['catID2'] = $catLevel['L2'];
+						$input['catID3'] = $catLevel['L3'];
+						$input['catID4'] = $catLevel['L4'];
+					}else{
+						$input['catID1'] = $input['categoryId'];
+						$input['catID2'] = $input['parentCategoryId'];
+						$input['catID3'] = 0;
+						$input['catID4'] = 0;						
 					}
 					
-					$ebay_cat = array('status'=>1,'updated_at'=>date('Y-m-d H:i:s'));
+					$input['galleryURL'] =  $product->galleryURL;
+					$input['viewItemURL'] =  $product->viewItemURL;									
+					$input['autoPay'] =  $product->autoPay;
+					$input['postalCode'] =  $product->postalCode;
+					$input['location'] =  $product->location;
+					$input['country'] =  $product->country;
+					$input['shippingInfo'] =  json_encode($product->shippingInfo);
+					$input['current_price'] =  $product->sellingStatus->currentPrice->value;
+					$input['current_price_currency'] =  $product->sellingStatus->currentPrice->currencyId;
+					$input['converted_current_price'] =  $product->sellingStatus->convertedCurrentPrice->value;
+					$input['converted_current_price_currency'] =  $product->sellingStatus->convertedCurrentPrice->currencyId;					
+					$input['sellingState'] =  $product->sellingStatus->sellingState;
+					$input['selling_time_left'] =  $product->sellingStatus->timeLeft;
+					$input['listingInfo'] =  json_encode($product->listingInfo);
+					$input['returnsAccepted'] =  $product->returnsAccepted;
+					$input['return_condition'] =  json_encode($product->condition);
+					$input['isMultiVariationListing'] =  $product->isMultiVariationListing;
+					$input['topRatedListing'] =  $product->topRatedListing;	
+					$input['updated_at'] =  date('Y-m-d H:i:s');
+						
 					
-					EbayCronCategory::where('status',0)->where('categoryId',$cat_id)->update($ebay_cat);
-					echo 'success';
-				} 
-
-			}
+					$item_detail = array();
+					$item_detail = $this->getSingleItem_live($input['itemId']); //API CALL
+					
+					if($item_detail){
+						$input['PaymentMethods'] =  $item_detail['PaymentMethods'];	//string
+						$input['Quantity'] = $item_detail['Quantity']; //string						
+						$input['Description'] = $item_detail['Description']; //string
+						$input['Seller'] = $item_detail['Seller']; //json
+					//	$input['PictureDetails'] = $item_detail['PictureDetails']; //json
+					
+						$input['product_image'] = $item_detail['product_image'];
+						$input['gallery_images'] = $item_detail['gallery_images'];
+						
+						$input['ItemSpecifics'] = $item_detail['ItemSpecifics']; //json
+						$input['SellingStatus'] = $item_detail['SellingStatus']; //json
+						$input['ShippingDetails'] = $item_detail['ShippingDetails']; //json
+						$input['Variations'] = $item_detail['Variations']; //json
+												
+						if($item_detail['Brand'] != ''){
+							$input3['name'] = $item_detail['Brand'];
+							$input3['slug'] = $this->slugify($item_detail['Brand']);
+							$input3['updated_at'] =  date('Y-m-d H:i:s');
+							
+							$brand_check = Brand::where('slug',$input3['slug'])->first();
+							
+							if($brand_check && $brand_check->count() > 0){
+								
+								Brand::where('id',$brand_check['id'])->update($input3);	
+								$input['brand_id'] = $brand_check['id'];
+							}else{
+								$input3['created_at'] =  date('Y-m-d H:i:s');
+								$input['brand_id'] = Brand::create($input3)->id;
+							}
+						}
+					}
+					
+					if($check && $check->count() > 0){
+						Product::where('itemId',$product->itemId)->update($input);	
+					}else{
+						$input['created_at'] =  date('Y-m-d H:i:s');
+						Product::create($input)->id;	
+					}  	
+				}
+				 
+				$ebay_cat = array('status'=>1,'updated_at'=>date('Y-m-d H:i:s'));
+				
+				EbayCronCategory::where('status',0)->where('categoryId',$cat_id)->update($ebay_cat);
+				
+				if($pageNo < $totalPages){ // && $pageNo <= 5 for 5 pages only
+					$pageNo++;
+					
+					$this->by_category_ebay($pageNo,$perPage,$cat_id);
+				}else{
+					echo 'products fetched successfully';
+					exit;
+				}
+				
+				
+			} 
 		}
 	}
+	
+	
 }

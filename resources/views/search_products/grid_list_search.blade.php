@@ -125,14 +125,11 @@
 						foreach($products as $product){?>
 					
 							<?php  
-							$galleryURL = env('APP_URL')."assets/images/no_image.png";
-							$PictureDetails = $product->PictureDetails; 
-							if($PictureDetails != ''){
-								$pic_det = json_decode($PictureDetails);
-								if($pic_det && isset($pic_det->GalleryURL) && $pic_det->GalleryURL != ''){
-									$galleryURL = $pic_det->GalleryURL;
-								}
+							$galleryURL = env('APP_URL')."assets/images/no_image.png"; 
+							if($product->product_image != ''){
+									$galleryURL = $product->product_image;
 							}
+							
 							//if($data['keyword_array']){
 								//$title = DetailController::getStringBold($data['keyword_array'],$product->title);
 							//}else{

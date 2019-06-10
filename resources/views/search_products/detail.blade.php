@@ -5,23 +5,15 @@ $settings = DetailController::get_settings();
 @extends('layouts.app')
 
 @section('content')
-<?php  
-$pic_array  = array();
-$single_pic = env('APP_URL')."assets/images/no_image.png";
-$PictureDetails = $product->PictureDetails; 
-if($PictureDetails != ''){
-	$pic_det = json_decode($PictureDetails);
-	//echo '<pre>';print_r($pic_det);die;
-	if($pic_det && $pic_det->PhotoDisplay == 'PicturePack'){
-		$pic_detail = $pic_det->PictureURL;
-		if(is_array($pic_detail)){
-			$pic_array = $pic_detail;
-		}else{
-			$single_pic = $pic_detail;
-		}
-		
-	}
+<?php
+$gallery_images = array();
+if($product->gallery_images != ''){
+	$gallery_images = explode(',',$product->gallery_images);
+}else{
+	$gallery_images[0] = env('APP_URL')."assets/images/no_image.png";
 }
+
+
 
 if($merchant && $merchant->count() > 0){
 	if($merchant->image != ''){
@@ -91,17 +83,13 @@ if($merchant && $merchant->count() > 0){
 							
 								<div class="slider-nav">
 								<?php 
-								if($pic_array){
-								foreach($pic_array as $pic){?>
+								if($gallery_images){
+								foreach($gallery_images as $pic){?>
 									<div class="slider-nav__item">
 										<img src="<?php echo $pic; ?>" alt="" />
 									</div>
 									
-								<?php } }else{?>
-									<div class="slider-nav__item">
-										<img src="<?php echo $single_pic;?>" alt="" />
-									</div>								
-								<?php }?>
+								<?php } }?>
 								
 								</div>
 							</div>
@@ -109,16 +97,12 @@ if($merchant && $merchant->count() > 0){
 							<div class="col-lg-9 col-md-9 col-sm-8 col-xs-8">
 								<div class="slider-for">
 								<?php 
-								if($pic_array){
-								foreach($pic_array as $pic){?>
+								if($gallery_images){
+								foreach($gallery_images as $pic){?>
 									<div class="slider-for__item ex1" data-src="<?php echo $pic; ?>">
 										<img class="sh_view_img" src="<?php echo $pic; ?>" alt="" />
 									</div>
-								<?php } }else{?>
-									<div class="slider-for__item ex1" data-src="<?php echo $single_pic;?>">
-										<img src="<?php echo $single_pic;?>" alt="" />
-									</div>							
-								<?php }?>							
+								<?php } }?>							
 
 
 								</div>

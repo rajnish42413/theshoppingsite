@@ -24,10 +24,19 @@
     <form action="searchajaxproducts" method="post" id="productsfrm">
       {{csrf_field()}}
 	<div class="row margin">
-	   <div class="col-lg-4 col-xs-6">
+	   <div class="col-lg-3 col-xs-6">
             <input id="name" name="name" value="" placeholder="Title" data-column="6" class="form-control"/>
         </div>
-	   <div class="col-lg-4 col-xs-6">
+	   <div class="col-lg-3 col-xs-6">
+			<select class="form-control js-example-basic-single" id="merchant_id" name="merchant_id">
+				<option value="">--Select Merchant--</option>
+		<?php if($merchants){
+				foreach($merchants as $merchant){?>
+					<option value="<?php echo $merchant->id;?>"><?php echo $merchant->name;?></option>
+		<?php } } ?>
+			</select>
+        </div>		
+	   <div class="col-lg-3 col-xs-6">
 			<select class="form-control js-example-basic-single" id="parent_id" name="parent_id" onchange="get_categories(this);">
 				<option value="">--Select Parent Category--</option>
 		<?php if($categories){
@@ -36,26 +45,26 @@
 		<?php } } ?>
 			</select>
         </div> 	
-	   <div class="col-lg-4 col-xs-6">
-			<select  class="form-control js-example-basic-single" id="cat_id" name="cat_id" onchange="get_sub_categories(this);">
-				<option value="">--Select Category--</option>
-			</select>
+        <div class="col-lg-3 col-xs-6">
+		<button type="button" id="filter_submit" name="filter_submit" class="btn btn-info btn-block">Filter</button>
         </div>
     </div>
 	<div class="row margin">
-	   <div class="col-lg-4 col-xs-6">
+	   <div class="col-lg-3 col-xs-6">
+			<select  class="form-control js-example-basic-single" id="cat_id" name="cat_id" onchange="get_sub_categories(this);">
+				<option value="">--Select Category--</option>
+			</select>
+        </div>	
+	   <div class="col-lg-3 col-xs-6">
 			<select  class="form-control js-example-basic-single" id="sub_cat_id" name="sub_cat_id" onchange="get_sub2_categories(this);">
 				<option value="">--Select Category Level 3--</option>
 			</select>
         </div>	
-	   <div class="col-lg-4 col-xs-6">
+	   <div class="col-lg-3 col-xs-6">
 			<select  class="form-control js-example-basic-single" id="sub2_cat_id" name="sub2_cat_id" >
 				<option value="">--Select Category Level 4--</option>
 			</select>
         </div>		
-        <div class="col-lg-4 col-xs-6">
-		<button type="button" id="filter_submit" name="filter_submit" class="btn btn-info btn-block">Filter</button>
-        </div>
     </div>
     </form>
 	<div class="row text-left margin" id="exportBtnDiv" style="display:none">
@@ -84,12 +93,13 @@
                         <tr>
                             <th style="width:50px"><input name="select_all" value="1" id="example-select-all" type="checkbox" /></th>
                             <th>Title</th>
+                            <th>Merchant</th>							
                             <th>Parent Category</th>							
                             <th>Category</th>
                             <th>Category Level 3</th>
                             <th>Category Level 4</th>
                             <th>Price</th>
-                            <th>Currency</th>
+                            <th>Currency</th>							
                             <th>Status</th>
                             <th>Action</th>
                         </tr>

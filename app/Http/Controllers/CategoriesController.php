@@ -301,7 +301,7 @@ class CategoriesController extends Controller
 	  $text = preg_replace('~[^\pL\d]+~u', '-', $text);
 
 	  // transliterate
-	  $text = iconv('utf-8', 'us-ascii//TRANSLIT', $text);
+	  $text = iconv('utf-8', 'utf-8//TRANSLIT', $text);
 
 	  // remove unwanted characters
 	  $text = preg_replace('~[^-\w]+~', '', $text);

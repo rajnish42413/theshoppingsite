@@ -2,14 +2,19 @@
 
 namespace App\Imports;
 
-use App\Product;
-use App\Brand;
-use App\Merchant;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithBatchInserts;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\WithValidation;
+
+use Auth;
+use DB;
+use Session;
+use App\Product;
+use App\Brand;
+use App\Merchant;
+use App\Category;
 
 class ProductsImport implements ToModel, WithBatchInserts, WithChunkReading, WithValidation
 {
@@ -20,28 +25,126 @@ class ProductsImport implements ToModel, WithBatchInserts, WithChunkReading, Wit
     * @return \Illuminate\Database\Eloquent\Model|null
     */
     public function model(array $row)
-    {
-		if($row[0] != 'item_id'){
-			$category = 0;
-			$parent_category = 0;
+    {			
+
+/* 	$input2 = array(
+					'name' =>'SWS',
+					'slug' =>$this->slugify('sws'),
+					'updated_at' => date('Y-m-d H:i:s'),
+				);
+	echo Merchant::create($input2)->id;die;
+ 						$cinput = array();
+						$cinput['categoryId'] = rand(11,99).time().rand(11,99);
+						$cinput['parentId'] = 0;
+						$cinput['slug'] = 'my-slug';
+						$cinput['catLevel'] = 1;
+						$cinput['categoryName'] = 'Test Category';
+						$cinput['created_at'] =  date('Y-m-d H:i:s');
+						$cinput['updated_at'] =  date('Y-m-d H:i:s');
+						
+						$id = Category::create($cinput)->id;
+						
+						$rows = Category::where('id',$id)->first();
+						
+						echo '<pre>';print_r($rows);die;  */
+						
+ 		if($row[0] != 'item_id'){
+			$category_array = array();
 			$gallery_images_json = '';
 			$itemId = trim($row[0]);	// itemId
 			$merchant = trim($row[1]);	// merchant
 			$category = trim($row[2]);	// category
-			$parent_category = trim($row[3]);	// parent_category
-			$title = trim($row[4]);	// title
+			$title = trim($row[3]);	// title			
+			$price = trim($row[4]);	// price
+			$currency = trim($row[5]);	// currency
+			$brand = trim($row[6]);	// brand
+			$item_url = trim($row[7]);	// item_url
+			$quantity = trim($row[8]);	// quantity
+			$description = trim($row[9]);	// description
+			$product_image = trim($row[10]);	// product_image
+			$gallery_images_str = trim($row[11]);	// gallery_images
 			
+			if($category!=''){
+				$category_array = explode('>',$category);
+			}
+			//echo '<pre>';print_r($category_array);die;
+			if($category_array){
+				$x=1;
+				$parentId = 0;
+				$catId = 0;
+				$lastElement = end($category_array);
+				$catID1 = 0;
+				$catID2 = 0;
+				$catID3 = 0;
+				$catID4 = 0;		
+				//echo $lastElement;die;
+				foreach($category_array as $cat){
+					$cat = trim($cat);//remove space
+					//echo $cat;die;
+					$cat_slug = $this->slugify($cat);
+					//echo $cat_slug;die;
+/* 					$cat_check = array();					
+					$cat_check = Category::where('slug',$cat_slug)->first();
+					if($cat_check && $cat_check->count() > 0){
+						//echo '<pre>';print_r($cat_check);die;
+						$catId = $cat_check->categoryId;
+						echo 'rk'.$parentId = $cat_check->parentCategoryId;	die;					
+						if($x == 1){
+							$catID1 = $cat_check->categoryId;
+						}
+						if($x == 2){
+							$catID2 = $cat_check->categoryId;
+						}
+						if($x == 3){
+							$catID3 = $cat_check->categoryId;
+						}
+						if($x == 4){
+							$catID4 = $cat_check->categoryId;
+						}
+					}else{ */
+						$cinput = array();
+						$cr = rand(111,999).rand(11111111,99999999).rand(111,999); //total 14 characters.
+						$cinput['categoryId'] = $cr;
+						//echo $parentId;die;
+						$cinput['parentId'] = $parentId;
+						$cinput['slug'] = $cat_slug;
+						$cinput['catLevel'] = $x;
+						$cinput['categoryName'] = $cat;
+						$cinput['created_at'] =  date('Y-m-d H:i:s');
+						$cinput['updated_at'] =  date('Y-m-d H:i:s');
+						//echo '<pre>';print_R($cinput);die;
+						$id = Category::create($cinput)->id;
+						if($cat == $lastElement){
+							$catId = $cinput['categoryId'];
+						}else{
+							$catId = $cinput['categoryId'];
+							$parentId = $cinput['categoryId'];		
+						}
+						
+						if($x == 1){
+							$catID1 = $cinput['categoryId'];
+						}
+						if($x == 2){
+							$catID2 = $cinput['categoryId'];
+						}
+						if($x == 3){
+							$catID3 = $cinput['categoryId'];
+						}
+						if($x == 4){
+							$catID4 = $cinput['categoryId'];
+						}						
+					//}
+					$x++;
+				}
+			}
+			
+/* 			echo 'categoryId = '.$catId;
+			echo '<br>';
+			echo 'parentId = '.$parentId; 
+			die; */
 			$pslug = $this->slugify($title);
 			$pslug = $this->check_slug_product($pslug);
-				
-			$price = trim($row[5]);	// price
-			$currency = trim($row[6]);	// currency
-			$brand = trim($row[7]);	// brand
-			$item_url = trim($row[8]);	// item_url
-			$quantity = trim($row[9]);	// quantity
-			$description = trim($row[10]);	// description
-			$product_image = trim($row[11]);	// product_image
-			$gallery_images_str = trim($row[12]);	// gallery_images
+			
 			if($gallery_images_str !=''){
 				$gi_arr = array();
 				$gi_arr = explode(',',$gallery_images_str);
@@ -49,6 +152,7 @@ class ProductsImport implements ToModel, WithBatchInserts, WithChunkReading, Wit
 					$gallery_images_json = json_encode($gi_arr,true);
 				}
 			}
+			
 			$brand_id = 0;
 			if($brand !=''){
 				$input2 = array(
@@ -90,8 +194,12 @@ class ProductsImport implements ToModel, WithBatchInserts, WithChunkReading, Wit
 					'merchant_id'     => $merchant_id,				
 					'title'     => $title,
 					'slug'     => $pslug,
-					'categoryId'    => $category,
-					'parentCategoryId'    => $parent_category,
+					'categoryId'    => $catId,
+					'parentCategoryId'    => $parentId,
+					'catID1'    => $catID1,
+					'catID2'    => $catID2,
+					'catID3'    => $catID3,
+					'catID4'    => $catID4,					
 					'viewItemURL'    => $item_url,
 					'current_price'    => $price,
 					'current_price_currency'    => $currency,
@@ -110,8 +218,12 @@ class ProductsImport implements ToModel, WithBatchInserts, WithChunkReading, Wit
 					'itemId'     => $itemId,
 					'title'     => $title,
 					'slug'     => $pslug,
-					'categoryId'    => $category,
-					'parentCategoryId'    => $parent_category,
+					'categoryId'    => $catId,
+					'parentCategoryId'    => $parentId,
+					'catID1'    => $catID1,
+					'catID2'    => $catID2,
+					'catID3'    => $catID3,
+					'catID4'    => $catID4,
 					'viewItemURL'    => $item_url,
 					'current_price'    => $price,
 					'current_price_currency'    => $currency,
@@ -126,7 +238,7 @@ class ProductsImport implements ToModel, WithBatchInserts, WithChunkReading, Wit
 				]);				
 			}
 
-		}
+		} 
     }
 	
     public function rules(): array
@@ -154,14 +266,14 @@ class ProductsImport implements ToModel, WithBatchInserts, WithChunkReading, Wit
 					  }
 				}
               },
-             '4' => function($attribute, $value, $onFailure) {
+             '3' => function($attribute, $value, $onFailure) {
 				 if($value != 'title'){
 					  if ($value == '') {
 						   $onFailure($attribute.' '.$value.' is required.');
 					  }						 
 				}
               },
-             '5' => function($attribute, $value, $onFailure) {
+             '4' => function($attribute, $value, $onFailure) {
 				 if($value != 'price'){
 					  if ($value == '') {
 						   $onFailure($attribute.' value is required.');
@@ -171,7 +283,7 @@ class ProductsImport implements ToModel, WithBatchInserts, WithChunkReading, Wit
 					  }
 				}
               },
-             '8' => function($attribute, $value, $onFailure) {
+             '7' => function($attribute, $value, $onFailure) {
 				 if($value != 'item_url'){
 					  if ($value == '') {
 						   $onFailure($attribute.' value is required.');
@@ -181,7 +293,7 @@ class ProductsImport implements ToModel, WithBatchInserts, WithChunkReading, Wit
 					  }
 				}
               },
-             '9' => function($attribute, $value, $onFailure) {
+             '8' => function($attribute, $value, $onFailure) {
 				 if($value != 'quantity'){
 					  if ($value == '') {
 						   $onFailure($attribute.' value is required.');
@@ -191,7 +303,7 @@ class ProductsImport implements ToModel, WithBatchInserts, WithChunkReading, Wit
 					  }
 				}
               },
-             '11' => function($attribute, $value, $onFailure) {
+             '10' => function($attribute, $value, $onFailure) {
 				 if($value != 'product_image'){
 					  if ($value == '') {
 						   $onFailure($attribute.' value is required.');
@@ -211,11 +323,11 @@ class ProductsImport implements ToModel, WithBatchInserts, WithChunkReading, Wit
 		return [
 		'0' => 'item_id',
 		'1' => 'merchant',
-		'4' => 'title',
-		'5' => 'price',
-		'8' => 'item_url',
-		'9' => 'quantity',
-		'11' => 'product_image',
+		'3' => 'title',
+		'4' => 'price',
+		'7' => 'item_url',
+		'8' => 'quantity',
+		'10' => 'product_image',
 		];
 	}	
 	

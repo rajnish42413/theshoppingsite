@@ -674,7 +674,8 @@ $(document).ready(function() {
 				}else{
 					return data;
 				}
-			}},			
+			}},		
+			{ "data": "merchant_name"},				
 			{ "data": "catName2"},		//parent - level 2	
 			{ "data": "catName1"},		//cat	- level 1
 			{ "data": "catName3"},		//cat	 - level 3
@@ -701,13 +702,13 @@ $(document).ready(function() {
          'orderable': false,
 		},
 		{
-		'targets': 4,
+		'targets': 5,
          'searchable': false,
          'orderable': false,
          'visible': false,
 		},
 		{
-		 'targets': 5,
+		 'targets': 6,
          'searchable': false,
          'orderable': false,
          'visible': false,
@@ -782,11 +783,12 @@ $(document).ready(function() {
 		$('#checked_ids').val('');
 		$('#selected_count').hide();  
         var name = $("#productsfrm #name").val();
+        var merchant_id = $("#productsfrm #merchant_id").val();
         var parent_id = $("#productsfrm #parent_id").val();
         var cat_id = $("#productsfrm #cat_id").val();
         var sub_cat_id = $("#productsfrm #sub_cat_id").val();
         var sub2_cat_id = $("#productsfrm #sub2_cat_id").val();
-		window.productsTable.column(1).search(name).column(2).search(parent_id).column(3).search(cat_id).column(4).search(sub_cat_id).column(5).search(sub2_cat_id).draw(); 		
+		window.productsTable.column(1).search(name).column(2).search(merchant_id).column(3).search(parent_id).column(4).search(cat_id).column(5).search(sub_cat_id).column(6).search(sub2_cat_id).draw(); 		
     });
 	
 	/* ./ productsTable */

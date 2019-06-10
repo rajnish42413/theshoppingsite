@@ -15,6 +15,7 @@ use App\Brand;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Log;
 use App\Imports\ProductsImport;
+//use App\Imports\ItemsImport;
 use Maatwebsite\Excel\Facades\Excel;
 use Mail;
 require realpath('excel-export/vendor/autoload.php') ;
@@ -50,7 +51,8 @@ class ProductsController extends Controller
 		$data['sub_title'] = 'List';
 		$data['link'] = 'products-add';
 		$categories = Category::where('parentId',0)->where('status',1)->orderBy('id','asc')->get();
-		return view('admin.products.list',['categories'=>$categories,'data'=>$data]);
+		$merchants = Merchant::where('status',1)->orderBy('id','asc')->get();
+		return view('admin.products.list',['categories'=>$categories,'merchants'=>$merchants,'data'=>$data]);
     }
 	
 	
@@ -64,29 +66,37 @@ class ProductsController extends Controller
         $srch       = $this->getDTsearch($req);
         //echo '<pre>';print_r($srch);die;
 
-        $qry = Product::select(DB::raw("products.*, categories.categoryName as catName1, c2.categoryName as catName2, c3.categoryName as catName3, c4.categoryName as catName4, categories.categoryId as catID1, c2.categoryId as catID2, c3.categoryId as catID3, c4.categoryId as catID4"))->leftJoin('categories',function ($join){$join->on('categories.categoryId','=','products.categoryId'); })->leftJoin('categories as c2',function ($join){$join->on('c2.categoryId','=','products.parentCategoryId'); })->leftJoin('categories as c3',function ($join){$join->on('c3.categoryId','=','products.catID3'); })->leftJoin('categories as c4',function ($join){$join->on('c4.categoryId','=','products.catID4'); });
+        $qry = Product::select(DB::raw("products.*, categories.categoryName as catName1, c2.categoryName as catName2, c3.categoryName as catName3, c4.categoryName as catName4, categories.categoryId as catID1, c2.categoryId as catID2, c3.categoryId as catID3, c4.categoryId as catID4,merchants.name as merchant_name"))->leftJoin('categories',function ($join){$join->on('categories.categoryId','=','products.categoryId'); })->leftJoin('categories as c2',function ($join){$join->on('c2.categoryId','=','products.parentCategoryId'); })->leftJoin('categories as c3',function ($join){$join->on('c3.categoryId','=','products.catID3'); })->leftJoin('categories as c4',function ($join){$join->on('c4.categoryId','=','products.catID4'); })->leftJoin('merchants',function ($join){$join->on('merchants.id','=','products.merchant_id'); });
         //$qry = Product::select(DB::raw("products.*"));
 	
-		$qry->where('categories.status',1);
-		$qry->where('c2.status',1);
+		//$qry->where('categories.status',1);
+		//$qry->where('c2.status',1);
 		
         if(isset($srch['title']))
         {
             $qry->where('products.title','like',"%" .$srch['title']. "%");
         }
 		
+        if(isset($srch['merchant_name']))
+        {
+            $qry->where('products.merchant_id',$srch['merchant_name']);
+        }
+		
         if(isset($srch['catName1']))
         {
             $qry->where('products.catID2',$srch['catName1']);
-        }		
+        }
+		
         if(isset($srch['catName2']))
         {
             $qry->where('products.catID1',$srch['catName2']);
         }
+		
         if(isset($srch['catName3']))
         {
             $qry->where('products.catID3',$srch['catName3']);
-        }		
+        }
+		
         if(isset($srch['catName4']))
         {
             $qry->where('products.catID4',$srch['catName4']);
@@ -181,10 +191,11 @@ class ProductsController extends Controller
     }
 	
 	public function importProcess(Request $request){
+	
 		if (Input::hasFile('file')){ 
 			$req    = $request->all();	
-			$path = Input::file('file')->getRealPath();
 			Excel::import(new ProductsImport,request()->file('file'));	
+			//Excel::import(new ItemsImport,request()->file('file'));	
 			echo '|success';		
 		}
 		
