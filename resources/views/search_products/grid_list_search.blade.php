@@ -1,4 +1,5 @@
-<?php //use \App\Http\Controllers\DetailController;?>
+<?php //use \App\Http\Controllers\DetailController;
+?>
 @extends('layouts.app')
 
 @section('content')

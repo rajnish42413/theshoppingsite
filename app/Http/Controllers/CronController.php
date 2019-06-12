@@ -33,7 +33,7 @@ class CronController extends Controller
         //$this->middleware('auth');
 		$api_setting = ApiSetting::where('api_name','ebay')->first();
 		if($api_setting && $api_setting->count() > 0 && $api_setting->mode == 'production'){
-			$this->APP_ID = $api_setting->app_id.'avengers-rk';
+			$this->APP_ID = $api_setting->app_id;
 			$this->DEV_ID = $api_setting->developer_id;
 			$this->CERT_ID = $api_setting->certificate_id;
 			$this->TOKEN = $api_setting->token;
@@ -352,7 +352,7 @@ class CronController extends Controller
             'body' => $body
         ]);
         $results = simplexml_load_string($response->getBody(),'SimpleXMLElement',LIBXML_NOCDATA);
-		//echo '<Pre>'; print_r($results); echo '</pre>';die;
+		echo '<Pre>'; print_r($results); echo '</pre>';die;
 		//return $results;
  		$detail = array();
         if ($results->Ack == 'Success'){
@@ -368,7 +368,7 @@ class CronController extends Controller
 			$product_image = '';
 			
 			$pic_det = (array)$item->PictureDetails;
-			if($pic_det && isset($pic_det->PhotoDisplay) && $pic_det->PhotoDisplay == 'PicturePack'){
+			if($pic_det && isset($pic_det->PhotoDisplay) && $pic_det->PhotoDisplay == 'PicturePack' && isset($pic_det->PictureURL)){
 				$pic_detail = $pic_det->PictureURL;
 				if(is_array($pic_detail)){
 					$pic_array = $pic_detail;
@@ -464,6 +464,34 @@ class CronController extends Controller
 			}
 		}
 	}	
+	
+	public function get_item_by_id($pid){
+		
+
+		$search = array();
+		$search[] = $pid; //parent category id
+		
+		$ebay_service = new EbayServices();
+		
+		$service = $ebay_service->createFinding();
+		
+		// Assign the keywords.
+		$request = new Types\FindItemsByProductRequest();
+		
+		$request->productId->type =  'ReferenceID';
+		$request->productId =  '53039031';
+
+		// Ask for the first 25 items.
+	//	$request->paginationInput = new Types\PaginationInput();
+	//	$request->paginationInput->entriesPerPage = 1;
+	//	$request->paginationInput->pageNumber = 100;
+
+		// Ask for the results to be sorted from high to low price.
+		//$request->sortOrder = 'CurrentPriceLowest';
+	
+		$response = $service->findItemsByProduct($request);
+	echo '<pre>';print_r($response);die;
+	}
 //Live it is working	
 	public function by_category_ebay($pageNo = 1,$perPage = 100, $cat_id = 0 ){
 		EbayCronCategory::where('today_date','<',date('Y-m-d'))->update(array('today_date'=>date('Y-m-d'),'status'=>0));//date checking and updating
@@ -479,9 +507,9 @@ class CronController extends Controller
 		$search[] = $cat_id; //parent category id
 		$parent_id = $cat_id;
 		$ebay_service = new EbayServices();
-		
+		//echo '<pre>';print_r($ebay_service);die;
 		$service = $ebay_service->createFinding();
-		
+	//	echo '<pre>';print_r($service);die;
 		// Assign the keywords.
 		$request = new Types\FindItemsByCategoryRequest();
 		
@@ -507,6 +535,7 @@ class CronController extends Controller
 			$perPage = $response->paginationOutput->entriesPerPage;
 
 			$products = $response->searchResult->item;
+			//echo '<pre>';print_r($products);die;
 			//echo '<pre>'; print_r($response->paginationOutput);echo '<hr>';
 			if($products){
  				foreach($products as $product){
@@ -581,6 +610,7 @@ class CronController extends Controller
 					
 					$item_detail = array();
 					$item_detail = $this->getSingleItem_live($input['itemId']); //API CALL
+					//$item_detail = $this->get_item_by_id($input['itemId']); //API CALL
 					
 					if($item_detail){
 						$input['PaymentMethods'] =  $item_detail['PaymentMethods'];	//string

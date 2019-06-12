@@ -26,28 +26,13 @@ class ProductsImport implements ToModel, WithBatchInserts, WithChunkReading, Wit
     */
     public function model(array $row)
     {			
-
-/* 	$input2 = array(
-					'name' =>'SWS',
-					'slug' =>$this->slugify('sws'),
-					'updated_at' => date('Y-m-d H:i:s'),
-				);
-	echo Merchant::create($input2)->id;die;
- 						$cinput = array();
-						$cinput['categoryId'] = rand(11,99).time().rand(11,99);
-						$cinput['parentId'] = 0;
-						$cinput['slug'] = 'my-slug';
-						$cinput['catLevel'] = 1;
-						$cinput['categoryName'] = 'Test Category';
-						$cinput['created_at'] =  date('Y-m-d H:i:s');
-						$cinput['updated_at'] =  date('Y-m-d H:i:s');
-						
-						$id = Category::create($cinput)->id;
-						
-						$rows = Category::where('id',$id)->first();
-						
-						echo '<pre>';print_r($rows);die;  */
-						
+		echo '<pre>';print_r($row);die;
+		$catId = 0;	
+		$parentId = 0;	
+		$catID1 = 0;
+		$catID2 = 0;
+		$catID3 = 0;
+		$catID4 = 0;			
  		if($row[0] != 'item_id'){
 			$category_array = array();
 			$gallery_images_json = '';
@@ -70,13 +55,7 @@ class ProductsImport implements ToModel, WithBatchInserts, WithChunkReading, Wit
 			//echo '<pre>';print_r($category_array);die;
 			if($category_array){
 				$x=1;
-				$parentId = 0;
-				$catId = 0;
-				$lastElement = end($category_array);
-				$catID1 = 0;
-				$catID2 = 0;
-				$catID3 = 0;
-				$catID4 = 0;		
+				$lastElement = end($category_array);	
 				//echo $lastElement;die;
 				foreach($category_array as $cat){
 					$cat = trim($cat);//remove space

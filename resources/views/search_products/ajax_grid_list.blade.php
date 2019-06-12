@@ -1,5 +1,5 @@
 					<?php if($products){
-						
+						//echo '<pre>';print_r($products); die;
 						foreach($products as $product){?>
 					
 							<?php  
@@ -32,7 +32,7 @@
 												</ul>
 											</div>
 											<div class="sh_less_price_store sh_float_width text-left">
-												<a href="javacript:void(0)"><img src="{{env('APP_URL')}}merchant_files/<?php echo $merchant_image;?>"></a>
+												<a href="<?php echo $product->viewItemURL;?>" target="_blank"><img src="{{env('APP_URL')}}merchant_files/<?php echo $merchant_image;?>"></a>
 											</div>
 									
 										</div>

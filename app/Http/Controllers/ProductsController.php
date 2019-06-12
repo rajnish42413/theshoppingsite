@@ -6,6 +6,8 @@ use Validator;
 use Auth;
 use DB;
 use Session;
+use ZipArchive;
+use PharData;
 
 use App\Merchant;
 use App\User;
@@ -192,11 +194,81 @@ class ProductsController extends Controller
 	
 	public function importProcess(Request $request){
 	
-		if (Input::hasFile('file')){ 
-			$req    = $request->all();	
-			Excel::import(new ProductsImport,request()->file('file'));	
-			//Excel::import(new ItemsImport,request()->file('file'));	
-			echo '|success';		
+		if (Input::hasFile('file')){
+			
+			$file = request()->file('file');
+			$ext =  $file->getClientOriginalExtension();
+			$temp =$file->getPathName();
+			$zipName = $file->getClientOriginalName();
+		
+			if($ext == 'csv' || $ext == 'xlsx'){				//CSV or Excel
+				Excel::import(new ProductsImport,$file);
+				$pre_fileName= time().rand().'.'.$ext;
+				$file->move('csv',$pre_fileName);
+				
+				echo '|success';
+				
+			}elseif($ext == 'zip'){								// Zip file of CSV or Excel
+				
+				$zipFolder = $this->slugify($zipName);
+				$zip = new ZipArchive;
+				if ($zip->open($temp)) {
+					$newZipFolder = 'csv/'.$zipFolder;
+					if (!file_exists($newZipFolder)) {
+						mkdir($newZipFolder, 0777, true);
+					}					
+					$zip->extractTo($newZipFolder.'/'); //extract zip files to folder
+					for($i = 0; $i < $zip->numFiles; $i++) {
+						$stat = $zip->statIndex($i);
+						$csvFile =$stat['name'];
+						$cext = pathinfo($csvFile, PATHINFO_EXTENSION);
+						$csvFilePath = realpath($newZipFolder.'/'.$csvFile);				
+						if($cext == 'csv' || $cext == 'xlsx'){
+							Excel::import(new ProductsImport,$csvFilePath);					
+						}else{
+							//Delete new folder. 
+							$this->deleteDir($newZipFolder);							
+							echo '|zip_error';
+							exit;
+						}
+					}
+					
+					$zip->close();
+				}
+				echo '|success';	
+				
+			}elseif($ext == 'gz'){								// gZip file of CSV or Excel
+				$zipFolder = $this->slugify($zipName);
+				$newZipFolder = 'csv/'.$zipFolder;
+				if(!file_exists($newZipFolder)) {
+					mkdir($newZipFolder, 0777, true);
+				}
+				try{				
+					$phar = new PharData($temp);
+					$phar->extractTo($newZipFolder.'/'); //extract gz files to folder
+					foreach($phar as $ph){
+						$csvFile =  $ph->getFileName();
+						$cext = pathinfo($csvFile, PATHINFO_EXTENSION);
+						$csvFilePath = realpath($newZipFolder.'/'.$csvFile);
+						if($cext == 'csv' || $cext == 'xlsx'){
+							Excel::import(new ProductsImport,$csvFilePath);					
+						}else{
+							//Delete new folder. 
+							$this->deleteDir($newZipFolder);
+							echo '|gz_error';
+							exit;
+						}	
+					}
+					
+					echo '|success';	
+				}catch (Exception $e) {
+					echo '|gz_error2';
+				}				
+			}else{
+				echo '|error';
+			}
+	
+				
 		}
 		
 	 }
@@ -335,5 +407,56 @@ class ProductsController extends Controller
 			echo 'success';
 		}
     }	
+
+	public static function slugify($text){
+	  // replace non letter or digits by -
+	  $text = preg_replace('~[^\pL\d]+~u', '-', $text);
+
+	  // transliterate
+	  $text = iconv('utf-8', 'utf-8//TRANSLIT', $text);
+
+	  // remove unwanted characters
+	  $text = preg_replace('~[^-\w]+~', '', $text);
+
+	  // trim
+	  $text = trim($text, '-');
+
+	  // remove duplicate -
+	  $text = preg_replace('~-+~', '-', $text);
+
+	  // lowercase
+	  $text = strtolower($text);
+
+	  if (empty($text)) {
+		return 'n-a';
+	  }
+
+	  return $text;
+	}
+	
+	public function deleteDir($dirPath) { 
+	//Delete all non-csv & non-xlsx files in the folder, but not delete the folder.
+		if (! is_dir($dirPath)) {
+			throw new InvalidArgumentException("$dirPath must be a directory");
+		}
+		if (substr($dirPath, strlen($dirPath) - 1, 1) != '/') {
+			$dirPath .= '/';
+		}
+		$files = glob($dirPath . '*', GLOB_MARK);
+		foreach ($files as $file) {
+			if (is_dir($file)) {
+				self::deleteDir($file);
+			} else {
+				$cext = pathinfo($file, PATHINFO_EXTENSION);
+				if($cext == 'csv' || $cext == 'xlsx'){
+					//nothing
+				}else{
+					unlink($file);
+				}
+				
+			}
+		}
+		//rmdir($dirPath);
+	}	
 	
 }

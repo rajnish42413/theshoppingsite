@@ -43,7 +43,7 @@ return [
     | User token can generated here.
     |
     */
-
+/* 
     'sandbox' => [
         'credentials' => [
             'devId' => env('EBAY_SANDBOX_DEV_ID'),
@@ -61,5 +61,5 @@ return [
         ],
         'authToken' => env('EBAY_PROD_AUTH_TOKEN'),
         'oauthUserToken' => env('EBAY_PROD_OAUTH_USER_TOKEN'),
-    ]
+    ] */
 ];

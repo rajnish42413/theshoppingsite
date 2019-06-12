@@ -440,7 +440,7 @@ class HomeController extends Controller
 			$cat_check = Category::where('categoryId',$cat_id)->first();
 			$level = $cat_check->catLevel;
 			
-			$results = Product::select(DB::raw("products.*"))->where('products.status',1);
+			$results = Product::select(DB::raw("products.*,merchants.image as merchant_image"))->leftJoin('merchants',function ($join){$join->on('products.merchant_id','=','merchants.id'); })->where('products.status',1);
 
 			if($level == 1){
 				$results = $results->where('products.catID1',$cat_id);
@@ -482,7 +482,7 @@ class HomeController extends Controller
 		}		
 		$results = $results->limit($showing_result);
 		$results = $results->get();
-
+		//echo $results;die;
 		if($results && $results->count() > 0){			
 			echo view('search_products/ajax_grid_list',['products'=>$results])->render();				
 		}else{
@@ -692,6 +692,7 @@ class HomeController extends Controller
 			if($orderByRowCase!=''){
 				$results = $results->orderByRaw($orderByRowCase);
 			} */
+			
 			$results = $results->groupBy('products.id');
 			$results = $results->orderBy('products.current_price','asc');
 			$results = $results->limit(10);
@@ -805,7 +806,7 @@ class HomeController extends Controller
 			$sorting_p = 'desc';
 		}
 		
-		$results = $results->groupBy('products.id');
+		//$results = $results->groupBy('products.id');
 		$results = $results->orderBy($sorting_name,$sorting_p);
 		if($offset_val!='' && $offset_val >= 10){
 			$results = $results->offset($offset_val);

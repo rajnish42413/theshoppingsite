@@ -16,7 +16,7 @@ class EbayServices
 		$api_setting = ApiSetting::where('api_name','ebay')->first();
 		
 		if($api_setting && $api_setting->count() > 0 && $api_setting->mode == 'production'){	
-		
+			
 			$config = Array(
 				'credentials' => Array(
 						'devId' => $api_setting->developer_id,
@@ -26,6 +26,7 @@ class EbayServices
 				'siteId' => 0,
 				'sandbox' =>false
 			);
+			//echo '<Pre>';print_r($config);die;
 		}	
 
         $this->sdk = new Sdk($config);

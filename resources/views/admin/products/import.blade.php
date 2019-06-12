@@ -35,7 +35,7 @@
 				</div>				
 				
                 <div class="form-group">
-                  <label for="file"><span class="text-danger">*</span> Upload CSV File</label>
+                  <label for="file"><span class="text-danger">*</span> Upload File <span class="text-danger"><small> ( Only CSV, Excel, Zip & GZ Files are acceptable. )</small></span></label>
 					<input class="form-control" name="file" id="file" type="file" required />				  
                   
                 </div>		
@@ -49,7 +49,7 @@
               <div class="box-body">
 				<div class="row">
 					<div class="col-sm-12">	
-						<a class="btn btn-warning btn-sm" href="<?php echo env('APP_URL');?>csv/test1.csv"><i class="fa fa-download"></i> Download Sample File</a>
+						<a class="btn btn-warning btn-sm" href="<?php echo env('APP_URL');?>csv/test_file.csv"><i class="fa fa-download"></i> Download Sample File</a>
 					</div>
 				</div>
               </div>
@@ -108,6 +108,26 @@ $('.wait_loader').show();
 					 });
 				
 			window.setTimeout(function() { window.location = surl }, 1000); 			
+		}else if(response == '|error'){
+					$.notify({
+					  message: 'Only CSV, Excel, Zip & GZ Files are acceptable.' 
+					 },{ element: 'body', type: "danger", allow_dismiss: true, offset: { x: 0, y: 60 }, delay: 500 
+					 });			
+		}else if(response == '|zip_error'){
+					$.notify({
+					  message: 'Your Zip file must contains csv/excel files only.' 
+					 },{ element: 'body', type: "danger", allow_dismiss: true, offset: { x: 0, y: 60 }, delay: 500 
+					 });			
+		}else if(response == '|gz_error'){
+					$.notify({
+					  message: 'Your GZ file must contains csv/excel files only.' 
+					 },{ element: 'body', type: "danger", allow_dismiss: true, offset: { x: 0, y: 60 }, delay: 500 
+					 });			
+		}else if(response == '|gz_error2'){
+					$.notify({
+					  message: 'Some Error Occured with your GZ File. Please upload another file.' 
+					 },{ element: 'body', type: "danger", allow_dismiss: true, offset: { x: 0, y: 60 }, delay: 500 
+					 });			
 		}
 
 		},
@@ -134,11 +154,11 @@ $('.wait_loader').show();
 	var file = input.files[0];
 	var excelfile = file.type;
 	//alert(file.type);
-	var match =  ['text/csv','application/vnd.ms-excel','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
+	var match =  ['text/csv','application/vnd.ms-excel','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','application/x-zip-compressed','application/x-gzip'];
 	 
-	if(!(excelfile==match[0] || excelfile==match[1] || excelfile==match[2])){
+	if(!(excelfile==match[0] || excelfile==match[1] || excelfile==match[2] || excelfile==match[3] || excelfile==match[4])){
 		$.notify({
-		  message: 'CSV/Excel File format is wrong.' 
+		  message: 'File format is wrong.' 
 		 },{ element: 'body', type: "danger", allow_dismiss: true, offset: { x: 20, y: 60 }, delay: 500 
 		 });
 		$("#file").val('');
