@@ -1055,7 +1055,6 @@ p.sh_green {
 }
 .sh_product_view_img .slider-nav.slick-initialized.slick-slider {
     border: 1px solid #e4e4e4;
-	margin-top: 30px;	
 }
 form.sh_review_from > div {
     margin-bottom: 30px;
@@ -1404,7 +1403,8 @@ ul.sh_review_color {
 }
 .slider-nav__item.slick-slide img {
     width: 100%;
-    height: 120px;
+    height: auto;
+    padding: 6px;
 }
 .slider-nav__item.slick-slide {
     width: 100% !important;

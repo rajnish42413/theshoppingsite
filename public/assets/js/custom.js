@@ -80,7 +80,7 @@
 	var newHeight = $(".slider-for").height();
 	$('.slick-vertical .slick-slide').height(function(){ return newHeight/3; });
 	$(".slick-slide").css("overflow","hidden");
-	$(".slick-slide img").css("width","100%");
+	$(".slider-nav .slick-slide img").css("width","100%");
 	$(".slick-slide img").css("margin","auto");
 
 	// ZOOM
