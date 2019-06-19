@@ -50,15 +50,8 @@
 		});
 		
 		
-	/*-------- MObile Menu -----------*/
-	/*-------- Category Sidebar -----------*/
-	
-		/* $('.sh_sidear_cat_menu > ul > li').on('click', function () {
-			$(this).find('ul').slideToggle();
-		});
-	  */
-	  
-	  
+	/*-------- MObile Menu End -----------*/
+		  
 	 /*---------- Slider Setting --------*/
  
 	$('.slider-for').slick({
@@ -77,6 +70,7 @@
 	  focusOnSelect: true,
 	  verticalSwiping: true,
 	});
+	
 	var newHeight = $(".slider-for").height();
 	$('.slick-vertical .slick-slide').height(function(){ return newHeight/3; });
 	$(".slick-slide").css("overflow","hidden");
@@ -95,9 +89,6 @@
 	// STYLE TOGGLE
 	$('.ex4').zoom({ on:'toggle' });
 
-	  
-	  
-	  
 	  
 	  
 	  /*-----------------------------------------------------
