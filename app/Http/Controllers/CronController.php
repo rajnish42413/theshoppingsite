@@ -352,7 +352,7 @@ class CronController extends Controller
             'body' => $body
         ]);
         $results = simplexml_load_string($response->getBody(),'SimpleXMLElement',LIBXML_NOCDATA);
-		echo '<Pre>'; print_r($results); echo '</pre>';die;
+		//echo '<Pre>'; print_r($results); echo '</pre>';die;
 		//return $results;
  		$detail = array();
         if ($results->Ack == 'Success'){
