@@ -397,7 +397,6 @@ class CronController extends Controller
 			}
 			if(isset($item->ProductListingDetails) && isset($item->ProductListingDetails->BrandMPN) && isset($item->ProductListingDetails->BrandMPN->Brand)){
 				$brand =$item->ProductListingDetails->BrandMPN->Brand;
-				//$brand_xml   =  simplexml_load_string($brand,'SimpleXMLElement',LIBXML_NOCDATA);
 				//echo '<pre>';print_R((string)$brand);die;
 				$detail['Brand'] = (string)$brand;
 			}else{
