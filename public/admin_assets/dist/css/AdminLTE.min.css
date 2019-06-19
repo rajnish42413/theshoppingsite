@@ -136,3 +136,15 @@
 .logo-mini img {
     width: 65%;
 }
+
+.m-t-1{
+	margin-top:10px;
+}
+
+.search_results {
+    width: 95%;
+    max-height: 180px;
+    position: absolute;
+    z-index: 11;
+    overflow: auto;
+}

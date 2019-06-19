@@ -23,6 +23,7 @@ Route::get('/home','HomeController@index')->name('home');
 Route::any('/all-categories','HomeController@all_categories')->name('all-categories');
 Route::any('/all-categories-ajax','HomeController@get_all_categories_ajax')->name('all-categories-ajax');
 Route::any('/get-search','HomeController@search_form')->name('get-search');
+
 Route::any('/search','HomeController@search_data')->name('search');
 
 //Cron Live
@@ -89,6 +90,16 @@ Route::group(['middleware'=>['Admin']],function(){
 	Route::any('get-sub2-categories-by-parent', 'CategoriesController@get_sub2_category_by_parent')->name('get-sub2-categories-by-parent'); 
 	Route::any('categories-status', 'CategoriesController@status_update')->name('categories-status');
 	Route::any('categories-status-multiple', 'CategoriesController@status_multiple_update')->name('categories-status-multiple');	
+	
+	
+	// Map Categories
+	Route::get('map-categories-list', 'MapCategoriesController@index')->name('map-categories-list');	
+	Route::get('searchajaxmapcategory', 'MapCategoriesController@ajax_list')->name('searchajaxmapcategory');	
+	Route::any('map-categories-add', 'MapCategoriesController@add')->name('map-categories-add');	
+	Route::any('map-categories-edit/{id?}', 'MapCategoriesController@add');	
+	Route::any('map-categories-save', 'MapCategoriesController@save_data')->name('map-categories-save');	
+	Route::any('map-categories-delete', 'MapCategoriesController@delete_data')->name('map-categories-delete');
+	Route::any('/get-category-by-merchant','MapCategoriesController@get_category_by_merchant')->name('get-category-by-merchant');
 	
 	// Products 
  	Route::get('products-list', 'ProductsController@index')->name('products-list');	

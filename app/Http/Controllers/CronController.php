@@ -352,7 +352,7 @@ class CronController extends Controller
             'body' => $body
         ]);
         $results = simplexml_load_string($response->getBody(),'SimpleXMLElement',LIBXML_NOCDATA);
-		echo '<Pre>'; print_r($results); echo '</pre>';die;
+		//echo '<Pre>'; print_r($results); echo '</pre>';die;
 		//return $results;
  		$detail = array();
         if ($results->Ack == 'Success'){
@@ -368,8 +368,10 @@ class CronController extends Controller
 			$product_image = '';
 			
 			$pic_det = (array)$item->PictureDetails;
-			if($pic_det && isset($pic_det->PhotoDisplay) && $pic_det->PhotoDisplay == 'PicturePack' && isset($pic_det->PictureURL)){
-				$pic_detail = $pic_det->PictureURL;
+			//echo '<pre>';print_r($pic_det);die;
+			if($pic_det && isset($pic_det['PhotoDisplay']) && $pic_det['PhotoDisplay'] == 'PicturePack' && isset($pic_det['PictureURL'])){
+				$pic_detail = $pic_det['PictureURL'];
+				//echo '<pre>';print_r($pic_detail);die;
 				if(is_array($pic_detail)){
 					$pic_array = $pic_detail;
 					if($pic_array){
@@ -394,11 +396,14 @@ class CronController extends Controller
 				$detail['Variations'] = '';
 			}
 			if(isset($item->ProductListingDetails) && isset($item->ProductListingDetails->BrandMPN) && isset($item->ProductListingDetails->BrandMPN->Brand)){
-				$detail['Brand'] = $item->ProductListingDetails->BrandMPN->Brand;
+				$brand =$item->ProductListingDetails->BrandMPN->Brand;
+				//$brand_xml   =  simplexml_load_string($brand,'SimpleXMLElement',LIBXML_NOCDATA);
+				//echo '<pre>';print_R((string)$brand);die;
+				$detail['Brand'] = (string)$brand;
 			}else{
 				$detail['Brand'] = '';
 			}
-			
+			//echo '<pre>';print_R($detail);die;
 			return $detail;
         } 
     }
@@ -611,7 +616,7 @@ class CronController extends Controller
 					$item_detail = array();
 					$item_detail = $this->getSingleItem_live($input['itemId']); //API CALL
 					//$item_detail = $this->get_item_by_id($input['itemId']); //API CALL
-					
+					//echo '<pre>';print_r($item_detail);die;
 					if($item_detail){
 						$input['PaymentMethods'] =  $item_detail['PaymentMethods'];	//string
 						$input['Quantity'] = $item_detail['Quantity']; //string						
@@ -643,13 +648,15 @@ class CronController extends Controller
 								$input['brand_id'] = Brand::create($input3)->id;
 							}
 						}
+						//echo 'ss';die;
 					}
 					
 					if($check && $check->count() > 0){
 						Product::where('itemId',$product->itemId)->update($input);	
 					}else{
 						$input['created_at'] =  date('Y-m-d H:i:s');
-						Product::create($input)->id;	
+						Product::create($input)->id;
+					
 					}  	
 				}
 				 

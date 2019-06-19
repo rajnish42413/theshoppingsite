@@ -239,7 +239,22 @@ $menu_permissions = DetailController::get_menu_permissions();
 			<?php } ?>			
           </ul>
         </li>
-		
+
+	<?php if(Auth::user()->is_super_admin == 1 || in_array('map_categories',$menu_permissions)){?>		
+        <li class="treeview <?php if($data['nav'] == 'menu_map_categories'){echo 'active';}?>">
+          <a href="#">
+            <i class="fa fa-tags"></i> <span>Map Categories</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li class="<?php if($data['sub_nav'] == 'menu_map_categories_add'){echo 'active';}?>"><a href="{{ route('map-categories-add') }}"><i class="fa fa-plus"></i> Add</a></li>
+            <li class="<?php if($data['sub_nav'] == 'menu_map_categories_list'){echo 'active';}?>"><a href="{{ route('map-categories-list') }}"><i class="fa fa-list"></i> List</a></li>
+          </ul>
+        </li>
+	<?php } ?>
+	
         <li class="treeview <?php if($data['nav'] == 'menu_products'){echo 'active';}?>">
           <a href="#">
             <i class="fa fa-product-hunt"></i> <span>Products</span>
