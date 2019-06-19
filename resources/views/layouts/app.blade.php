@@ -238,36 +238,6 @@ $(window).on("load", function() {
     $('.js-example-basic-single').select2();
 </script>
 <script>
-
-/*-------- Product Zoom and Slider -----------*/
-	
-		 // SLICK
-		 $('.slider-for').slick({
-		  slidesToShow: 1,
-		  slidesToScroll: 1,
-		  arrows: false,
-		  fade: true,
-		  asNavFor: '.slider-nav'
-		});
-		$('.slider-nav').slick({
-		  slidesToShow: 3,
-		  slidesToScroll: 1,
-		  asNavFor: '.slider-for',
-		  dots: false,
-		  focusOnSelect: true
-		});
-		// ZOOM
-		$('.ex1').zoom();
-
-		// STYLE GRAB
-		$('.ex2').zoom({ on:'grab' });
-
-		// STYLE CLICK
-		$('.ex3').zoom({ on:'click' });	
-
-		// STYLE TOGGLE
-		$('.ex4').zoom({ on:'toggle' });
-	
 var getSearch = null;
 function get_search(e){
 	if(e.value != ''){
