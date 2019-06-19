@@ -230,10 +230,9 @@ $(window).on("load", function() {
 <script src="{{env('APP_URL')}}assets/js/slider/index.js"></script>
 <script src="{{env('APP_URL')}}assets/js/bootstrap.js"></script>
 <script src="{{env('APP_URL')}}assets/js/popper.min.js"></script>
-<script src="{{env('APP_URL')}}assets/js/custom.js"></script> 
-
 <script src="{{env('APP_URL')}}assets/js/product_zoom/jquery.zoom.min.js"></script>
 <script src="{{env('APP_URL')}}assets/js/product_zoom/slick.min.js"></script>
+<script src="{{env('APP_URL')}}assets/js/custom.js"></script> 
 <script>
     $('.js-example-basic-single').select2();
 </script>
