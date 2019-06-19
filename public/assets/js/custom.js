@@ -50,13 +50,45 @@
 		});
 		
 		
-	/*-------- MObile Menu -----------*/
-	/*-------- Category Sidebar -----------*/
+	/*-------- MObile Menu End -----------*/
+		  
+	 /*---------- Slider Setting --------*/
+ 
+	$('.slider-for').slick({
+	  slidesToShow: 1,
+	  slidesToScroll: 1,
+	  arrows: false,
+	  fade: true,
+	  asNavFor: '.slider-nav'
+	});
+	$('.slider-nav').slick({
+	  slidesToShow: 3,
+	  slidesToScroll: 1,
+	  asNavFor: '.slider-for',
+	  dots: false,
+	  vertical: true,
+	  focusOnSelect: true,
+	  verticalSwiping: true,
+	});
 	
-		/* $('.sh_sidear_cat_menu > ul > li').on('click', function () {
-			$(this).find('ul').slideToggle();
-		});
-	  */
+	var newHeight = $(".slider-for").height();
+	$('.slick-vertical .slick-slide').height(function(){ return newHeight/3; });
+	$(".slick-slide").css("overflow","hidden");
+	$(".slider-nav .slick-slide img").css("width","100%");
+	$(".slick-slide img").css("margin","auto");
+
+	// ZOOM
+	$('.ex1').zoom();
+
+	// STYLE GRAB
+	$('.ex2').zoom({ on:'grab' });
+
+	// STYLE CLICK
+	$('.ex3').zoom({ on:'click' });	
+
+	// STYLE TOGGLE
+	$('.ex4').zoom({ on:'toggle' });
+
 	  
 	  
 	  /*-----------------------------------------------------

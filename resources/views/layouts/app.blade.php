@@ -230,44 +230,13 @@ $(window).on("load", function() {
 <script src="{{env('APP_URL')}}assets/js/slider/index.js"></script>
 <script src="{{env('APP_URL')}}assets/js/bootstrap.js"></script>
 <script src="{{env('APP_URL')}}assets/js/popper.min.js"></script>
-<script src="{{env('APP_URL')}}assets/js/custom.js"></script> 
-
 <script src="{{env('APP_URL')}}assets/js/product_zoom/jquery.zoom.min.js"></script>
 <script src="{{env('APP_URL')}}assets/js/product_zoom/slick.min.js"></script>
+<script src="{{env('APP_URL')}}assets/js/custom.js"></script> 
 <script>
     $('.js-example-basic-single').select2();
 </script>
 <script>
-
-/*-------- Product Zoom and Slider -----------*/
-	
-		 // SLICK
-		 $('.slider-for').slick({
-		  slidesToShow: 1,
-		  slidesToScroll: 1,
-		  arrows: false,
-		  fade: true,
-		  asNavFor: '.slider-nav'
-		});
-		$('.slider-nav').slick({
-		  slidesToShow: 3,
-		  slidesToScroll: 1,
-		  asNavFor: '.slider-for',
-		  dots: false,
-		  focusOnSelect: true
-		});
-		// ZOOM
-		$('.ex1').zoom();
-
-		// STYLE GRAB
-		$('.ex2').zoom({ on:'grab' });
-
-		// STYLE CLICK
-		$('.ex3').zoom({ on:'click' });	
-
-		// STYLE TOGGLE
-		$('.ex4').zoom({ on:'toggle' });
-	
 var getSearch = null;
 function get_search(e){
 	if(e.value != ''){
