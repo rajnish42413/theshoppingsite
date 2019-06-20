@@ -26,7 +26,7 @@ class ProductsImport implements ToModel, WithBatchInserts, WithChunkReading, Wit
     */
     public function model(array $row)
     {			
-		echo '<pre>';print_r($row);die;
+		//echo '<pre>';print_r($row);die;
 		$catId = 0;	
 		$parentId = 0;	
 		$catID1 = 0;
