@@ -173,19 +173,8 @@ $parent_categories = DetailController::get_parent_categories();
 						<h4>useful Links</h4>
 						<ul>
 							<li><a href="{{env('APP_URL')}}about">About</a></li>
-							<li><a href="javacript:void(0)">Affiliates</a></li>
-							<li><a href="javacript:void(0)">API</a></li>
-							<li><a href="javacript:void(0)">Blog</a></li>
 							<li><a href="{{env('APP_URL')}}contact">Contact</a></li>
 							<li><a href="{{env('APP_URL')}}faq">FAQ</a></li>
-						</ul>
-						<ul>
-							<li><a href="javacript:void(0)">Jobs</a></li>
-							<li><a href="javacript:void(0)">Legal</a></li>
-							<li><a href="javacript:void(0)">Partners</a></li>
-							<li><a href="javacript:void(0)">Press</a></li>
-							<li><a href="javacript:void(0)">Turbo Lister Alternative</a></li>
-							<li><a href="javacript:void(0)">Webstores</a></li>
 						</ul>
 					</div>
 				</div>
