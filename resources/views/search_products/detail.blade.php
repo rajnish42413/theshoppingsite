@@ -34,9 +34,10 @@ if($merchant && $merchant->count() > 0){
 			<div class="row">
 				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 					<div class="sh_breadcurm sh_float_width">
-						<ul>
-							<li><a href="javacript:void(0)"><?php echo $data['parent_category'];?></a></li>
-							<li><a href="javacript:void(0)"><?php echo $data['category'];?></a></li>
+						<ul class="cat-list">								
+						<?php foreach($categories as $cat){?>
+							<li><a href="<?php echo env('APP_URL')."category/".$cat->slug;?>"><?php echo $cat->categoryName;?></a></li>
+						<?php } ?>
 						</ul>
 					</div>
 				</div>

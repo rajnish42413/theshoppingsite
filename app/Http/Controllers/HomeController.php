@@ -309,7 +309,7 @@ class HomeController extends Controller
 	//search_by_brands
 	
 	public function product_detail(Request $request,$slug){
-
+		
 		$data['nav'] = 'terms';
 		$data['meta_title'] = config('app.name')." :: Product Detail";
 		$data['meta_keywords'] = config('app.name')." Product Detail";
@@ -321,7 +321,6 @@ class HomeController extends Controller
 		if($slug != ''){
 
 			$product = Product::select(DB::raw("products.*"))->where('products.slug',$slug)->where('products.status',1)->first();
-					
 			if($product && $product->count() > 0){
 
 				$category = Category::where('categoryId',$product->categoryId)->first();

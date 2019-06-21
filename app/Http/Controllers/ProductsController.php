@@ -53,6 +53,7 @@ class ProductsController extends Controller
 		$data['sub_title'] = 'List';
 		$data['link'] = 'products-add';
 		$categories = Category::where('parentId',0)->where('status',1)->orderBy('id','asc')->get();
+		
 		$merchants = Merchant::where('status',1)->orderBy('id','asc')->get();
 		return view('admin.products.list',['categories'=>$categories,'merchants'=>$merchants,'data'=>$data]);
     }
