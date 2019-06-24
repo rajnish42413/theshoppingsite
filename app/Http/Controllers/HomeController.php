@@ -326,6 +326,7 @@ class HomeController extends Controller
 				
 				$category = Category::where('categoryId',$product->categoryId)->first();
 				if($category && $category->count() > 0){
+					
 					$data['category'] = $category->categoryName;	
 					$data['cat_breadcrumb'] = $this->getCatBredcrumb($category);
 				}else{

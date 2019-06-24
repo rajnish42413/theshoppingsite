@@ -52,44 +52,45 @@ class ProductsImport implements ToModel, WithBatchInserts, WithChunkReading, Wit
 			$gallery_images_str = trim($row[12]);	// gallery_images
 			$cat_check = array();
 			
-			$merchant_id = 0; //default
- 			if($merchant !=''){
-				$input2 = array(
-					'name' => $merchant,
-					'slug' => $this->slugify($merchant),
-					'updated_at' => date('Y-m-d H:i:s'),
-				);
-				$merchant_check = Merchant::where('slug',$input2['slug'])->first();
-				if($merchant_check && $merchant_check->count() > 0){
-					$merchant_id = $merchant_check->id;
-					Merchant::where('id',$merchant_id)->update($input2);
-				}else{
-					$input2['updated_at'] = date('Y-m-d H:i:s');
-					$merchant_id = Merchant::create($input2)->id;
+			if($product_image != '#'){
+				$merchant_id = 0; //default
+				if($merchant !=''){
+					$input2 = array(
+						'name' => $merchant,
+						'slug' => $this->slugify($merchant),
+						'updated_at' => date('Y-m-d H:i:s'),
+					);
+					$merchant_check = Merchant::where('slug',$input2['slug'])->first();
+					if($merchant_check && $merchant_check->count() > 0){
+						$merchant_id = $merchant_check->id;
+						Merchant::where('id',$merchant_id)->update($input2);
+					}else{
+						$input2['updated_at'] = date('Y-m-d H:i:s');
+						$merchant_id = Merchant::create($input2)->id;
+					}
+					
 				}
-				
-			}
 
-			$brand_id = 0;
-			if($brand !=''){
-				$input3 = array(
-					'name' => $brand,
-					'slug' => $this->slugify($brand),
-					'updated_at' => date('Y-m-d H:i:s'),
-				);
-				$brand_check = Brand::where('slug',$input3['slug'])->first();
-				if($brand_check && $brand_check->count() > 0){
-					$brand_id = $brand_check->id;
-					Brand::where('id',$brand_id)->update($input3);
-				}else{
-					$input3['updated_at'] = date('Y-m-d H:i:s');
-					$brand_id = Brand::create($input3)->id;
-				}
-			}			
-			
-			if($categoryId !=''){
+				$brand_id = 0;
+				if($brand !=''){
+					$input3 = array(
+						'name' => $brand,
+						'slug' => $this->slugify($brand),
+						'updated_at' => date('Y-m-d H:i:s'),
+					);
+					$brand_check = Brand::where('slug',$input3['slug'])->first();
+					if($brand_check && $brand_check->count() > 0){
+						$brand_id = $brand_check->id;
+						Brand::where('id',$brand_id)->update($input3);
+					}else{
+						$input3['updated_at'] = date('Y-m-d H:i:s');
+						$brand_id = Brand::create($input3)->id;
+					}
+				}			
+
 				$cat_check = Category::where('categoryId',$categoryId)->first();
-				if($cat_check && $cat_check->count() > 0){
+				
+				if($categoryId !='' && $cat_check && $cat_check->count() > 0){
 					$cID1 = $catId = $cat_check->categoryId;
 					$cID2 = $parentId  = $cat_check->parentId;
 					$cID3 = $this->getParentId($parentId);
@@ -107,142 +108,122 @@ class ProductsImport implements ToModel, WithBatchInserts, WithChunkReading, Wit
 						$catID2 = $parentId;
 						$catID3 = 0;
 						$catID4 = 0;						
-					}
+					}	
+				
+				}else{
+					$cinput = array();
+					$parentId = $other_cat_id = Category::where('is_other',1)->first()->categoryId;
 					
-				}
-			}else{
-				if($category!=''){
-					$category_array = explode('>',$category);
-				}
-				//echo '<pre>';print_r($category_array);die;
-				if($category_array){
-					$x=1;
-					$lastElement = trim(end($category_array));	
-
-					foreach($category_array as $cat){
-												
-							$cinput = array();
+					 if($category!=''){
+						$category_array = explode('>',$category);
+					}
+					//echo '<pre>';print_r($category_array);die;
+					$cat_count = count($category_array);
+					if($category_array){
+						$cat = trim(end($category_array));	
+						$cat_slug = $this->slugify($cat);
 							
-							$cat = trim($cat);//remove space
-							$cat_slug = $this->slugify($cat);
-							if($merchant_id != 0){
-								$cat_slug = $cat_slug.'-'.$merchant_id;
-							}
-							$cat_check2 = array();					
-							$cat_check2 = Category::where('slug',$cat_slug);
-							if($merchant_id != 0){
-								$cat_check2 = $cat_check2->where('merchant_id',$merchant_id);
-							}
-							$cat_check2 = $cat_check2->first();
-							if($cat_check2 && $cat_check2->count() > 0){
-								
-								$cinput['categoryId'] = $cat_check2->categoryId;
-								
+						$cat_check2 = array();					
+						$cat_check2 = Category::where('slug',$cat_slug)->where('parentId',$parentId);
+						
+						if($merchant_id != 0){
+							$cat_check2 = $cat_check2->where('merchant_id',$merchant_id);
+						}
+						
+						$cat_check2 = $cat_check2->first();
+						
+						if($cat_check2 && $cat_check2->count() > 0){
+							$catId =  $cinput['categoryId'] = $cat_check2->categoryId;
+						}else{
+							if($categoryId != ''){
+								$catId = $cinput['categoryId'] = $categoryId; 
 							}else{
-								
-								$cr = rand(111,999).rand(11111111,99999999).rand(111,999);
-								$cinput['categoryId'] = $cr;
-								$cinput['parentId'] = $parentId;
-								$cinput['merchant_id'] = $merchant_id;
-								$cinput['slug'] = $cat_slug;
-								$cinput['catLevel'] = $x;
-								$cinput['categoryName'] = $cat;
-								$cinput['created_at'] =  date('Y-m-d H:i:s');
-								$cinput['updated_at'] =  date('Y-m-d H:i:s');
-								Category::create($cinput);	//create new category
-							}
-						 
-							if($cat == $lastElement){
-								$catId = $cinput['categoryId'];
-								
-							}else{
-								$catId = $cinput['categoryId'];
-								$parentId = $cinput['categoryId'];		
-							}
-								
-
-							if($x == 1){
-								$catID1 = $cinput['categoryId'];
-							}
-							if($x == 2){
-								$catID2 = $cinput['categoryId'];
-							}
-							if($x == 3){
-								$catID3 = $cinput['categoryId'];
-							}
-							if($x == 4){
-								$catID4 = $cinput['categoryId'];
+								$catId = $cinput['categoryId'] = rand(111,999).rand(11111111,99999999).rand(111,999);
 							}
 							
+							$cinput['parentId'] = $parentId;
+							$cinput['merchant_id'] = $merchant_id;
+							$cinput['slug'] = $cat_slug;
+							$cinput['catLevel'] = 2;
+							$cinput['categoryName'] = $cat;
+							$cinput['created_at'] =  date('Y-m-d H:i:s');
+							$cinput['updated_at'] =  date('Y-m-d H:i:s');
+							//echo '<pre>';print_r($cinput);die;
+							Category::create($cinput);	//create new category							
+						}
+						
+						$catID1 = $parentId;
+						$catID2 = $cinput['categoryId'];
+						$catID3 = 0;
+						$catID4 = 0;
 
-						$x++;
+					}
+ 
+				}
+
+				$pslug = $this->slugify($title);
+				$pslug = $this->check_slug_product($pslug);
+				
+				if($gallery_images_str !=''){
+					$gi_arr = array();
+					$gi_arr = explode(',',$gallery_images_str);
+					if($gi_arr){
+						$gallery_images_json = json_encode($gi_arr,true);
 					}
 				}
+				
+				$item_check = Product::where('itemId',$itemId)->get();
 
-			}
-
-			$pslug = $this->slugify($title);
-			$pslug = $this->check_slug_product($pslug);
-			
-			if($gallery_images_str !=''){
-				$gi_arr = array();
-				$gi_arr = explode(',',$gallery_images_str);
-				if($gi_arr){
-					$gallery_images_json = json_encode($gi_arr,true);
+				if($item_check && $item_check->count() > 0){
+					$uinput = array(
+						'merchant_id'     => $merchant_id,				
+						'title'     => $title,
+						'slug'     => $pslug,
+						'categoryId'    => $catId,
+						'parentCategoryId'    => $parentId,
+						'catID1'    => $catID1,
+						'catID2'    => $catID2,
+						'catID3'    => $catID3,
+						'catID4'    => $catID4,					
+						'viewItemURL'    => $item_url,
+						'current_price'    => $price,
+						'current_price_currency'    => $currency,
+						'converted_current_price'    => $price,
+						'converted_current_price_currency'    => $currency,					
+						'brand_id'    => $brand_id,
+						'product_image'    => $product_image,
+						'gallery_images'    => $gallery_images_json,
+						'description'    => $description,
+						'updated_at'    => date('Y-m-d H:i:s')				
+					);
+					Product::where('itemId',$itemId)->update($uinput);
+				}else{
+					return new Product([
+						'merchant_id' => $merchant_id,
+						'itemId'     => $itemId,
+						'title'     => $title,
+						'slug'     => $pslug,
+						'categoryId'    => $catId,
+						'parentCategoryId'    => $parentId,
+						'catID1'    => $catID1,
+						'catID2'    => $catID2,
+						'catID3'    => $catID3,
+						'catID4'    => $catID4,
+						'viewItemURL'    => $item_url,
+						'current_price'    => $price,
+						'current_price_currency'    => $currency,
+						'converted_current_price'    => $price,
+						'converted_current_price_currency'    => $currency,					
+						'brand_id'    => $brand_id,
+						'product_image'    => $product_image,
+						'gallery_images'    => $gallery_images_json,
+						'description'    => $description,
+						'created_at'    => date('Y-m-d H:i:s'),
+						'updated_at'    => date('Y-m-d H:i:s')
+					]);				
 				}
-			}
-			
-			$item_check = Product::where('itemId',$itemId)->get();
 
-			if($item_check && $item_check->count() > 0){
-				$uinput = array(
-					'merchant_id'     => $merchant_id,				
-					'title'     => $title,
-					'slug'     => $pslug,
-					'categoryId'    => $catId,
-					'parentCategoryId'    => $parentId,
-					'catID1'    => $catID1,
-					'catID2'    => $catID2,
-					'catID3'    => $catID3,
-					'catID4'    => $catID4,					
-					'viewItemURL'    => $item_url,
-					'current_price'    => $price,
-					'current_price_currency'    => $currency,
-					'converted_current_price'    => $price,
-					'converted_current_price_currency'    => $currency,					
-					'brand_id'    => $brand_id,
-					'product_image'    => $product_image,
-					'gallery_images'    => $gallery_images_json,
-					'description'    => $description,
-					'updated_at'    => date('Y-m-d H:i:s')				
-				);
-				Product::where('itemId',$itemId)->update($uinput);
-			}else{
-				return new Product([
-					'merchant_id' => $merchant_id,
-					'itemId'     => $itemId,
-					'title'     => $title,
-					'slug'     => $pslug,
-					'categoryId'    => $catId,
-					'parentCategoryId'    => $parentId,
-					'catID1'    => $catID1,
-					'catID2'    => $catID2,
-					'catID3'    => $catID3,
-					'catID4'    => $catID4,
-					'viewItemURL'    => $item_url,
-					'current_price'    => $price,
-					'current_price_currency'    => $currency,
-					'converted_current_price'    => $price,
-					'converted_current_price_currency'    => $currency,					
-					'brand_id'    => $brand_id,
-					'product_image'    => $product_image,
-					'gallery_images'    => $gallery_images_json,
-					'description'    => $description,
-					'created_at'    => date('Y-m-d H:i:s'),
-					'updated_at'    => date('Y-m-d H:i:s')
-				]);				
-			}
-
+			} 
 		} 
     }
 	
@@ -308,16 +289,21 @@ class ProductsImport implements ToModel, WithBatchInserts, WithChunkReading, Wit
 					  }
 				}
               },
-             '11' => function($attribute, $value, $onFailure) {
+              '11' => function($attribute, $value, $onFailure) {
 				 if($value != 'product_image'){
 					  if ($value == '') {
 						   $onFailure($attribute.' value is required.');
-					  }			
+					  }	
+					if($value == '#'){
+						//nothing
+					}else{
 					  if (!filter_var($value, FILTER_VALIDATE_URL)) {
 						   $onFailure($attribute.' value must be a valid image address.');
-					  }
+					  }						
+					}
+
 				}
-              }			  
+              } 		  
         ];
 
         return $errors;
