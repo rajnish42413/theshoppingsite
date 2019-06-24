@@ -1,4 +1,4 @@
-<?php //use \App\Http\Controllers\DetailController;
+
 ?>
 @extends('layouts.app')
 

@@ -6,6 +6,7 @@ $settings = DetailController::get_settings();
 
 @section('content')
 <?php
+
 $gallery_images = array();
 if($product->gallery_images != ''){
 	$gallery_images = explode(',',$product->gallery_images);
@@ -31,17 +32,17 @@ if($merchant && $merchant->count() > 0){
 	<!--Breadcurm Start-->
 	<div class="sh_breadcurm_wrap sh_float_width">
 		<div class="container">
+		<?php if($data['cat_breadcrumb'] != ''){?>
 			<div class="row">
 				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 					<div class="sh_breadcurm sh_float_width">
 						<ul class="cat-list">								
-						<?php foreach($categories as $cat){?>
-							<li><a href="<?php echo env('APP_URL')."category/".$cat->slug;?>"><?php echo $cat->categoryName;?></a></li>
-						<?php } ?>
+						<?php echo $data['cat_breadcrumb']; ?>
 						</ul>
 					</div>
 				</div>
-			</div>	
+			</div>
+		<?php } ?>
 		</div>	
 	</div>	
 	<!--Product View Start-->

@@ -315,17 +315,19 @@ class HomeController extends Controller
 		$data['meta_keywords'] = config('app.name')." Product Detail";
 		$data['meta_description'] = config('app.name')." Product Detail";
 		$data['parent_category'] = "-";	
-		$data['category'] = "-";		
+		$data['category'] = "-";
+		$data['cat_breadcrumb']	= '';
 		$product = array();
 		$categories = array();
 		if($slug != ''){
 
 			$product = Product::select(DB::raw("products.*"))->where('products.slug',$slug)->where('products.status',1)->first();
 			if($product && $product->count() > 0){
-
+				
 				$category = Category::where('categoryId',$product->categoryId)->first();
 				if($category && $category->count() > 0){
 					$data['category'] = $category->categoryName;	
+					$data['cat_breadcrumb'] = $this->getCatBredcrumb($category);
 				}else{
 					$data['category'] = '';
 				}
@@ -336,11 +338,9 @@ class HomeController extends Controller
 					$data['parent_category'] = '';
 				}				
 				
-				$categories = $this->get_categories($product->parentCategoryId);
-				
 				$merchant = Merchant::where('id',$product->merchant_id)->first();
 				
-				return view('search_products/detail',['data'=>$data,'categories'=>$categories,'product'=>$product,'merchant'=>$merchant]);				
+				return view('search_products/detail',['data'=>$data,'product'=>$product,'merchant'=>$merchant]);				
 			}else{
 			return redirect(env('APP_URL'));
 		}
@@ -946,22 +946,22 @@ function getSpecialParts($string){
 
 		$output = '';
 		$arr = array();
-		
-		$arr[] = '<li><a href="'.$res->slug.'">'.$res->categoryName.'</a></li>';
+		$base_url = env('APP_URL').'category/';
+		$arr[] = '<li><a href="'.$base_url.$res->slug.'">'.$res->categoryName.'</a></li>';
 		
 		$res2 = Category :: where('categoryId',$res->parentId)->first();
 		
 		if($res2 && $res2->count() > 0){
 			
-			$arr[] = '<li><a href="'.$res2->slug.'">'.$res2->categoryName.'</a></li>';
+			$arr[] = '<li><a href="'.$base_url.$res2->slug.'">'.$res2->categoryName.'</a></li>';
 			
 			$res3 = Category :: where('categoryId',$res2->parentId)->first();
 			if($res3 && $res3->count() > 0){
-				$arr[] = '<li><a href="'.$res3->slug.'">'.$res3->categoryName.'</a></li>';
+				$arr[] = '<li><a href="'.$base_url.$res3->slug.'">'.$res3->categoryName.'</a></li>';
 				
 				$res4 = Category :: where('categoryId',$res3->parentId)->first();
 				if($res4 && $res4->count() > 0){
-					$arr[] =  '<li><a href="'.$res4->slug.'">'.$res4->categoryName.'</a></li>';
+					$arr[] =  '<li><a href="'.$base_url.$res4->slug.'">'.$res4->categoryName.'</a></li>';
 				}				
 			}			
 			
