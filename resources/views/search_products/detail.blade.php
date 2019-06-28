@@ -49,7 +49,7 @@ if($merchant && $merchant->count() > 0){
 	<div class="sh_product_view_wrap sh_float_width">
 		<div class="container">
 			<div class="row">
-				<div class="col-lg-8 col-md-8 col-sm-7 col-xs-12">
+				<div class="col-lg-10 col-md-9 col-sm-8 col-xs-12">
 					<div class="sh_product_view_name sh_float_width">
 						<h3><?php echo $product->title;?></h3>
 						<div class="sh_product_view_rating sh_float_width">
@@ -65,7 +65,7 @@ if($merchant && $merchant->count() > 0){
 						</div>
 					</div>
 				</div>
-				<div class="col-lg-4 col-md-4 col-sm-5 col-xs-12 text-right">
+				<div class="col-lg-2 col-md-3 col-sm-4 col-xs-12 text-right">
 					<div class="sh_product_view_name sh_float_width">
 						<h6>Updated On: <?php echo date('j F Y',strtotime($product->updated_at));?></h6>
 					</div>
@@ -114,15 +114,17 @@ if($merchant && $merchant->count() > 0){
 						</div>
 					</div>
 				</div>
-				<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+				<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
 					<div class="sh_product_view_store sh_float_width">
 						<h3 class="sh_best_price">Best Price: $<?php echo $product->current_price;?></h3>
 						<div class="sh_compare_price sh_float_width">          
-							<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+							<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
 								<img src="{{env('APP_URL')}}merchant_files/<?php echo $merchant_img;?>" alt="<?php echo $merchant_title;?>">
 							</div>
-							<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+							<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
 								<h4 class="sh_store_price">$<?php echo $product->current_price;?></h4>
+							</div>
+							<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
 								<a class="sh_shop_btn" href="<?php echo $product->viewItemURL;?>" target="_blank">Shop Now <i class="icofont-rounded-right"></i></a>
 							</div>
 						</div>

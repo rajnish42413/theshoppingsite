@@ -839,6 +839,7 @@ span.sh_new_prod {
     font-weight: 600;
     text-transform: uppercase;
     margin-bottom: 15px;
+    font-size: 14px;
 }
 .sh_product_view_rating li {
     padding: 0;
@@ -870,9 +871,10 @@ span.sh_new_prod {
     border-bottom: 0;
 }
 .sh_store_price {
-    font-size: 24px;
+    font-size: 20px;
     font-weight: 600;
     margin-bottom: 15px;
+    padding-top: 3px;
 }
 .sh_compare_price a {
     background: #bc2130;
