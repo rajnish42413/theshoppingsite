@@ -271,7 +271,13 @@ function get_product_name(e){
 
 function load_more(e){
 	$('.load_more i').removeClass('hide');
-	var y = 0;
+	
+	if($("#filter_form #offset_val").val() == ''){
+		var y = 0;
+	}else{
+		var y = parseInt($("#filter_form #offset_val").val());
+	}	
+	
 	var z = parseInt($("#filter_form #showing_result").val());
 	y = z + y;	
 	$("#filter_form #offset_val").val(y);

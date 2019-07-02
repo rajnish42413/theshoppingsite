@@ -108,6 +108,8 @@ Route::group(['middleware'=>['Admin']],function(){
 	Route::any('products-import', 'ProductsController@import')->name('products-import');	
 	//Route::any('products-import-save', 'ProductsController@import_save_data')->name('products-import-save');	
 	Route::any('products-import-save', 'ProductsController@importProcess')->name('products-import-save');	
+	Route::any('get_total_insert_data', 'ProductsController@get_total_insert_data')->name('get_total_insert_data');		
+	Route::any('fast-products-import-save', 'ProductsController@faseImportProcess')->name('fast-products-import-save');		
 	Route::any('export-testing', 'ProductsController@export_testing')->name('export-testing');	
 	Route::any('import-testing', 'ProductsController@import_testing')->name('import-testing');	
 	Route::any('excel-generate', 'ProductsController@excel_genrate')->name('excel-generate');	

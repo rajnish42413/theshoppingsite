@@ -63,15 +63,16 @@ class ProductsImport implements ToModel, WithBatchInserts, WithChunkReading, Wit
 					$merchant_check = Merchant::where('slug',$input2['slug'])->first();
 					if($merchant_check && $merchant_check->count() > 0){
 						$merchant_id = $merchant_check->id;
-						Merchant::where('id',$merchant_id)->update($input2);
+						//Merchant::where('id',$merchant_id)->update($input2);
 					}else{
 						$input2['updated_at'] = date('Y-m-d H:i:s');
 						$merchant_id = Merchant::create($input2)->id;
 					}
 					
 				}
-
+	
 				$brand_id = 0;
+				
 				if($brand !=''){
 					$input3 = array(
 						'name' => $brand,
@@ -87,7 +88,8 @@ class ProductsImport implements ToModel, WithBatchInserts, WithChunkReading, Wit
 						$brand_id = Brand::create($input3)->id;
 					}
 				}			
-
+				
+				
 				$cat_check = Category::where('categoryId',$categoryId)->first();
 				
 				if($categoryId !='' && $cat_check && $cat_check->count() > 0){
@@ -160,7 +162,8 @@ class ProductsImport implements ToModel, WithBatchInserts, WithChunkReading, Wit
 					}
  
 				}
-
+				
+				$pslug='';
 				$pslug = $this->slugify($title);
 				$pslug = $this->check_slug_product($pslug);
 				
@@ -196,7 +199,9 @@ class ProductsImport implements ToModel, WithBatchInserts, WithChunkReading, Wit
 						'description'    => $description,
 						'updated_at'    => date('Y-m-d H:i:s')				
 					);
-					Product::where('itemId',$itemId)->update($uinput);
+					//Product::where('itemId',$itemId)->update($uinput);
+					
+					return true;
 				}else{
 					return new Product([
 						'merchant_id' => $merchant_id,
@@ -220,7 +225,9 @@ class ProductsImport implements ToModel, WithBatchInserts, WithChunkReading, Wit
 						'description'    => $description,
 						'created_at'    => date('Y-m-d H:i:s'),
 						'updated_at'    => date('Y-m-d H:i:s')
-					]);				
+					]);	
+				//	Product::insert($insert_data);	
+					//return true;	
 				}
 
 			} 
@@ -324,12 +331,12 @@ class ProductsImport implements ToModel, WithBatchInserts, WithChunkReading, Wit
 	
     public function batchSize(): int
     {
-        return 500;
+        return 250;
     }
 	
     public function chunkSize(): int
     {
-        return 500;
+        return 250;
     }
 	
 	public static function slugify($text){

@@ -33,7 +33,12 @@
 						</div>
 					</div>
 				</div>				
-				
+				<div class="progress">
+  <div class="progress-bar progress-bar-success progress-bar-striped" id="progress_count" role="progressbar"
+  aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:0%">
+    <span class="pcount">0%</span> Complete (success)
+  </div>
+</div>
                 <div class="form-group">
                   <label for="file"><span class="text-danger">*</span> Upload File <span class="text-danger"><small> ( Only CSV, Excel, Zip & GZ Files are acceptable. )</small></span></label>
 					<input class="form-control" name="file" id="file" type="file" required />				  
@@ -75,6 +80,7 @@ $('.wait_loader').show();
 	$('.admin_errors.alert-danger ul').html('');
 	$("#sub_btn").html('please wait..'); 
 	$('.error').html('');
+	//get_p_count();
 	$.ajax({
 		type: "POST",
 		url: '<?php echo route('products-import-save');?>',
@@ -84,7 +90,7 @@ $('.wait_loader').show();
 		cache:false,
 		datatype:"json",
 		success: function(response)
-		{
+		{ return false;
 			$("#sub_btn").html('Submit'); 
 			$('.wait_loader').hide();	
 			var result = response.split("|"); 
@@ -177,5 +183,21 @@ $("#file").change(function() {
 	
   readURL(this);
 });
+
+function get_p_count(){
+	setInterval(function(){ 
+	$.ajax({
+	headers: {
+		'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+	},
+    type: "POST",
+   url: '<?php echo route('get_total_insert_data');?>',
+   success: function(res){
+        $('.pcount').text(res);
+        $('#progress_count').css('width',res);
+    }
+  });
+ },10000);
+}
  </script>	
 @endsection
