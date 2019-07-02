@@ -125,7 +125,7 @@ if($merchant && $merchant->count() > 0){
 								<h4 class="sh_store_price">$<?php echo $product->current_price;?></h4>
 							</div>
 							<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-								<a class="sh_shop_btn" href="<?php echo $product->viewItemURL;?>" target="_blank">Shop Now <i class="icofont-rounded-right"></i></a>
+								<a class="sh_shop_btn" href="<?php echo $product->viewItemURL;?>" target="_blank">Shop Here <i class="icofont-rounded-right"></i></a>
 							</div>
 						</div>
 						<div class="sh_compare_price sh_float_width hide">          
@@ -134,7 +134,7 @@ if($merchant && $merchant->count() > 0){
 							</div>
 							<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
 								<h4 class="sh_store_price">$1009,99</h4>
-								<a class="sh_shop_btn" href="javacript:void(0)">Shop Now <i class="icofont-rounded-right"></i></a>
+								<a class="sh_shop_btn" href="javacript:void(0)">Shop Here <i class="icofont-rounded-right"></i></a>
 							</div>
 						</div>
 						<div class="sh_compare_price sh_float_width hide">          
@@ -143,7 +143,7 @@ if($merchant && $merchant->count() > 0){
 							</div>
 							<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
 								<h4 class="sh_store_price">$1119,99</h4>
-								<a class="sh_shop_btn" href="javacript:void(0)">Shop Now <i class="icofont-rounded-right"></i></a>
+								<a class="sh_shop_btn" href="javacript:void(0)">Shop Here <i class="icofont-rounded-right"></i></a>
 							</div>
 						</div>
 					</div>
@@ -172,7 +172,7 @@ if($merchant && $merchant->count() > 0){
 										<table class="table">
 											<thead>
 												<tr>
-													<th>Shops</th>
+													<th>Stores</th>
 													<th>Description</th>
 													<th>Info/ Delivery Time</th>
 													<th>Price</th>
@@ -194,21 +194,18 @@ if($merchant && $merchant->count() > 0){
 													</td>
 													<td>
 														<div class="sh_tab_compare_info">
-															<p>1-2 Work-day</p>
-															<span>New</span>
+															<p>2 days Shipping</p>
 														</div>
 													</td>
 													<td>
 														<div class="sh_tab_compare_price">
 															<h6>$<?php echo $product->current_price;?></h6>
-															<p>Price</p>
-															<p>Free Delivery</p>
 														</div>
 													</td>
 													<td>
 														<div class="sh_tab_compare_total_price">
-															<h4>$<?php echo $product->current_price;?></h4>
-															<a class="sh_shop_btn" href="<?php echo $product->viewItemURL;?>" target="_blank">Shop Now <i class="icofont-rounded-right"></i></a>
+															<!--<h4>$<?php //echo $product->current_price;?></h4>-->
+															<a class="sh_shop_btn" href="<?php echo $product->viewItemURL;?>" target="_blank">Shop Here <i class="icofont-rounded-right"></i></a>
 														</div>
 													</td>
 												</tr>
