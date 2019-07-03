@@ -2127,9 +2127,11 @@ form#filter_form .sh_side_widget.sh_cat_search_form.sh_float_width {
     text-align: center;
 }
 .lodind_img img {
+    width: 6%;
+    transform: rotate(-20deg);
+    left: 8px;
+    top: 20px;
     position: relative;
-    left: -10px;
-    top: 10px;
     margin: auto;
 }
 .lodind_img img.img-responsive {

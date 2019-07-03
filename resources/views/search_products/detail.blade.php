@@ -176,7 +176,7 @@ if($merchant && $merchant->count() > 0){
 													<th>Description</th>
 													<th>Info/ Delivery Time</th>
 													<th>Price</th>
-													<th>Total Price</th>
+													<th></th>
 												</tr>
 											</thead>
 											<tbody>
@@ -194,7 +194,8 @@ if($merchant && $merchant->count() > 0){
 													</td>
 													<td>
 														<div class="sh_tab_compare_info">
-															<p>2 days Shipping</p>
+															<p>2 days</p>
+															<p>Free Shipping</p>
 														</div>
 													</td>
 													<td>
@@ -904,7 +905,8 @@ if($product->Variations != ''){
 					<div class="sh_rated_product_sec sh_float_width">
 						<img src="{{env('APP_URL')}}assets/images/product_view/shopergy.png">
 						<div class="sh_rated_product_text sh_float_width">
-							<h4><?php if($settings){ echo $settings->title;} ?></h4>
+							<!----<h4><?php //if($settings){ echo $settings->title;} ?></h4>--->
+							<h4>Walmart </h4>
 							<ul>
 								<li><span class="fa fa-star"></span></li>
 								<li><span class="fa fa-star"></span></li>
