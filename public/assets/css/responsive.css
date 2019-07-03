@@ -216,6 +216,11 @@
 	a.sh_logo img {
 		height: auto;
 	}
+	
+	.lodind_img img {
+		width: 16%;
+	}
+	
 }
 @media (min-width:480px) and (max-width:767px){
 	.sh_top_category_section {
