@@ -61,7 +61,7 @@
               <!-- /.box-body -->
 
               <div class="box-footer">
-				<input type="hidden" name="id" id="id" value="<?php if($row){ echo $row->id; }?>" >
+				<input type="hidden" name="id" id="id" value="<?php if($row){ echo $row->itemId; }?>" >
                 <button type="submit" class="btn btn-primary" id="sub_btn">Submit</button>
               </div>
             </form>
