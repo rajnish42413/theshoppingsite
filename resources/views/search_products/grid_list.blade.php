@@ -145,11 +145,11 @@
 										<div class="out_of_stock">
 											<span>Out of Stock</span>
 										</div>
-									<?php }elseif($product->Quantity <= 10){?>
-										<div class="less_stock">
-											<span>Only <?php echo $product->Quantity;?> Left</span>
-										</div>									
-									<?php }?>
+									<?php }//elseif($product->Quantity <= 10){?>
+										<!--<div class="less_stock">
+											<span>Only <?php //echo $product->Quantity;?> Left</span>
+										</div>	--->								
+									<?php //}?>
 										<img class="grid_prd" src="<?php echo $galleryURL;?>">
 										<h4 class="sh_prod_name"><?php echo $product->title;?></h4>
 										<div class="sh_about_prod">
