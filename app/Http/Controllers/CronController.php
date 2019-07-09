@@ -75,7 +75,7 @@ class CronController extends Controller
                  <CategorySiteID>0</CategorySiteID>
                 <DetailLevel>ReturnAll</DetailLevel>
                 <ViewAllNodes>True</ViewAllNodes>
-                <LevelLimit>4</LevelLimit>
+                <LevelLimit>7</LevelLimit>
                  <RequesterCredentials>
                  <eBayAuthToken>'.$this->TOKEN.'</eBayAuthToken>
                  </RequesterCredentials>
@@ -83,8 +83,9 @@ class CronController extends Controller
         $response = $client->request('POST', 'https://api.ebay.com/ws/api.dll', [
             'body' => $body
         ]);
+
         $categories = simplexml_load_string($response->getBody(),'SimpleXMLElement',LIBXML_NOCDATA);
-		//echo '<Pre>'; print_r($categories);die;
+		echo '<Pre>'; print_r($categories);die;
 		$x=0;
         if ($categories->Ack == 'Success'){
             foreach($categories->CategoryArray->Category as $category){
@@ -455,7 +456,7 @@ class CronController extends Controller
 	}	
 	
 	public function create_product_slug(){
-		$products = Product::where('status',1)->where('slug','')->orderBy('id','asc')->get();
+		$products = Product::where('status',1)->where('slug','')->orderBy('updated_at','desc')->get();
 		if($products && $products->count() > 0){
 			foreach($products as $p){
 				if($p->title !=''){
@@ -463,7 +464,7 @@ class CronController extends Controller
 					$slug = $this->check_slug_product($slug);
 					$input = array('slug'=>$slug);
 					//echo '<pre>'; print_r($input);die;
-					Product::where('id',$p->id)->update($input);
+					Product::where('itemId',$p->itemId)->update($input);
 				}
 			}
 		}
@@ -654,7 +655,7 @@ class CronController extends Controller
 						Product::where('itemId',$product->itemId)->update($input);	
 					}else{
 						$input['created_at'] =  date('Y-m-d H:i:s');
-						Product::create($input)->id;
+						Product::create($input)->itemId;
 					
 					}  	
 				}

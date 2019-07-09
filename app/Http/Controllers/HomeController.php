@@ -50,8 +50,8 @@ class HomeController extends Controller
 		$data['meta_keywords']= $row->meta_keywords;
 		$data['meta_description'] = $row->meta_description;
 		$banners = Banner::where('section_name','home_slider')->orderBy('id','asc')->limit(4)->get();
-		$deals = Product::where('is_deal_of_the_day',1)->where('status',1)->orderBy('id','asc')->limit(8)->get();
-		$top_products = Product::where('is_top_product',1)->where('status',1)->orderBy('id','asc')->limit(8)->get();
+		$deals = Product::where('is_deal_of_the_day',1)->where('status',1)->orderBy('updated_at','desc')->limit(8)->get();
+		$top_products = Product::where('is_top_product',1)->where('status',1)->orderBy('updated_at','desc')->limit(8)->get();
 		$top_categories = Category::where('is_top_category',1)->where('status',1)->orderBy('id','asc')->limit(8)->get();
 		return view('home',['data'=>$data,'banners'=>$banners,'deals'=>$deals,'top_categories'=>$top_categories,'top_products'=>$top_products]);
     }
@@ -390,10 +390,11 @@ class HomeController extends Controller
 		if($brand_id!= ''){
 			$results = $results->where('products.brand_id',$brand_id);
 		}		
-		$results = $results->groupBy('products.id');
+		$results = $results->groupBy('products.itemId');
 		$results = $results->orderBy('products.current_price','asc');
 		$results = $results->limit($showing_result);
 		$results = $results->get();
+		//echo $results;die;
 		if($results->count() > 0){
 			$products = $results;
 		}
@@ -472,10 +473,10 @@ class HomeController extends Controller
 			$sorting_name = 'products.current_price';
 			$sorting_p = 'desc';
 		}elseif($sorting_type == '3'){
-			$sorting_name = 'products.id';
+			$sorting_name = 'products.itemId';
 			$sorting_p = 'desc';
 		}
-		$results = $results->groupBy('products.id');
+		$results = $results->groupBy('products.itemId');
 		$results = $results->orderBy($sorting_name,$sorting_p);
 		if($offset_val!='' && $offset_val >= 10){
 			$results = $results->offset($offset_val);
@@ -693,7 +694,7 @@ class HomeController extends Controller
 				$results = $results->orderByRaw($orderByRowCase);
 			} */
 			
-			$results = $results->groupBy('products.id');
+			$results = $results->groupBy('products.itemId');
 			$results = $results->orderBy('products.current_price','asc');
 			$results = $results->limit(10);
 			$results = $results->get();
@@ -802,11 +803,11 @@ class HomeController extends Controller
 			$sorting_name = 'products.current_price';
 			$sorting_p = 'desc';
 		}elseif($sorting_type == '3'){
-			$sorting_name = 'products.id';
+			$sorting_name = 'products.itemId';
 			$sorting_p = 'desc';
 		}
 		
-		//$results = $results->groupBy('products.id');
+		//$results = $results->groupBy('products.itemId');
 		$results = $results->orderBy($sorting_name,$sorting_p);
 		if($offset_val!='' && $offset_val >= 10){
 			$results = $results->offset($offset_val);

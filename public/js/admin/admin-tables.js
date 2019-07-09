@@ -665,7 +665,7 @@ $(document).ready(function() {
         "ajax": 'searchajaxproducts',
 
         "columns": [
-            { "data": "id","orderable":false,"render": function(data, type, row, meta){ 
+            { "data": "itemId","orderable":false,"render": function(data, type, row, meta){ 
 			return '<input type="checkbox" name="id[]" value="'+ $('<div/>').text(data).html() + ' " >';
 			}},
             { "data": "title","render": function(data, type, row, meta){ 
@@ -684,13 +684,13 @@ $(document).ready(function() {
 			{ "data": "current_price_currency"},
             { "data": "status","render": function(data, type, row, meta){ 
 				if(data=='1'){
-					return '<button type="button" onclick="status_row_single('+row.id+',\'productsTable\',\'products-status\',\'0\')" class="btn btn-sm btn-success">Active</button>';
+					return '<button type="button" onclick="status_row_single('+row.itemId+',\'productsTable\',\'products-status\',\'0\')" class="btn btn-sm btn-success">Active</button>';
 				}
 				else if(data=='0'){
-					return '<button type="button" onclick="status_row_single('+row.id+',\'productsTable\',\'products-status\',\'1\')" class="btn btn-sm btn-danger">Deactive</button>';
+					return '<button type="button" onclick="status_row_single('+row.itemId+',\'productsTable\',\'products-status\',\'1\')" class="btn btn-sm btn-danger">Deactive</button>';
 				}
 			}},			
-		   { "data": "id","orderable":false,"render": function(data, type, row, meta){ 
+		   { "data": "itemId","orderable":false,"render": function(data, type, row, meta){ 
 			   return '<a href="products-edit/'+data+'"  class="btn btn-sm btn-primary">Edit</a>&nbsp;&nbsp;<a href="'+row.viewItemURL+'" target="_blank"  class="btn btn-sm btn-info">View</a>';
 
 		   }},	

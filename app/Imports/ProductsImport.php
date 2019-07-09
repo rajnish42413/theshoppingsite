@@ -165,7 +165,7 @@ class ProductsImport implements ToModel, WithBatchInserts, WithChunkReading, Wit
 				
 				$pslug='';
 				$pslug = $this->slugify($title);
-				$pslug = $this->check_slug_product($pslug);
+				$pslug = $pslug.'-'.$itemId;
 				
 				if($gallery_images_str !=''){
 					$gi_arr = array();

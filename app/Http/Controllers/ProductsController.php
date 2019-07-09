@@ -68,7 +68,9 @@ class ProductsController extends Controller
 
         $order      = $this->getDTsort($req);
         $srch       = $this->getDTsearch($req);
-        //echo '<pre>';print_r($srch);die;
+       
+	    $order[0] = 'updated_at';
+	    $order[1] = 'desc';
 
         $qry = Product::select(DB::raw("products.*, categories.categoryName as catName1, c2.categoryName as catName2, c3.categoryName as catName3, c4.categoryName as catName4, categories.categoryId as catID1, c2.categoryId as catID2, c3.categoryId as catID3, c4.categoryId as catID4,merchants.name as merchant_name"))->leftJoin('categories',function ($join){$join->on('categories.categoryId','=','products.categoryId'); })->leftJoin('categories as c2',function ($join){$join->on('c2.categoryId','=','products.parentCategoryId'); })->leftJoin('categories as c3',function ($join){$join->on('c3.categoryId','=','products.catID3'); })->leftJoin('categories as c4',function ($join){$join->on('c4.categoryId','=','products.catID4'); })->leftJoin('merchants',function ($join){$join->on('merchants.id','=','products.merchant_id'); });
         //$qry = Product::select(DB::raw("products.*"));
@@ -106,18 +108,18 @@ class ProductsController extends Controller
             $qry->where('products.catID4',$srch['catName4']);
         }		
 		
-		$qry->groupBy('products.id');
+		$qry->groupBy('products.itemId');
         
 		if($order[0] == 'list_create'){
 			$order[0] = 'products.created_at';
 		}
 		else if($order[0] == 'listId'){
-			$order[0] = 'products.id';
+			$order[0] = 'products.itemId';
 		}
 		else if($order[0] == 'id'){
-			$order[0] = 'products.id';
+			$order[0] = 'products.itemId';
 		}					
-	
+		
 		$qry->orderByRaw("$order[0] $order[1]");	
 		 
 		//echo $qry->toSql();die;
@@ -144,7 +146,7 @@ class ProductsController extends Controller
 		$row = array();
 		$result = array();
 		if($id!=""){
-			$result = Product::where('id',$id)->first();
+			$result = Product::where('itemId',$id)->first();
 			if($result){
 				$row = $result;
 				$data['sub_title'] = 'Edit';
@@ -174,9 +176,9 @@ class ProductsController extends Controller
 			'status' => $req['status'],
 		);
 		if($id!=''){
-			Product::where('id',$id)->update($input);	
+			Product::where('itemId',$id)->update($input);	
 		}else{
-			$id = Product::create($input)->id;				
+			$id = Product::create($input)->itemId;				
 		}	
 
 		echo "|success";
@@ -566,7 +568,7 @@ echo 'success';die;	*/
 		if($request->input('parent_id')!== NULL && $request->input('parent_id') != '' && $request->input('cat_id') !== NULL && $request->input('cat_id') != ''){
 			$categoryId = $request->input('cat_id');
 			$parentCategoryId = $request->input('parent_id');
-			$products = Product :: where('parentCategoryId',$parentCategoryId)->where('categoryId',$categoryId)->where('status',1)->orderBy('id','asc')->get(); //
+			$products = Product :: where('parentCategoryId',$parentCategoryId)->where('categoryId',$categoryId)->where('status',1)->orderBy('updated_at','desc')->get(); //
 			if($products && $products->count() > 0){
 				
 				$spreadsheet = new Spreadsheet();
@@ -667,7 +669,7 @@ echo 'success';die;	*/
         if ($request->isMethod('post')){
             $req    = $request->all();
 			$deleteIds = explode(',',$req['ids']);
-			Product::whereIn('id',$deleteIds)->delete();
+			Product::whereIn('itemId',$deleteIds)->delete();
 			echo 'success';
 		}
     }	
@@ -678,7 +680,7 @@ echo 'success';die;	*/
             $req = $request->all();
 			$statusId = $req['id'];
 			$status = $req['value'];
-			Product::where('id',$statusId)->update(array('status'=>$status));
+			Product::where('itemId',$statusId)->update(array('status'=>$status));
 			echo 'success';
 		}
     }
@@ -691,7 +693,7 @@ echo 'success';die;	*/
 
 			$statusIds = explode(' ,',$req['ids']);
 			$status = $req['status'];
-			Product::whereIn('id',$statusIds)->update(array('status'=>$status));
+			Product::whereIn('itemId',$statusIds)->update(array('status'=>$status));
 			echo 'success';
 		}
     }	
@@ -701,7 +703,7 @@ echo 'success';die;	*/
 	  $text = preg_replace('~[^\pL\d]+~u', '-', $text);
 
 	  // transliterate
-	  $text = iconv('utf-8', 'utf-8//TRANSLIT', $text);
+	  //$text = iconv('utf-8', 'utf-8//TRANSLIT', $text);
 
 	  // remove unwanted characters
 	  $text = preg_replace('~[^-\w]+~', '', $text);
