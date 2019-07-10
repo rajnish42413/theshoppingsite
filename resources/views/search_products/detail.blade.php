@@ -11,7 +11,12 @@ $gallery_images = array();
 if($product->gallery_images != ''){
 	$gallery_images = explode(',',$product->gallery_images);
 }else{
-	$gallery_images[0] = env('APP_URL')."assets/images/no_image.png";
+	if($product->product_image != ''){
+		$gallery_images[0] = $product->product_image;
+	}else{
+		$gallery_images[0] = env('APP_URL')."assets/images/no_image.png";
+	}
+	
 }
 
 

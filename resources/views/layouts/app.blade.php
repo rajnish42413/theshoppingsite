@@ -277,7 +277,7 @@ $("#searchForm").submit(function(e){
 });
 </script> 
 <script>
-$('#menu_header #pnProductNavContents a').click(function(){
+$('#menu_header #pnProductNavContents a').click(function(e){
    e.preventDefault()
 //alert($(this).attr('href'));
   $('html, body').animate(
