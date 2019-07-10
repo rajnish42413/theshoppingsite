@@ -282,6 +282,9 @@
 	.sh_product_view_rating {
 		font-size: 12px;
 	}
+	.select2-container .select2-selection--single {
+		height: 30px;
+	}
 	
 }
 @media (min-width:480px) and (max-width:767px){
@@ -339,12 +342,15 @@
 	.sh_store_price {
 		font-size: 14px;
 	}
-	.sh_compare_price a {
+	.sh_compare_price a.sh_shop_btn {
 		padding: 4px;
 		font-size: 10px;
 	}
 	.sh_compare_price {
 		padding: 12px;
+	}
+	#search_category + .select2-container {
+		width: calc(60% - 70px) !important;
 	}
 }
 @media (max-width:440px){

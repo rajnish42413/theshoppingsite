@@ -876,7 +876,7 @@ span.sh_new_prod {
     margin-bottom: 15px;
     padding-top: 3px;
 }
-.sh_compare_price a {
+.sh_compare_price a.sh_shop_btn {
     background: #bc2130;
     color: #ffffff;
     padding: 6px 20px;

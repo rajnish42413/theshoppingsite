@@ -27,7 +27,7 @@
 			<div class="row productListing">
 				<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
 					<div class="sh_float_width">
-						<div id="sh_filter_menu">Filter</div>
+						<a href="javascript:void(0)" id="sh_filter_menu">Filter</a>
 					</div>
 					<div id="sh_filter_menu_wrapper" class="sh_float_width">
 						<?php if($products && $products->count() > 0){?>

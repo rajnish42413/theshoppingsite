@@ -28,7 +28,7 @@
 			<div class="row">
 				<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
 					<div class="sh_float_width">
-						<div id="sh_filter_menu">Filter</div>
+						<a href="javascript:void(0)" id="sh_filter_menu">Filter</a>
 					</div>
 					<div id="sh_filter_menu_wrapper" class="sh_float_width">
 						<div class="sh_side_bar sh_float_width">
