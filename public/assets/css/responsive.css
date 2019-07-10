@@ -3,6 +3,9 @@
 	button.sh_menu_btn {
 		display: none;
 	}
+	#sh_filter_menu{
+		display: none;
+	}
 }
 @media (min-width: 767px){
 	.sh_main_menu ul li a:hover,
@@ -105,6 +108,12 @@
 @media (max-width:767px){
 	body {
 		font-size: 14px;
+	}
+	#sh_filter_menu{
+		display: block;
+	}
+	#sh_filter_menu_wrapper{
+		display:none;
 	}
 	.sh_menu_btn {
 		float: none;
