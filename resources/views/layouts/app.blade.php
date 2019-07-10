@@ -65,13 +65,39 @@ $parent_categories = DetailController::get_parent_categories();
 						<div class="sh_logo_wrap">
 							<a class="sh_logo" href="{{env('APP_URL')}}"><img src="{{env('APP_URL')}}assets/images/<?php if($settings){echo $settings->logo;}?>" alt="logo"></a>
 						</div>
-						<div class="sh_menu_icon_box">
-							<div class="menu_icon text-right">
-								<button class="sh_menu_btn"><span class="fa fa-bars"></span></button>
-							</div>
+						<div id="mobile-nav" class="sh_menu_icon_box">
+							<div class="menu-button"><span class="fa fa-reorder"></span></div>
+							<ul>
+								<li><a href="{{env('APP_URL')}}">Home</a></li>
+								<?php if($nav_menus){
+								foreach($nav_menus as $nav){?>								
+								<li class="parent">
+								<a><?php echo $nav['nav_menu_name'];?></a>
+								<?php if($nav['categories']){?>
+									   <ul>
+											<?php foreach($nav['categories'] as $cat){?>
+												<li class="parent">
+													<a href="{{env('APP_URL')}}category/<?php echo $cat['slug'];?>"><?php echo $cat['name'];?></a>
+													<?php if($cat['sub_categories']){
+																$x=1;?>
+														<ul>
+														<?php  foreach($cat['sub_categories'] as $sub_cat){
+																?>
+															 <li class="parent"><a href="{{env('APP_URL')}}category/<?php echo $sub_cat['slug'];?>"><?php echo $sub_cat['name'];?></a></li>
+														<?php } ?>
+														</ul>
+													<?php } ?>
+												</li>
+											<?php } ?>
+
+										 </ul>
+									<?php }?>
+									</li>
+								<?php } } ?>
+								<li class="parent_list"><a href="{{env('APP_URL')}}all-categories">See All Categories</a></li>
+							</ul>
 						</div>
 					</div>
-					
 				</div>
 				<!-- Search bar -->
 				<div class="col-lg-9 col-md-9 col-sm-8 col-xs-12 text-right">

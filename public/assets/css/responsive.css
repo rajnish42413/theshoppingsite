@@ -6,6 +6,10 @@
 	#sh_filter_menu{
 		display: none;
 	}
+	.sh_menu_icon_box{
+		display: none;
+	}
+	
 }
 @media (min-width: 767px){
 	.sh_main_menu ul li a:hover,
@@ -108,6 +112,9 @@
 @media (max-width:767px){
 	body {
 		font-size: 14px;
+	}
+	.sh_menu_icon_box{
+		display: block;
 	}
 	#sh_filter_menu{
 		display: block;
@@ -294,6 +301,8 @@
 	}
 	.sh_product_view_name h3 {
 		font-size: 10px;
+		text-transform: capitalize;
+		line-height: 1.5;
 	}
 	.sh_product_view_name h6 {
 		font-size: 12px;
@@ -349,8 +358,16 @@
 	}
 	
 }
+@media (max-width:512px){
+	.sh_product_view_name h3 {
+		font-size: 8px;
+	}
+}
 
 @media (max-width: 479px){
+	.sh_product_view_name h3 {
+		font-size: 6px;
+	}
 	.sh_Search_bar button {
 		width: 55px;
 	}
@@ -409,6 +426,7 @@
 	}
 }
 
+
 @media (max-width:359px){
 
 	#search_category + .select2-container {
@@ -419,6 +437,78 @@
 	}
 	.sh_product_review ul li {
 		font-size: 5px;
+	}
+	
+}
+
+
+@media (max-width:767.99px){
+
+	/* Menu Controls */
+	.menu-button {
+		color:#fff;
+		cursor:pointer;
+		font-size:2rem;
+		padding:.75rem 1.55rem;
+		position:fixed;
+		right:0;
+	}
+	.open-menu {
+		color:#fff;
+		cursor:pointer;
+		font-size:1rem;
+		padding:1rem;
+		position:absolute;
+		right:0;
+		top:0;
+		transition:transform 250ms ease;
+	}
+	.rotate { transform:rotate(135deg); }
+
+	/* Generated Overflow Element */
+	.overflow {
+		margin-top:57px;
+		overflow-x:hidden;
+		overflow-y:auto;
+	}
+
+	/* Menu Styles */
+	#mobile-nav {
+		background-color:#60babb;
+		position:fixed;
+		width:100%;
+		z-index:1;
+	}
+	#mobile-nav ul {
+		background-color:rgba(0,0,0,.1);
+		display:none;
+		margin:0 1rem;
+		padding:0;
+		position:relative;
+	}
+	#mobile-nav ul:first-child {
+		background-color:transparent;
+	}
+	#mobile-nav ul li {
+		border-top:1px solid rgba(255,255,255,.075);
+		list-style:none;
+		margin-bottom:0;
+		position:relative;
+	}
+	#mobile-nav ul li a {
+		color:#fff;
+		display:inline-block;
+		font-size:1rem;
+		padding:1rem 0;
+		text-decoration:none;
+		width:100%;
+	}
+	#mobile-nav ul ul {
+		margin:0;
+	}
+	#mobile-nav ul ul li {
+		border-top:none;
+		padding-left:1rem;
 	}
 	
 }
