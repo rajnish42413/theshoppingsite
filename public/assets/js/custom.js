@@ -163,8 +163,12 @@
 	  
 	  
 	  
-	  
-	  
+		//Filter menu
+	    $(document).ready(function(){
+		  $("#sh_filter_menu").click(function(){
+			$("#sh_filter_menu_wrapper").slideToggle(500);
+		  });
+		});
 	  
 	  
 	  

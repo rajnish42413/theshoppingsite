@@ -26,60 +26,65 @@
 		<div class="container">
 			<div class="row productListing">
 				<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-				<?php if($products && $products->count() > 0){?>
-					<div class="sh_side_bar sh_float_width">
-						<div class="sh_side_bar_section sh_float_width">
-						<form id="filter_form" action="" method="post">
-						{{ csrf_field() }}
-							<input type="hidden" id="keyword" value="<?php echo $data['keyword'];?>" name="keyword" />
-							<input type="hidden" id="search_category" value="<?php echo $data['search_category'];?>" name="cat" />
-							<input type="hidden" id="sorting_type" value="1" name="sorting_type" />
-							<input type="hidden" id="offset_val" value="" name="offset_val" />
-							<input type="hidden" id="showing_result" value="10" name="showing_result" />
-							<input type="hidden" id="parent_cat_id" value="<?php echo $data['parent_cat_id'];?>" name="parent_cat_id" />
-							<input type="hidden" id="cat_id" value="<?php echo $data['cat_id'];?>" name="cat_id" />					
+					<div class="sh_float_width">
+						<a href="javascript:void(0)" id="sh_filter_menu">Filter</a>
+					</div>
+					<div id="sh_filter_menu_wrapper" class="sh_float_width">
+						<?php if($products && $products->count() > 0){?>
+						<div class="sh_side_bar sh_float_width">
+							<div class="sh_side_bar_section sh_float_width">
+							<form id="filter_form" action="" method="post">
+							{{ csrf_field() }}
+								<input type="hidden" id="keyword" value="<?php echo $data['keyword'];?>" name="keyword" />
+								<input type="hidden" id="search_category" value="<?php echo $data['search_category'];?>" name="cat" />
+								<input type="hidden" id="sorting_type" value="1" name="sorting_type" />
+								<input type="hidden" id="offset_val" value="" name="offset_val" />
+								<input type="hidden" id="showing_result" value="10" name="showing_result" />
+								<input type="hidden" id="parent_cat_id" value="<?php echo $data['parent_cat_id'];?>" name="parent_cat_id" />
+								<input type="hidden" id="cat_id" value="<?php echo $data['cat_id'];?>" name="cat_id" />					
 
-							<div class="sh_side_widget sh_sidear_cat_price_filter sh_float_width">
-								<h4 class="sh_sidecat_heading">Filter By Price</h4>
-								<div class="wrapper">
-									<div class="range-slider">
-										
-										<input class="form-control" type="hidden" value="<?php echo $data['min_price'];?>" name="dpriceMin" id="dpriceMinVal" placeholder="Min" min="0">
-										<input class="form-control" type="hidden" value="<?php echo $data['max_price'];?>" name="dpriceMax" id="dpriceMaxVal" placeholder="Max" min="1">
-										<input type="text" class="price-slider" title="price" placeholder="" name="price_range" id="price_range" data-min="0"/>										
+								<div class="sh_side_widget sh_sidear_cat_price_filter sh_float_width">
+									<h4 class="sh_sidecat_heading">Filter By Price</h4>
+									<div class="wrapper">
+										<div class="range-slider">
+											
+											<input class="form-control" type="hidden" value="<?php echo $data['min_price'];?>" name="dpriceMin" id="dpriceMinVal" placeholder="Min" min="0">
+											<input class="form-control" type="hidden" value="<?php echo $data['max_price'];?>" name="dpriceMax" id="dpriceMaxVal" placeholder="Max" min="1">
+											<input type="text" class="price-slider" title="price" placeholder="" name="price_range" id="price_range" data-min="0"/>										
+										</div>
+
 									</div>
-
 								</div>
-							</div>
-							<?php if($brands){?>
-							<div class="sh_side_widget sh_sidear_cat_brands sh_float_width">
-								<h4 class="sh_sidecat_heading">Filter By Brand</h4>
-								<ul class="my-brands">
-							<?php foreach($brands as $brand){?>
-									<li><input type="checkbox" name="brands[]" class="pro_brands checkmark" value="<?php echo $brand->id;?>" onchange="get_search_data(0)" <?php if($data['brand_id']!= '' && $data['brand_id'] == $brand->id){ echo 'checked'; }?>><?php echo $brand->name;?></li>	
-							<?php } ?>
-								</ul>
-							</div>
-							<?php } ?>
-							</form>							
-						</div>
-					</div>
-					<?php } ?>
-					<?php if($categories){?>
-					<div class="sh_side_bar sh_float_width">
-						<div class="sh_side_bar_section sh_float_width">
-										
-							<div class="sh_side_widget sh_sidear_cat_menu sh_float_width">
-								<h4 class="sh_sidecat_heading">Categories</h4>
-								<ul class="cat-list">								
-								<?php foreach($categories as $cat){?>
-									<li><a href="<?php echo env('APP_URL')."category/".$cat->slug;?>"><?php echo $cat->categoryName;?></a></li>
+								<?php if($brands){?>
+								<div class="sh_side_widget sh_sidear_cat_brands sh_float_width">
+									<h4 class="sh_sidecat_heading">Filter By Brand</h4>
+									<ul class="my-brands">
+								<?php foreach($brands as $brand){?>
+										<li><input type="checkbox" name="brands[]" class="pro_brands checkmark" value="<?php echo $brand->id;?>" onchange="get_search_data(0)" <?php if($data['brand_id']!= '' && $data['brand_id'] == $brand->id){ echo 'checked'; }?>><?php echo $brand->name;?></li>	
 								<?php } ?>
-								</ul>
-							</div>						
-						</div>					
-					</div>
-					<?php } ?>				
+									</ul>
+								</div>
+								<?php } ?>
+								</form>							
+							</div>
+						</div>
+						<?php } ?>
+						<?php if($categories){?>
+						<div class="sh_side_bar sh_float_width">
+							<div class="sh_side_bar_section sh_float_width">
+											
+								<div class="sh_side_widget sh_sidear_cat_menu sh_float_width">
+									<h4 class="sh_sidecat_heading">Categories</h4>
+									<ul class="cat-list">								
+									<?php foreach($categories as $cat){?>
+										<li><a href="<?php echo env('APP_URL')."category/".$cat->slug;?>"><?php echo $cat->categoryName;?></a></li>
+									<?php } ?>
+									</ul>
+								</div>						
+							</div>					
+						</div>
+						<?php } ?>				
+					</div>			
 				</div>			
 				<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
 					<div class="sh_product_grid sh_float_width">

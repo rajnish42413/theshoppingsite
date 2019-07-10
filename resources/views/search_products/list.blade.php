@@ -27,50 +27,55 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-					<div class="sh_side_bar sh_float_width">
-						<div class="sh_side_bar_section sh_float_width">
-							<h4 class="sh_nav_title">Categories</h4>
-							<div class="sh_side_widget sh_cat_search_form sh_float_width">
-								<form>
-									<input type="text" placeholder="Search" value="">
-									<button><span class="icofont-search-2"></span></button>
-								</form>
-							</div>
-							<div class="sh_side_widget sh_sidear_cat_menu sh_float_width">
-							<?php if($categories){?>
-								<ul>								
-								<?php foreach($categories as $cat){?>
-									<li><a href="<?php echo env('APP_URL')."category/".$cat->slug;?>"><?php echo $cat->categoryName;?></a></li>
+					<div class="sh_float_width">
+						<a href="javascript:void(0)" id="sh_filter_menu">Filter</a>
+					</div>
+					<div id="sh_filter_menu_wrapper" class="sh_float_width">
+						<div class="sh_side_bar sh_float_width">
+							<div class="sh_side_bar_section sh_float_width">
+								<h4 class="sh_nav_title">Categories</h4>
+								<div class="sh_side_widget sh_cat_search_form sh_float_width">
+									<form>
+										<input type="text" placeholder="Search" value="">
+										<button><span class="icofont-search-2"></span></button>
+									</form>
+								</div>
+								<div class="sh_side_widget sh_sidear_cat_menu sh_float_width">
+								<?php if($categories){?>
+									<ul>								
+									<?php foreach($categories as $cat){?>
+										<li><a href="<?php echo env('APP_URL')."category/".$cat->slug;?>"><?php echo $cat->categoryName;?></a></li>
+									<?php } ?>
+									</ul>
 								<?php } ?>
-								</ul>
-							<?php } ?>
-							</div>
-							<div class="sh_side_widget sh_sidear_cat_price_filter sh_float_width">
-								<h4 class="sh_sidecat_heading">Filter By Price</h4>
-								<div class="wrapper">
-									<div class="range-slider">
-										<input type="text" class="js-range-slider" value="" />
-									</div>
-									<div class="extra-controls form-inline">
-										<div class="form-group">
-											<input type="text" class="js-input-from form-control" value="0" />
-											<input type="text" class="js-input-to form-control" value="0" />
+								</div>
+								<div class="sh_side_widget sh_sidear_cat_price_filter sh_float_width">
+									<h4 class="sh_sidecat_heading">Filter By Price</h4>
+									<div class="wrapper">
+										<div class="range-slider">
+											<input type="text" class="js-range-slider" value="" />
+										</div>
+										<div class="extra-controls form-inline">
+											<div class="form-group">
+												<input type="text" class="js-input-from form-control" value="0" />
+												<input type="text" class="js-input-to form-control" value="0" />
+											</div>
+										</div>
+										<div class="sh_filter_pri">
+											<a class="sh_btn" href="javacript:void(0)">Filter</a>
 										</div>
 									</div>
-									<div class="sh_filter_pri">
-										<a class="sh_btn" href="javacript:void(0)">Filter</a>
-									</div>
 								</div>
-							</div>
-							<div class="sh_side_widget sh_sidear_cat_brands sh_float_width">
-								<h4 class="sh_sidecat_heading">Brand</h4>
-								<ul>
-									<li><a href="javacript:void(0)">Philips</a></li>
-									<li><a href="javacript:void(0)">Acer</a></li>
-									<li><a href="javacript:void(0)">Canon</a></li>
-									<li><a href="javacript:void(0)">Hitichi</a></li>	
-									<li><a href="javacript:void(0)">Toshiba</a></li>	
-								</ul>
+								<div class="sh_side_widget sh_sidear_cat_brands sh_float_width">
+									<h4 class="sh_sidecat_heading">Brand</h4>
+									<ul>
+										<li><a href="javacript:void(0)">Philips</a></li>
+										<li><a href="javacript:void(0)">Acer</a></li>
+										<li><a href="javacript:void(0)">Canon</a></li>
+										<li><a href="javacript:void(0)">Hitichi</a></li>	
+										<li><a href="javacript:void(0)">Toshiba</a></li>	
+									</ul>
+								</div>
 							</div>
 						</div>
 					</div>
