@@ -8,12 +8,12 @@ $(document).ready(function () {
     // fix non-scrolling overflow issue on mobile devices
     $('#mobile-nav > ul').wrap('<div class="overflow"></div>');
     $(window).on('load resize', function () {
-        var vph = $(window).height() - 57; // 57px - height of #mobile-nav
-        $('.overflow').css('max-height', vph);
+        var vph = $(window).height() - 70; // 57px - height of #mobile-nav
+        $('#mobile-nav .overflow').css('max-height', vph);
     });
     
     // global variables
-    var menu = $('.overflow > ul');
+    var menu = $('#mobile-nav .overflow > ul');
     var bg = $('html, body');
     
     // toggle background scrolling
@@ -48,7 +48,7 @@ $(document).ready(function () {
     // list item click events
     $('.open-menu').on('click', function (e) {
         e.preventDefault();
-        $(this).prev('ul').slideToggle(250);
+        $(this).prev('#mobile-nav ul').slideToggle(250);
         $(this).toggleClass('rotate');
     });
 });

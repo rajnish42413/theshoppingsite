@@ -467,7 +467,7 @@
 
 	/* Generated Overflow Element */
 	.overflow {
-		margin-top:57px;
+		margin-top:70px;
 		overflow-x:hidden;
 		overflow-y:auto;
 	}
@@ -481,8 +481,6 @@
 	}
 	#mobile-nav > .overflow {
 		background: #49acad;
-		height: 280px;
-		overflow-y: auto;
 	}
 	#mobile-nav ul {
 		background-color:rgba(0,0,0,.1);

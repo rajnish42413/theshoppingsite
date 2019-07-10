@@ -4,7 +4,7 @@
 			var $this = $(window);
 	
 	/*------ Mobile Menu --------*/
-		var pho_count = 0;
+		/* var pho_count = 0;
 		$('.sh_menu_btn').on("click", function(){
 			if( pho_count == '0') {
 				$('.sh_main_menu_wrapper').addClass('sh_main_menu_hide');
@@ -47,7 +47,7 @@
 				$('#menu li.parent_list .list_colmn_container').removeClass('current');
 				$(this).addClass('current');
 			}
-		});
+		}); */
 		
 		
 	/*-------- MObile Menu End -----------*/
