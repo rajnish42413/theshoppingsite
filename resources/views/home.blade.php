@@ -185,17 +185,20 @@
 	</div>
 <?php } ?>	
 	<!-- Home Add Section -->
+	<div class="clearfix"></div>
 	<div class="sh_add_wrapper sh_float_width">
 		<div class="container">
 			<div class="row">
 				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 					<div class="sh_add_section sh_float_width">
-						<img src="{{env('APP_URL')}}assets/images/ad.png">
+					<!--	<img src="{{env('APP_URL')}}assets/images/ad.png">-->
+						<iframe src="//rcm-na.amazon-adsystem.com/e/cm?o=1&p=48&l=ur1&category=amazonhomepage&f=ifr&linkID=6d798ea5dd439559e5bc15e238518193&t=theshoppi0545-20&tracking_id=theshoppi0545-20" width="100%" height="90" scrolling="no" border="0" marginwidth="0" style="border:none;" frameborder="0"></iframe>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+	<div class="clearfix"></div>
 </div>	
  
 @endsection
