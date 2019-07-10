@@ -149,7 +149,7 @@ a.sh_logo {
 }
 .sh_Search_bar input {
     background: #fff;
-    padding: 6px 100px 6px 15px;
+    padding: 6px 15px;
     width: 60%;
     height: 40px;
     position: relative;
@@ -1525,7 +1525,6 @@ img.sh_view_img {
 }
 
 .sh_grid_product_section.sh_float_width {
-    min-height: 265px;
     width: 100%;
 }
 

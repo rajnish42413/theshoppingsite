@@ -60,7 +60,7 @@ $parent_categories = DetailController::get_parent_categories();
 	<div class="sh_top_header_wrap sh_float_width">
 		<div class="container">
 			<div class="row">
-				<div class="col-lg-3 col-md-3 col-sm-4 col-xs-4">
+				<div class="col-lg-3 col-md-3 col-sm-4 col-xs-12">
 					<div class="sh_header_navbar sh_float_width">
 						<div class="sh_logo_wrap">
 							<a class="sh_logo" href="{{env('APP_URL')}}"><img src="{{env('APP_URL')}}assets/images/<?php if($settings){echo $settings->logo;}?>" alt="logo"></a>
@@ -68,7 +68,7 @@ $parent_categories = DetailController::get_parent_categories();
 					</div>
 				</div>
 				<!-- Search bar -->
-				<div class="col-lg-9 col-md-9 col-sm-8 col-xs-8 text-right">
+				<div class="col-lg-9 col-md-9 col-sm-8 col-xs-12 text-right">
 					<div class="sh_Search_bar sh_float_width">
 						<form id="searchForm" method="GET" action="{{route('search')}}">
 							<input type="text" name="keyword"  id="keyword" placeholder="Search" value="<?php if(isset($data['keyword']) && $data['keyword']!=''){ echo $data['keyword'];}?>">
