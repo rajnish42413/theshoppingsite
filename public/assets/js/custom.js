@@ -2,7 +2,7 @@
   "use strict";
   
 		/****** MOBILE MENU JS Start *********/
-		$(document).ready(function () {
+		/* $(document).ready(function () {
 			// append plus symbol to every list item that has children
 			$('#mobile-nav .parent').append('<span class="open-menu fa fa-plus"></span>');
 			
@@ -52,7 +52,7 @@
 				$(this).prev('ul').slideToggle(250);
 				$(this).toggleClass('rotate');
 			});
-		});
+		}); */
 		/****** MOBILE MENU JS END *********/
   
   
