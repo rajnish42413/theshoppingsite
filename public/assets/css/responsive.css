@@ -474,10 +474,15 @@
 
 	/* Menu Styles */
 	#mobile-nav {
-		background-color:#60babb;
 		position:fixed;
 		width:100%;
-		z-index:1;
+		z-index:99999999;
+		left:0;
+	}
+	#mobile-nav > .overflow {
+		background: #49acad;
+		height: 280px;
+		overflow-y: auto;
 	}
 	#mobile-nav ul {
 		background-color:rgba(0,0,0,.1);
