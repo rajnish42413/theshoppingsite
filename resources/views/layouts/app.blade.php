@@ -65,7 +65,13 @@ $parent_categories = DetailController::get_parent_categories();
 						<div class="sh_logo_wrap">
 							<a class="sh_logo" href="{{env('APP_URL')}}"><img src="{{env('APP_URL')}}assets/images/<?php if($settings){echo $settings->logo;}?>" alt="logo"></a>
 						</div>
+						<div class="sh_menu_icon_box">
+							<div class="menu_icon text-right">
+								<button class="sh_menu_btn"><span class="fa fa-bars"></span></button>
+							</div>
+						</div>
 					</div>
+					
 				</div>
 				<!-- Search bar -->
 				<div class="col-lg-9 col-md-9 col-sm-8 col-xs-12 text-right">
@@ -141,7 +147,8 @@ $parent_categories = DetailController::get_parent_categories();
 							<button class="sh_menu_btn"><span class="fa fa-bars"></span></button>
 						</div>
 					</div>
-				</div>				
+				</div>	
+				
 			</div>
 		</div>
 	</div>

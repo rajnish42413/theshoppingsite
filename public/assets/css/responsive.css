@@ -115,6 +115,18 @@
 	#sh_filter_menu_wrapper{
 		display:none;
 	}
+	a#sh_filter_menu {
+		background: #111111;
+		display: inline-block;
+		color: #ffffff;
+		padding: 6px 30px;
+		font-size: 12px;
+		text-transform: uppercase;
+		font-weight: 600;
+		margin-bottom: 15px;
+		cursor: pointer;
+	}
+	
 	.sh_menu_btn {
 		float: none;
 		border: none;
@@ -146,7 +158,7 @@
 		transition: all 0.3s;
 	}
 	.sh_main_menu_wrapper {
-		width: 180px;
+		width: 60%;
 	}
 	.sh_main_menu_wrapper.sh_main_menu_hide {
 		-webkit-transform: translateX(0%);
@@ -162,6 +174,7 @@
 	}
 	.sh_main_menu ul {
 		width: 100%;
+		margin: 0;
 	}
 	.sh_main_menu ul li {
 		width: 100%;
@@ -223,9 +236,14 @@
 		margin-top: 30px;
 	}
 	.sh_logo_wrap {
-		text-align: center;
+		text-align: left;
+		width: 50%;
+		float: left;
 	}
-	
+	.sh_menu_icon_box {
+		width: 50%;
+		float: left;
+	}
 	.lodind_img img {
 		width: 16%;
 	}
@@ -239,6 +257,7 @@
 	#search_category + .select2-container--default .select2-selection--single {
 		min-height: 30px !important;
 		line-height: 30px !important;
+		height: 30px;
 	}
 	.select2-container .select2-selection--single {
 		height: 30px;

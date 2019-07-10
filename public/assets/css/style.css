@@ -1995,6 +1995,14 @@ div#main_menu_header .sh_main_menu ul li a {
 }
 
 
+
+/********************************************/
+.sh_tab_compare_wrap tbody tr td:nth-child(2) {
+    white-space: unset;
+}
+.sh_tab_compare_total_price {
+    white-space: nowrap;
+}
 /********************************************/
 div#menu_header.active_head + .width_allCategory a.main_title_cat {
     position: fixed;
