@@ -173,7 +173,7 @@
 		float: right;
 	}
 	.sh_Search_bar input {
-		width: 100%;
+		width: 45%;
 	}
 	.sh_copyright_section {
 		text-align: center;
@@ -213,12 +213,65 @@
 	.sh_product_view_store {
 		margin-top: 30px;
 	}
-	a.sh_logo img {
-		height: auto;
+	.sh_logo_wrap {
+		text-align: center;
 	}
 	
 	.lodind_img img {
 		width: 16%;
+	}
+	.sh_Search_bar input {
+		height: 30px;
+	}
+	#search_category + .select2-container {
+		width: calc(56% - 70px) !important;
+	}
+	
+	#search_category + .select2-container--default .select2-selection--single {
+		min-height: 30px !important;
+		line-height: 30px !important;
+	}
+	.select2-container .select2-selection--single {
+		height: 30px;
+	}
+	#search_category + .select2-container--default .select2-selection--single .select2-selection__rendered {
+		line-height: 30px !important;
+	}
+	#search_category + .select2-container--default .select2-selection--single .select2-selection__arrow {
+		height: 30px !important;
+	}
+	.select2-container--default .select2-selection--single .select2-selection__arrow {
+		top: 0;
+		right: 4px;
+	}
+	.sh_Search_bar button {
+		width: 70px;
+		font-size: 12px;
+	}
+	.select2-container--default .select2-results>.select2-results__options {
+		font-size: 12px;
+	}
+	.sh_less_price_store img {
+		width: 25%;
+	}
+	.sh_grid_product_section.sh_float_width .grid_prd {
+		height: 75px!important;
+	}
+	.sh_prod_name {
+		-webkit-line-clamp: 1;
+		height: 18px;
+	}
+	.best_price_store {
+		width: 60%;
+	}
+	.sh_product_view_name h3 {
+		font-size: 10px;
+	}
+	.sh_product_view_name h6 {
+		font-size: 12px;
+	}
+	.sh_product_view_rating {
+		font-size: 12px;
 	}
 	
 }
@@ -235,13 +288,13 @@
 	.slider-nav__item.slick-slide img {
 		height: 100px;
 	}
+	.sh_less_price_store img {
+		width: 30%;
+	}
+	
 }
 
 @media (max-width: 479px){
-	.sh_Search_bar input {
-		padding: 6px 70px 6px 15px;
-		height: 30px;
-	}
 	.sh_Search_bar button {
 		width: 55px;
 	}
@@ -263,16 +316,50 @@
 		margin-bottom: 30px;
 	}
 	.sh_custom_width {
-		width: 100%;
+		width: 50%;
 	}
 	.slider-nav__item.slick-slide img {
 		height: 80px;
 	}
+	.sh_less_price_store img {
+		width: 30%;
+	}
+	.best_price_store {
+		width: 98%;
+	}
+	.sh_store_price {
+		font-size: 14px;
+	}
+	.sh_compare_price a {
+		padding: 4px;
+		font-size: 10px;
+	}
+	.sh_compare_price {
+		padding: 12px;
+	}
 }
-@media (max-width:449px){
-	
+@media (max-width:440px){
+	.sh_product_view_name h6 {
+		font-size: 10px;
+	}
+	.sh_product_view_rating {
+		font-size: 10px;
+	}
+	.sh_product_view_rating span.fa {
+		font-size: 6px;
+	}
 }
 
 @media (max-width:359px){
+
+	#search_category + .select2-container {
+		width: calc(56% - 56px) !important;
+	}
+	.sh_less_price_store img {
+		width: 40%;
+	}
+	.sh_product_review ul li {
+		font-size: 5px;
+	}
 	
 }

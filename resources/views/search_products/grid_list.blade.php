@@ -178,7 +178,7 @@
 						</div>
 						
 					<?php if($products && $products->count() >= 10){?>
-						<div class="load_more" style="display:none;">
+						<div class="load_more sh_float_width" style="display:none;">
 							<div class="col-lg-12 text-center"><button onclick="load_more(this)" class="sh_btn btn btn-block" type="button">Load More <i class="fa fa-spin fa-spinner hide"></i></button></div>
 						</div>
 					<?php } ?>
