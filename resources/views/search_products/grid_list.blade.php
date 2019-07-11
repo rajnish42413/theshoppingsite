@@ -90,7 +90,7 @@
 					<div class="sh_product_grid sh_float_width">
 					<?php if($products && $products->count() > 0){?>
 						<div class="sh_product_grid_top sh_float_width">
-							<div class="col-lg-6 col-md-5 col-sm-4 col-xs-6">
+							<div class="col-lg-6 col-md-5 col-sm-4 col-xs-5">
 								<div class="sh_search_filter sh_float_width">
 									<ul>
 										<li>Show Result:</li>
@@ -106,7 +106,7 @@
 								</div>
 							</div>
 							
-							<div class="col-lg-6 col-md-4 col-sm-4 col-xs-6 text-right">
+							<div class="col-lg-6 col-md-4 col-sm-4 col-xs-7 text-right">
 								<div class="sh_search_filter sh_float_width">
 									<ul>
 										<li>Sort by:</li>

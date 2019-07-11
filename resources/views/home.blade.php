@@ -192,7 +192,22 @@
 				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 					<div class="sh_add_section sh_float_width">
 					<!--	<img src="{{env('APP_URL')}}assets/images/ad.png">-->
-						<iframe src="//rcm-na.amazon-adsystem.com/e/cm?o=1&p=48&l=ur1&category=amazonhomepage&f=ifr&linkID=6d798ea5dd439559e5bc15e238518193&t=theshoppi0545-20&tracking_id=theshoppi0545-20" width="100%" height="90" scrolling="no" border="0" marginwidth="0" style="border:none;" frameborder="0"></iframe>
+						<div class="alignleft">
+							<script type="text/javascript">
+								amzn_assoc_ad_type = "banner";
+								amzn_assoc_marketplace = "amazon";
+								amzn_assoc_region = "US";
+								amzn_assoc_placement = "assoc_banner_placement_default";
+								amzn_assoc_campaigns = "amazonhomepage";
+								amzn_assoc_banner_type = "rotating";
+								amzn_assoc_p = "48";
+								amzn_assoc_width = "728";
+								amzn_assoc_height = "90";
+								amzn_assoc_tracking_id = "theshoppi0545-20";
+								amzn_assoc_linkid = "c6ae37b4687fae96f4e68aeabde17faf";
+							</script>
+							<script src="//z-na.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&Operation=GetScript&ID=OneJS&WS=1"></script>
+						</div>
 					</div>
 				</div>
 			</div>

@@ -83,7 +83,7 @@
 				<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
 					<div class="sh_product_grid sh_float_width">
 						<div class="sh_product_grid_top sh_float_width">
-							<div class="col-lg-5 col-md-5 col-sm-4 col-xs-6">
+							<div class="col-lg-5 col-md-5 col-sm-4 col-xs-5">
 								<div class="sh_search_filter sh_float_width">
 									<ul>
 										<li>Show Result:</li>
@@ -98,7 +98,7 @@
 									</ul>
 								</div>
 							</div>
-							<div class="col-lg-4 col-md-4 col-sm-4 col-xs-6">
+							<div class="col-lg-4 col-md-4 col-sm-4 col-xs-7">
 								<div class="sh_search_filter sh_float_width">
 									<ul>
 										<li>Sort by:</li>
