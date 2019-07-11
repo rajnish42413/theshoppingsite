@@ -2403,3 +2403,8 @@ h4.sh_prod_name b {
 .sh_Search_bar input {
     float: left;
 }
+
+
+.sh_add_section {
+	text-align: center;
+}

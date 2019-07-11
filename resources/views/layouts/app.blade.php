@@ -83,7 +83,7 @@ $parent_categories = DetailController::get_parent_categories();
 														<ul>
 														<?php  foreach($cat['sub_categories'] as $sub_cat){
 																?>
-															 <li class="parent"><a href="{{env('APP_URL')}}category/<?php echo $sub_cat['slug'];?>"><?php echo $sub_cat['name'];?></a></li>
+															 <li><a href="{{env('APP_URL')}}category/<?php echo $sub_cat['slug'];?>"><?php echo $sub_cat['name'];?></a></li>
 														<?php } ?>
 														</ul>
 													<?php } ?>

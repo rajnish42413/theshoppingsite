@@ -90,7 +90,7 @@
 					<div class="sh_product_grid sh_float_width">
 					<?php if($products && $products->count() > 0){?>
 						<div class="sh_product_grid_top sh_float_width">
-							<div class="col-lg-6 col-md-5 col-sm-4 col-xs-6">
+							<div class="col-lg-6 col-md-5 col-sm-4 col-xs-5">
 								<div class="sh_search_filter sh_float_width">
 									<ul>
 										<li>Show Result:</li>
@@ -106,7 +106,7 @@
 								</div>
 							</div>
 							
-							<div class="col-lg-6 col-md-4 col-sm-4 col-xs-6 text-right">
+							<div class="col-lg-6 col-md-4 col-sm-4 col-xs-7 text-right">
 								<div class="sh_search_filter sh_float_width">
 									<ul>
 										<li>Sort by:</li>
@@ -198,6 +198,42 @@
 			</div>	
 		</div>	
 	</div>	
+	
+	<!-- Home Add Section -->
+	<div class="clearfix"></div>
+	<div class="sh_add_wrapper sh_float_width">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+					<div class="sh_add_section sh_float_width">
+						<div class="aligncenter sh_add_section">
+							<script type="text/javascript">
+								amzn_assoc_placement = "adunit0";
+								amzn_assoc_search_bar = "false";
+								amzn_assoc_tracking_id = "theshoppi0545-20";
+								amzn_assoc_ad_mode = "search";
+								amzn_assoc_ad_type = "smart";
+								amzn_assoc_marketplace = "amazon";
+								amzn_assoc_region = "US";
+								amzn_assoc_title = "Shop Related Products";
+								amzn_assoc_default_search_phrase = "Amazon";
+								amzn_assoc_default_category = "All";
+								amzn_assoc_linkid = "c07e0039f3c54b5c9e151aec6aaba029";
+								amzn_assoc_rows = "2";
+							</script>
+							<script src="//z-na.amazon-adsystem.com/widgets/onejs?MarketPlace=US"></script>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="clearfix"></div>
+	
+	
+	
+	
+	
 	
 </div>	
 <script src="{{env('APP_URL')}}assets/js/rang_slider/rang.js"  charset="UTF-8"></script>

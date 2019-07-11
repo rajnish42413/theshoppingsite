@@ -457,8 +457,9 @@
 		cursor:pointer;
 		font-size:2rem;
 		padding:.75rem 1.55rem;
-		position:fixed;
-		right:0;
+		position: absolute;
+		right: 0;
+		top: 15px;
 	}
 	.open-menu {
 		color:#fff;
@@ -481,10 +482,11 @@
 
 	/* Menu Styles */
 	#mobile-nav {
-		position:fixed;
 		width:100%;
 		z-index:99999999;
 		left:0;
+		position: absolute;
+		top: 0;
 	}
 	#mobile-nav > .overflow {
 		background: #49acad;
@@ -521,10 +523,4 @@
 		padding-left:1rem;
 	}
 	
-}
-
-
-
-div#mobile-nav {
-    display: none !important;
 }
