@@ -71,22 +71,10 @@ class ProductsImport implements ToModel, WithBatchInserts, WithChunkReading, Wit
 					
 				}
 	
-				$brand_id = 0;
+				$brand_id = '';
 				
 				if($brand !=''){
-					$input3 = array(
-						'name' => $brand,
-						'slug' => $this->slugify($brand),
-						'updated_at' => date('Y-m-d H:i:s'),
-					);
-					$brand_check = Brand::where('slug',$input3['slug'])->first();
-					if($brand_check && $brand_check->count() > 0){
-						$brand_id = $brand_check->id;
-						Brand::where('id',$brand_id)->update($input3);
-					}else{
-						$input3['updated_at'] = date('Y-m-d H:i:s');
-						$brand_id = Brand::create($input3)->id;
-					}
+					$brand_id = $brand;
 				}			
 				
 				

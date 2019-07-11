@@ -263,20 +263,9 @@ class CronController extends Controller
 						$input['Variations'] = $item_detail['Variations']; //json
 												
 						if($item_detail['Brand'] != ''){
-							$input3['name'] = $item_detail['Brand'];
-							$input3['slug'] = $this->slugify($item_detail['Brand']);
-							$input3['updated_at'] =  date('Y-m-d H:i:s');
+
+							$input['brand_id'] = $item_detail['Brand'];
 							
-							$brand_check = Brand::where('slug',$input3['slug'])->first();
-							
-							if($brand_check && $brand_check->count() > 0){
-								
-							    Brand::where('id',$brand_check['id'])->update($input3);	
-								$input['brand_id'] = $brand_check['id'];
-							}else{
-								$input3['created_at'] =  date('Y-m-d H:i:s');
-								$input['brand_id'] = Brand::create($input3)->id;
-							}
 						}
 					}
 					
