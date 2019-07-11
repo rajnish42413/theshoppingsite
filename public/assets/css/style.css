@@ -2404,7 +2404,14 @@ h4.sh_prod_name b {
     float: left;
 }
 
-
+.load_more button {
+    border: none;
+}
+.sh_ads_wrapper {
+    padding: 30px 0;
+    background: #ffffff;
+	text-align: center;
+}
 .sh_add_section {
 	text-align: center;
 }
