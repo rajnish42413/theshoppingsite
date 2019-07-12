@@ -643,14 +643,22 @@ class HomeController extends Controller
 			$data['keyword_array'] = $keyword = $this->getParts($request->input('keyword')); 
 
 			$data['keyword'] =  $request->input('keyword'); //string
-			$data['search_category'] = $scat =  $request->input('cat'); //string slug
+			
+			$res = $this->getSearchData($data);
+			if($res['success'] == true){
+				$results = $res['data'];
+			}else{
+				$results = array();
+			}
+			
+			/* $data['search_category'] = $scat =  $request->input('cat'); //string slug
 			
 			$cat_value = Category::where('status',1)->where('categories.slug',$scat)->first();
 			
 			if($cat_value && $cat_value->count() > 0){	
 				$my_cat_id = $cat_value->categoryId;
 			}		
-			
+		*/	
 			$categories = array();
 			$products = array();
 			$brands = array();
@@ -664,7 +672,7 @@ class HomeController extends Controller
 			$data['min_price']	= '';
 			$data['max_price'] = '';
 			$data['brand_id'] = '';
-						
+		/*				
 			$results = Product::select(DB::raw("products.*,merchants.image as merchant_image"))->leftJoin('merchants',function ($join){$join->on('products.merchant_id','=','merchants.id'); })->where('products.status',1);
 			
 			if($my_cat_id!=''){
@@ -679,21 +687,7 @@ class HomeController extends Controller
 					}      
 				});
 			}		
-			
-/* 			$orderByRowCase = '';
-			if($keyword){
-				$orderByRowCase .= ' CASE ';
-				$r=1;
-				for($s = 0; $s < count($keyword); $s++){
-					$orderByRowCase .= ' WHEN `products`.`title` LIKE "%'.$keyword[$s].'%" then '.$r.' ';
-					$r++;
-				}
-				$orderByRowCase .= ' END'; 
-			} 
-			
-			if($orderByRowCase!=''){
-				$results = $results->orderByRaw($orderByRowCase);
-			} */
+
 			
 			$results = $results->groupBy('products.itemId');
 			$results = $results->orderBy('products.current_price','asc');
@@ -726,7 +720,7 @@ class HomeController extends Controller
 					$brands = array_values(array_unique($brands));
 					
 				}		
-			}			
+			}			 */
 			//echo '<Pre>';print_r($brands);die;
 			$data['nav'] = 'terms';
 			$data['meta_title'] = config('app.name')." :: Search Products";
@@ -1048,4 +1042,54 @@ function getSpecialParts($string){
 		}		
 	}	
 
+
+	function getSearchData($data){
+		
+		$requestArray = array('query' => array('match' => array('title' =>$data['keyword']))); 
+
+		$requestJson = json_encode($requestArray,true);
+
+		$curl = curl_init();
+
+		curl_setopt_array($curl, array(
+		CURLOPT_PORT => "9500",
+		CURLOPT_URL => "http://3.130.7.225:9500/products/_search?pretty=",
+		CURLOPT_RETURNTRANSFER => true,
+		CURLOPT_ENCODING => "",
+		CURLOPT_MAXREDIRS => 10,
+		CURLOPT_TIMEOUT => 30,
+		CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+		CURLOPT_CUSTOMREQUEST => "POST",
+		CURLOPT_POSTFIELDS => $requestJson,
+		CURLOPT_HTTPHEADER => array(
+		"cache-control: no-cache",
+		"content-type: application/json",
+		"postman-token: 1f45ec37-01cb-026e-1455-62b4357d18c9"
+		),
+		));
+
+		$response = curl_exec($curl);
+		$err = curl_error($curl);
+
+		curl_close($curl);
+
+		if ($err) {
+			$res = "cURL Error #:" . $err;
+			$output = array('success'=>false,'data'=>$res);
+		} else {
+			$res =  json_decode($response,true);
+			if($res['hits']['hits']){
+				$res_data = $res['hits']['hits'];
+				$output = array('success'=>true,'data'=>$res_data);
+			}else{
+				$error = 'No Results';
+				$output = array('success'=>false,'data'=>$error);
+			}
+			
+		}
+		
+		return $output;
+	}
 }
+
+

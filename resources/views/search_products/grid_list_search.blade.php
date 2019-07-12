@@ -30,7 +30,7 @@
 						<a href="javascript:void(0)" id="sh_filter_menu">Filter</a>
 					</div>
 					<div id="sh_filter_menu_wrapper" class="sh_float_width">
-						<?php if($products && $products->count() > 0){?>
+						<?php if($products){?>
 						<div class="sh_side_bar sh_float_width">
 							<div class="sh_side_bar_section sh_float_width">
 							<form id="filter_form" action="" method="post">
@@ -88,7 +88,7 @@
 				</div>			
 				<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
 					<div class="sh_product_grid sh_float_width">
-					<?php if($products && $products->count() > 0){?>
+					<?php if($products){?>
 						<div class="sh_product_grid_top sh_float_width">
 							<div class="col-lg-6 col-md-5 col-sm-4 col-xs-5">
 								<div class="sh_search_filter sh_float_width">
@@ -125,45 +125,39 @@
 							<img id="listLoading" src="<?php echo env('APP_URL')?>assets/images/loading.gif" style="display: table;margin: auto;">
 						
 						<div id="products-view" class="sh_product_grid_product sh_float_width" style="display:none;">
-					<?php if($products && $products->count() > 0){
+					<?php if($products){
 						
-						foreach($products as $product){?>
-					
+						foreach($products as $key){
+							$product = $key['_source'];
+							?>
+							
 							<?php  
 							$galleryURL = env('APP_URL')."assets/images/no_image.png"; 
-							if($product->product_image != ''){
-									$galleryURL = $product->product_image;
+							if($product['product_image'] != ''){
+									$galleryURL = $product['product_image'];
 							}
+
+							$title = $product['title'];
 							
-							//if($data['keyword_array']){
-								//$title = DetailController::getStringBold($data['keyword_array'],$product->title);
-							//}else{
-								$title = $product->title;
-							//}
-							
-							if($product->merchant_image!=''){
-								$merchant_image = $product->merchant_image;
+							if(isset($product['merchant_image']) && $product['merchant_image']!=''){
+								$merchant_image = $product['merchant_image'];
 							}else{
 								$merchant_image = 'default.png';
 							}
 							?>
 						
 							<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 sh_custom_width">
-								<a href="{{ env('APP_URL')}}product/<?php echo $product->slug;?>">
+								<a href="{{ env('APP_URL')}}product/<?php echo $product['slug'];?>">
 									<div class="sh_grid_product_section sh_float_width">
-									<?php if($product->Quantity == 0){?>
+								<?php if($product['quantity']== 0){?>
 										<div class="out_of_stock">
 											<span>Out of Stock</span>
 										</div>
-									<?php }//elseif($product->Quantity <= 10){?>
-										<!--<div class="less_stock">
-											<span>Only <?php //echo $product->Quantity;?> Left</span>
-										</div>-->									
-									<?php //}?>
+									<?php } ?>
 										<img class="grid_prd" src="<?php echo $galleryURL;?>">
 										<h4 class="sh_prod_name"><?php echo $title;?></h4>
 										<div class="sh_about_prod">
-											<div class="sh_product_price">$<?php echo $product->current_price;?></div>
+											<div class="sh_product_price">$<?php echo $product['current_price'];?></div>
 											<div class="sh_product_review">
 												<ul>
 													<li><span class="fa fa-star"></span></li>
@@ -174,7 +168,7 @@
 												</ul>
 											</div>
 											<div class="sh_less_price_store sh_float_width text-left">
-												<a href="<?php echo $product->viewItemURL;?>" target="_blank"><img src="{{env('APP_URL')}}merchant_files/<?php echo $merchant_image;?>"></a>
+												<a href="<?php echo $product['viewitemurl'];?>" target="_blank"><img src="{{env('APP_URL')}}merchant_files/<?php echo $merchant_image;?>"></a>
 											</div>
 									
 										</div>
@@ -187,7 +181,7 @@
 						
 						</div>
 						
-					<?php if($products && $products->count() >= 10){?>
+					<?php if($products && count($products) >= 10){?>
 						<div class="load_more sh_float_width">
 							<div class="col-lg-12 text-center"><button onclick="load_more(this)" class="sh_btn btn btn-block" type="button">Load More <i class="fa fa-spin fa-spinner hide"></i></button></div>
 						</div>
@@ -330,5 +324,5 @@ function load_more(e){
 	setTimeout(function(){ get_search_data(1); }, 100);
 }
 	
-</script>	
+</script>
 @endsection
