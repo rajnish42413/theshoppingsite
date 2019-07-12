@@ -53,9 +53,9 @@ class ProductsController extends Controller
 		$data['title'] = 'Products';
 		$data['sub_title'] = 'List';
 		$data['link'] = 'products-add';
-		$categories = Category::where('parentId',0)->where('status',1)->orderBy('id','asc')->get();
+		$categories = Category::on('mysql2')->where('parentId',0)->where('status',1)->orderBy('id','asc')->get();
 		
-		$merchants = Merchant::where('status',1)->orderBy('id','asc')->get();
+		$merchants = Merchant::on('mysql2')->where('status',1)->orderBy('id','asc')->get();
 		return view('admin.products.list',['categories'=>$categories,'merchants'=>$merchants,'data'=>$data]);
     }
 	
@@ -72,8 +72,8 @@ class ProductsController extends Controller
 	    $order[0] = 'updated_at';
 	    $order[1] = 'desc';
 
-        $qry = Product::select(DB::raw("products.*, categories.categoryName as catName1, c2.categoryName as catName2, c3.categoryName as catName3, c4.categoryName as catName4, categories.categoryId as catID1, c2.categoryId as catID2, c3.categoryId as catID3, c4.categoryId as catID4,merchants.name as merchant_name"))->leftJoin('categories',function ($join){$join->on('categories.categoryId','=','products.categoryId'); })->leftJoin('categories as c2',function ($join){$join->on('c2.categoryId','=','products.parentCategoryId'); })->leftJoin('categories as c3',function ($join){$join->on('c3.categoryId','=','products.catID3'); })->leftJoin('categories as c4',function ($join){$join->on('c4.categoryId','=','products.catID4'); })->leftJoin('merchants',function ($join){$join->on('merchants.id','=','products.merchant_id'); });
-        //$qry = Product::select(DB::raw("products.*"));
+        $qry = Product::on('mysql2')->select(DB::raw("products.*, categories.categoryName as catName1, c2.categoryName as catName2, c3.categoryName as catName3, c4.categoryName as catName4, categories.categoryId as catID1, c2.categoryId as catID2, c3.categoryId as catID3, c4.categoryId as catID4,merchants.name as merchant_name"))->leftJoin('categories',function ($join){$join->on('categories.categoryId','=','products.categoryId'); })->leftJoin('categories as c2',function ($join){$join->on('c2.categoryId','=','products.parentCategoryId'); })->leftJoin('categories as c3',function ($join){$join->on('c3.categoryId','=','products.catID3'); })->leftJoin('categories as c4',function ($join){$join->on('c4.categoryId','=','products.catID4'); })->leftJoin('merchants',function ($join){$join->on('merchants.id','=','products.merchant_id'); });
+        //$qry = Product::on('mysql2')->select(DB::>raw("products.*"));
 	
 		//$qry->where('categories.status',1);
 		//$qry->where('c2.status',1);
@@ -142,11 +142,11 @@ class ProductsController extends Controller
 		$data['sub_title'] = 'Add';
 		$data['link'] = 'products-list';
 		$categories = array();
-		$categories = Category::get();
+		$categories = Category::on('mysql2')->get();
 		$row = array();
 		$result = array();
 		if($id!=""){
-			$result = Product::where('itemId',$id)->first();
+			$result = Product::on('mysql2')->where('itemId',$id)->first();
 			if($result){
 				$row = $result;
 				$data['sub_title'] = 'Edit';
@@ -176,9 +176,9 @@ class ProductsController extends Controller
 			'status' => $req['status'],
 		);
 		if($id!=''){
-			Product::where('itemId',$id)->update($input);	
+			Product::on('mysql2')->where('itemId',$id)->update($input);	
 		}else{
-			$id = Product::create($input)->itemId;				
+			$id = Product::on('mysql2')->create($input)->itemId;				
 		}	
 
 		echo "|success";
@@ -197,7 +197,7 @@ class ProductsController extends Controller
     }
 	
 	public function faseImportProcess(Request $request){
-			Product::truncate();
+			Product::on('mysql2')->truncate();
 		if (Input::hasFile('file')){
 			
 			$file = request()->file('file');
@@ -241,13 +241,13 @@ class ProductsController extends Controller
 						'slug' => $this->slugify($merchant),
 						'updated_at' => date('Y-m-d H:i:s'),
 					);
-					$merchant_check = Merchant::where('slug',$input2['slug'])->first();
+					$merchant_check = Merchant::on('mysql2')->where('slug',$input2['slug'])->first();
 					if($merchant_check && $merchant_check->count() > 0){
 						$merchant_id = $merchant_check->id;
-						//Merchant::where('id',$merchant_id)->update($input2);
+						//Merchant::on('mysql2')->where('id',$merchant_id)->update($input2);
 					}else{
 						$input2['updated_at'] = date('Y-m-d H:i:s');
-						$merchant_id = Merchant::create($input2)->id;
+						$merchant_id = Merchant::on('mysql2')->create($input2)->id;
 					}
 					
 				}
@@ -260,18 +260,18 @@ class ProductsController extends Controller
 						'slug' => $this->slugify($brand),
 						'updated_at' => date('Y-m-d H:i:s'),
 					);
-					$brand_check = Brand::where('slug',$input3['slug'])->first();
+					$brand_check = Brand::on('mysql2')->where('slug',$input3['slug'])->first();
 					if($brand_check && $brand_check->count() > 0){
 						$brand_id = $brand_check->id;
-						Brand::where('id',$brand_id)->update($input3);
+						Brand::on('mysql2')->where('id',$brand_id)->update($input3);
 					}else{
 						$input3['updated_at'] = date('Y-m-d H:i:s');
-						$brand_id = Brand::create($input3)->id;
+						$brand_id = Brand::on('mysql2')->create($input3)->id;
 					}
 				}
 				*/				
 				/*
-				$cat_check = Category::where('categoryId',$categoryId)->first();
+				$cat_check = Category::on('mysql2')->where('categoryId',$categoryId)->first();
 				
 				if($categoryId !='' && $cat_check && $cat_check->count() > 0){
 					$cID1 = $catId = $cat_check->categoryId;
@@ -295,7 +295,7 @@ class ProductsController extends Controller
 				
 				}else{
 					$cinput = array();
-					$parentId = $other_cat_id = Category::where('is_other',1)->first()->categoryId;
+					$parentId = $other_cat_id = Category::on('mysql2')->where('is_other',1)->first()->categoryId;
 					
 					 if($category!=''){
 						$category_array = explode('>',$category);
@@ -307,7 +307,7 @@ class ProductsController extends Controller
 						$cat_slug = $this->slugify($cat);
 							
 						$cat_check2 = array();					
-						$cat_check2 = Category::where('slug',$cat_slug)->where('parentId',$parentId);
+						$cat_check2 = Category::on('mysql2')->where('slug',$cat_slug)->where('parentId',$parentId);
 						
 						if($merchant_id != 0){
 							$cat_check2 = $cat_check2->where('merchant_id',$merchant_id);
@@ -332,7 +332,7 @@ class ProductsController extends Controller
 							$cinput['created_at'] =  date('Y-m-d H:i:s');
 							$cinput['updated_at'] =  date('Y-m-d H:i:s');
 							//echo '<pre>';print_r($cinput);die;
-							Category::create($cinput);	//create new category							
+							Category::on('mysql2')->create($cinput);	//create new category							
 						}
 						
 						$catID1 = $parentId;
@@ -356,7 +356,7 @@ class ProductsController extends Controller
 					}
 				}
 				
-				$item_check = Product::where('itemId',$itemId)->get();
+				$item_check = Product::on('mysql2')->where('itemId',$itemId)->get();
 
 				if($item_check && $item_check->count() > 0){
 					$uinput = array(
@@ -380,7 +380,7 @@ class ProductsController extends Controller
 						'description'    => $description,
 						'updated_at'    => date('Y-m-d H:i:s')				
 					);
-					Product::where('itemId',$itemId)->update($uinput);
+					Product::on('mysql2')->where('itemId',$itemId)->update($uinput);
 				}else{
 					$input = array(
 						'merchant_id' => $merchant_id,
@@ -405,7 +405,7 @@ class ProductsController extends Controller
 						'created_at'    => date('Y-m-d H:i:s'),
 						'updated_at'    => date('Y-m-d H:i:s')
 					);	
-					Product::create($input);				
+					Product::on('mysql2')->create($input);				
 				}
 
 			} 
@@ -425,7 +425,7 @@ class ProductsController extends Controller
 	
 	public function check_slug_product($slug){
 		$rand = time().rand(10,99);
-		$slug_check = Product::where('slug',$slug)->first();
+		$slug_check = Product::on('mysql2')->where('slug',$slug)->first();
 		if($slug_check && $slug_check->count() > 0){
 			$slug = $slug_check->slug.'-'.$rand;
 			return $slug;
@@ -471,7 +471,7 @@ class ProductsController extends Controller
 		return $catLevel;
 	}	
 	public function get_total_insert_data(Request $request){
-		$p_count = Product::count();
+		$p_count = Product::on('mysql2')->count();
 		$totalWidth = 97152;
 		$percent = ($p_count*100/$totalWidth);
 		echo $percent_friendly = number_format($percent, 2 ) . '%';
@@ -568,7 +568,7 @@ echo 'success';die;	*/
 		if($request->input('parent_id')!== NULL && $request->input('parent_id') != '' && $request->input('cat_id') !== NULL && $request->input('cat_id') != ''){
 			$categoryId = $request->input('cat_id');
 			$parentCategoryId = $request->input('parent_id');
-			$products = Product :: where('parentCategoryId',$parentCategoryId)->where('categoryId',$categoryId)->where('status',1)->orderBy('updated_at','desc')->get(); //
+			$products = Product::on('mysql2')->where('parentCategoryId',$parentCategoryId)->where('categoryId',$categoryId)->where('status',1)->orderBy('updated_at','desc')->get(); //
 			if($products && $products->count() > 0){
 				
 				$spreadsheet = new Spreadsheet();
@@ -670,7 +670,7 @@ echo 'success';die;	*/
         if ($request->isMethod('post')){
             $req    = $request->all();
 			$deleteIds = explode(',',$req['ids']);
-			Product::whereIn('itemId',$deleteIds)->delete();
+			Product::on('mysql2')->whereIn('itemId',$deleteIds)->delete();
 			echo 'success';
 		}
     }	
@@ -681,7 +681,7 @@ echo 'success';die;	*/
             $req = $request->all();
 			$statusId = $req['id'];
 			$status = $req['value'];
-			Product::where('itemId',$statusId)->update(array('status'=>$status));
+			Product::on('mysql2')->where('itemId',$statusId)->update(array('status'=>$status));
 			echo 'success';
 		}
     }
@@ -694,7 +694,7 @@ echo 'success';die;	*/
 
 			$statusIds = explode(' ,',$req['ids']);
 			$status = $req['status'];
-			Product::whereIn('itemId',$statusIds)->update(array('status'=>$status));
+			Product::on('mysql2')->whereIn('itemId',$statusIds)->update(array('status'=>$status));
 			echo 'success';
 		}
     }	

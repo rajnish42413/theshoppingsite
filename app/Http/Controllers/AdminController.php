@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Brand;
+use App\Product;
 
 class AdminController extends Controller
 {
@@ -25,7 +27,7 @@ class AdminController extends Controller
      */
     public function index()
     {
-		
+			
 		$data['nav'] = 'menu_dashboard';
 		$data['sub_nav'] = '';
 		$data['title'] = 'Dashboard';
