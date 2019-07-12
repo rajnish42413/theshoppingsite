@@ -252,7 +252,7 @@ class ProductsController extends Controller
 					
 				}
 				*/
-				$brand_id = 0;
+				$brand_id = '';
 				/*
 				if($brand !=''){
 					$input3 = array(
@@ -604,12 +604,13 @@ echo 'success';die;	*/
 				$c= 2;
 				foreach($products as $row){
 		
-					$brand = Brand::where('id',$row->brand_id)->first();
-					if($brand && $brand->count() > 0){
-						$brand_name = $brand->name;
-					}else{
+					
+					if($row->brand_id == 0 || $row->brand_id == ''){
 						$brand_name = '';
+					}else{
+						$brand_name = $row->brand_id;
 					}
+					
 					if($row->description != ''){
 						if($row->description != strip_tags($row->description)) {
 							$description = '';

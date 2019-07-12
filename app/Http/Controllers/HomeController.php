@@ -269,6 +269,7 @@ class HomeController extends Controller
 					$products = $this->get_products_by_id($res->categoryId, $data['brand_id'], $res->catLevel);	
 				
 					$brands = $this->get_brands_by_parent($res->categoryId,$res->catLevel);	
+					
 				
 					$data['min_price'] = $this->getMinPriceByParentCat($res->categoryId, $res->catLevel);
 					
@@ -586,7 +587,7 @@ class HomeController extends Controller
 		if($parent_id == ""){
 			$parent_id = '0';
 		}
-		$results = Brand::select(DB::raw("brands.*"))->Join('products',function ($join){$join->on('products.brand_id','=','brands.id'); });
+		$results = Product::select(DB::raw("products.brand_id"));
 		
 		if($level == 1){
 			$results = $results->where('products.catID1',$parent_id);
@@ -598,8 +599,8 @@ class HomeController extends Controller
 			$results = $results->where('products.catID4',$parent_id);
 		}
 		
-		$results = $results->groupBy('brands.id');
-		$results = $results->orderBy('brands.name','asc');
+		$results = $results->groupBy('products.brand_id');
+		$results = $results->orderBy('products.brand_id','asc');
 		$results = $results->get();
 		if($results->count() > 0){
 			$brands = $results;
@@ -708,10 +709,10 @@ class HomeController extends Controller
 			
 			if($results && $results->count() > 0){
 				$cat_ids = array();
-				$brand_ids = array();
+				$brands = array();
 				foreach($results as $row){
 					$cat_ids[] = $row->parentCategoryId;
-					$brand_ids[] = $row->brand_id;
+					$brands[] = $row->brand_id;
 				}
 				
 				if($scat == ''){
@@ -721,12 +722,12 @@ class HomeController extends Controller
 					}
 				}
 				
-				if($brand_ids){ 
-					$brand_ids = array_values(array_unique($brand_ids));
-					$brands = Brand::whereIn('id',$brand_ids)->get();
+				if($brands){ 
+					$brands = array_values(array_unique($brands));
+					
 				}		
 			}			
-
+			//echo '<Pre>';print_r($brands);die;
 			$data['nav'] = 'terms';
 			$data['meta_title'] = config('app.name')." :: Search Products";
 			$data['meta_keywords'] = config('app.name')." Search Products";
