@@ -139,18 +139,18 @@ class NavigationMenuController extends Controller
 			'updated_at' => date('Y-m-d H:i:s'),
 		);
 		if($id!=''){
-			NavigationMenu::where('id',$id)->update($input);	
+			NavigationMenu::on('mysql2')->where('id',$id)->update($input);	
 		}else{
 			$input['created_by'] = Auth::user()->id;
 			$input['created_at'] = date('Y-m-d H:i:s');
-			$id = NavigationMenu::create($input)->id;				
+			$id = NavigationMenu::on('mysql2')->create($input)->id;				
 		}	
 		if($parent_id != 0){
 			$check = NavigationMenu::where('id',$parent_id)->first();
 			if($check->count()>0){
 				$input2['slug'] = "#";
 				$input2['has_child'] = 1;
-				NavigationMenu::where('id',$check->id)->update($input2);
+				NavigationMenu::on('mysql2')->where('id',$check->id)->update($input2);
 			}
 		}
 		echo '|success';				
@@ -163,7 +163,7 @@ class NavigationMenuController extends Controller
         {
             $req    = $request->all();
 			$deleteIds = explode(',',$req['ids']);
-			NavigationMenu::whereIn('id',$deleteIds)->delete();
+			NavigationMenu::on('mysql2')->whereIn('id',$deleteIds)->delete();
 			echo 'success';
 		}
     }	

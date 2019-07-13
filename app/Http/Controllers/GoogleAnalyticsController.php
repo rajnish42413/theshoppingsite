@@ -75,7 +75,7 @@ class GoogleAnalyticsController extends Controller
 				'status'=> $status,
 				'updated_at' => date('Y-m-d H:i:s'),
 			);
-				GoogleAnalytics::where('id',$id)->update($input);	
+				GoogleAnalytics::on('mysql2')->where('id',$id)->update($input);	
 
 			echo '|success';				
         //}

@@ -84,7 +84,7 @@ class EnquiryController extends Controller
         if ($request->isMethod('post')){
             $req    = $request->all();
 			$deleteIds = explode(',',$req['ids']);
-			Enquiry::whereIn('id',$deleteIds)->delete();
+			Enquiry::on('mysql2')->whereIn('id',$deleteIds)->delete();
 			echo 'success';
 		}
     }	

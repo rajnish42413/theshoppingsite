@@ -90,7 +90,7 @@ class SettingsController extends Controller
 			'logo'=> $pre_fileName,
 			'updated_at' => date('Y-m-d H:i:s'),
 		);
-			Setting::where('id',$id)->update($input);	
+			Setting::on('mysql2')->where('id',$id)->update($input);	
 
 		echo '|success';				
     }
@@ -114,10 +114,10 @@ class SettingsController extends Controller
 						'updated_at' => date('Y-m-d H:i:s'),
 					);
 					if($id[$i] != ''){
-						SocialSetting::where('id',$id[$i])->update($input);
+						SocialSetting::on('mysql2')->where('id',$id[$i])->update($input);
 					}else{
 						$input['created_at'] = date('Y-m-d H:i:s');
-						SocialSetting::create($input)->id;
+						SocialSetting::on('mysql2')->create($input)->id;
 					}					
 				}
 			
@@ -165,7 +165,7 @@ class SettingsController extends Controller
 			'updated_at' => date('Y-m-d H:i:s'),
 		);
 		//echo '<pre>';print_r($input);die;
-			ApiSetting::where('id',$id)->update($input);	
+			ApiSetting::on('mysql2')->where('id',$id)->update($input);	
 
 		echo '|success';				
     }
@@ -173,7 +173,7 @@ class SettingsController extends Controller
 	public function social_link_delete(Request $request) {
 
 		$deleteId = $request->input('id');
-		SocialSetting::where('id',$deleteId)->delete();
+		SocialSetting::on('mysql2')->where('id',$deleteId)->delete();
 		echo 'success';
     }		
 }

@@ -66,10 +66,10 @@ class SettingController extends Controller
 			}
 
 
-			Settings::where('key','site.title')->update(array('value'=>$site_title));	
-			Settings::where('key','site.description')->update(array('value'=>$site_description));	
-			Settings::where('key','site.hotel.defaultpricemargin')->update(array('value'=>$price_margin));	
-			Settings::where('key','site.logo')->update(array('value'=>$site_logo));	
+			Settings::on('mysql2')->where('key','site.title')->update(array('value'=>$site_title));	
+			Settings::on('mysql2')->where('key','site.description')->update(array('value'=>$site_description));	
+			Settings::on('mysql2')->where('key','site.hotel.defaultpricemargin')->update(array('value'=>$price_margin));	
+			Settings::on('mysql2')->where('key','site.logo')->update(array('value'=>$site_logo));	
 
 			echo '|success';				
         }

@@ -656,8 +656,13 @@ class HomeController extends Controller
 			if($cat_value && $cat_value->count() > 0){	
 				$data['categoryId'] = $cat_value->categoryId;
 			}
+			
 			$merchant_ids = array();
 			$merchantData = array();
+			$cat_ids = array();
+			$categories = array();
+			$products = array();
+			$brands = array();
 			
 			$res = $this->getSearchData($data);
 
@@ -668,8 +673,8 @@ class HomeController extends Controller
 					if($row['_source']['merchant_id'] != ''){
 						$merchant_ids[] = $row['_source']['merchant_id'];
 					}
-					if($row['_source']['parentcategoryid'] != ''){
-						$cat_ids[] = $row['_source']['parentcategoryid'];
+					if($row['_source']['categoryid'] != ''){
+						$cat_ids[] = $row['_source']['categoryid'];
 					}
 					if($row['_source']['brand_id'] != ''){
 						$brands[] = $row['_source']['brand_id'];
@@ -688,20 +693,15 @@ class HomeController extends Controller
 					}
 				}
 			}
-			
-
-			$cat_ids = array();
-			$categories = array();
-			$products = array();
-			$brands = array();
-			
+						
 			if($scat == ''){
 				if($cat_ids){ 
 					$cat_ids = array_values(array_unique($cat_ids)); 
-					$categories = Category::whereIn('parentId',$cat_ids)->get();		
+					//echo '<pre>';print_r($cat_ids);die;
+					$categories = Category::whereIn('categoryId',$cat_ids)->get();		
 				}
 			}
-			
+			//echo '<pre>';print_r($categories);die;
 			if($brands){ 
 				$brands = array_values(array_unique($brands));
 				

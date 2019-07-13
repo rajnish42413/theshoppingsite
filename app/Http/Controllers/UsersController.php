@@ -164,13 +164,13 @@ class UsersController extends Controller
 			'updated_at' => date('Y-m-d H:i:s'),
 		);
 		if($id!=''){
-			User::where('id',$id)->update($input);	
+			User::on('mysql2')->where('id',$id)->update($input);	
 		}else{
 			$random_pass = $this->random_pass();
 			$input['verified'] = 1;
 			$input['password'] = bcrypt($random_pass);
 			$input['created_at'] = date('Y-m-d H:i:s');
-			$id = User::create($input)->id;	
+			$id = User::on('mysql2')->create($input)->id;	
 			$input['password'] = $random_pass;
 			Mail::send(new NewUser($input));
 		}
@@ -182,7 +182,7 @@ class UsersController extends Controller
         {
             $req    = $request->all();
 			$deleteIds = explode(',',$req['ids']);
-			User::whereIn('id',$deleteIds)->delete();
+			User::on('mysql2')->whereIn('id',$deleteIds)->delete();
 			echo 'success';
 		}
     }
@@ -194,7 +194,7 @@ class UsersController extends Controller
             $req = $request->all();
 			$statusId = $req['id'];
 			$status = $req['value'];
-			User::where('id',$statusId)->update(array('active'=>$status));
+			User::on('mysql2')->where('id',$statusId)->update(array('active'=>$status));
 			echo 'success';
 		}
     }
@@ -207,7 +207,7 @@ class UsersController extends Controller
 
 			$statusIds = explode(' ,',$req['ids']);
 			$status = $req['status'];
-			User::whereIn('id',$statusIds)->update(array('active'=>$status));
+			User::on('mysql2')->whereIn('id',$statusIds)->update(array('active'=>$status));
 			echo 'success';
 		}
     }		

@@ -37,7 +37,7 @@ class EnquiryService implements EnquiryServiceContract
       $result['errors'] = $validator->errors();
     }
     else{
-		$result['obj'] = Enquiry::create($input);
+		$result['obj'] = Enquiry::on('mysql2')->create($input);
 		$result['success'] = collect(["Thanks for contacting us, we will get back to you shortly"]); 
 	  
       
@@ -46,6 +46,6 @@ class EnquiryService implements EnquiryServiceContract
   }
 
   public function deleteByIds($ids){
-    return Enquiry::destroy($ids);
+    return Enquiry::on('mysql2')->destroy($ids);
   }
 }
