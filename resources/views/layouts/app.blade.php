@@ -41,6 +41,7 @@ $parent_categories = DetailController::get_parent_categories();
 <?php if($settings){echo $settings->google_analytics;}?>	
 </head>
 <body>
+<?php if($data['nav'] != 'products-by-search'){?>
 <div class="preloader">
     <div class="thecube">
         <!--<div class="loader"></div>-->
@@ -53,7 +54,7 @@ $parent_categories = DetailController::get_parent_categories();
         </h4>
     </div>
 </div>
-
+<?php } ?>
 <?php if($settings){echo $settings->google_analytics2;}?>
 <!-- Header Start -->
 <header>
@@ -240,13 +241,15 @@ $parent_categories = DetailController::get_parent_categories();
 			</div>
 		</div>
 	</div>	
-</footer>	
+</footer>
+<?php if($data['nav'] != 'products-by-search'){?>
 <script>
 $(window).on("load", function() {
     var preLoader = $('.preloader');
     preLoader.addClass('loaderout').fadeToggle(500);  
 });
 </script>
+<?php } ?>
 <!--Main js file Style--> 
 <script src="{{env('APP_URL')}}assets/js/slider/owl.carousel.js"></script>
 <script src="{{env('APP_URL')}}assets/js/slider/index.js"></script>

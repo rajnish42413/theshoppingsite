@@ -38,7 +38,7 @@
 								<input type="hidden" id="keyword" value="<?php echo $data['keyword'];?>" name="keyword" />
 								<input type="hidden" id="search_category" value="<?php echo $data['search_category'];?>" name="cat" />
 								<input type="hidden" id="sorting_type" value="1" name="sorting_type" />
-								<input type="hidden" id="offset_val" value="" name="offset_val" />
+								<input type="hidden" id="offset_val" value="0" name="offset_val" />
 								<input type="hidden" id="showing_result" value="10" name="showing_result" />
 								<input type="hidden" id="parent_cat_id" value="<?php echo $data['parent_cat_id'];?>" name="parent_cat_id" />
 								<input type="hidden" id="cat_id" value="<?php echo $data['cat_id'];?>" name="cat_id" />					
@@ -112,6 +112,7 @@
 										<li>Sort by:</li>
 										<li>
 											<select id="product_sorting" onchange="product_sorting(this);">
+												<option value="0">Default</option>
 												<option value="1">Price: Low to High</option>
 												<option value="2">Price: High to Low</option>
 												<option value="3">New</option>
@@ -139,8 +140,8 @@
 
 							$title = $product['title'];
 							
-							if(isset($product['merchant_image']) && $product['merchant_image']!=''){
-								$merchant_image = $product['merchant_image'];
+							if(isset($product['merchant_id']) && $product['merchant_id']!=''){
+								$merchant_image = $merchantData[$product['merchant_id']];
 							}else{
 								$merchant_image = 'default.png';
 							}
@@ -232,14 +233,14 @@ $(window).on('load', function(){
 function product_sorting(e){
 	var x = e.value;
 	$("#filter_form #sorting_type").val(x);
-	$("#filter_form #offset_val").val('');
+	$("#filter_form #offset_val").val(0);
 	get_search_data(0);
 }
 
 function showing_result(e){
 	var y = e.value;
 	$("#filter_form #showing_result").val(y);
-	$("#filter_form #offset_val").val('');
+	$("#filter_form #offset_val").val(0);
 	get_search_data(0);
 }
 
@@ -299,14 +300,14 @@ function get_search_data(x){
 				var priceMax = data.to;
 				$("#dpriceMinVal").val(priceMin);
 				$("#dpriceMaxVal").val(priceMax);		
-				setTimeout(function(){ $("#filter_form #offset_val").val(''); get_search_data(0); }, 100);
+				setTimeout(function(){ $("#filter_form #offset_val").val(0); get_search_data(0); }, 100);
 			},
         });
     }
 	 
 
 function get_product_name(e){
-	setTimeout(function(){ $("#filter_form #offset_val").val(''); get_search_data(0); }, 100);
+	setTimeout(function(){ $("#filter_form #offset_val").val(0); get_search_data(0); }, 100);
 }
 
 function load_more(e){
