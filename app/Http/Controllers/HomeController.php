@@ -299,7 +299,7 @@ class HomeController extends Controller
 				}				
 			}
 		}
-		$data['nav'] = 'terms';
+		$data['nav'] = 'products-by-category';
 		$data['meta_title'] = config('app.name')." :: Search Products";
 		$data['meta_keywords'] = config('app.name')." Search Products";
 		$data['meta_description'] = config('app.name')." Search Products";	
@@ -311,7 +311,7 @@ class HomeController extends Controller
 	
 	public function product_detail(Request $request,$slug){
 		
-		$data['nav'] = 'terms';
+		$data['nav'] = 'product-detail';
 		$data['meta_title'] = config('app.name')." :: Product Detail";
 		$data['meta_keywords'] = config('app.name')." Product Detail";
 		$data['meta_description'] = config('app.name')." Product Detail";
@@ -636,32 +636,77 @@ class HomeController extends Controller
 	
 		$base_url= env('APP_URL');
 		$data['search_category'] = '';
-		$my_cat_id = '';
+		$data['categoryId'] = '';
+		$data['parentCategoryId'] = '';
+		$data['brand_id'] = '';
+		$data['from'] = 0;
+		$data['size'] = 10;
+		$data['min_price'] = '';
+		$data['max_price'] = '';
+		$data['sorting_type'] = 0;
 		
 		if($request->isMethod('get') && $request->input('keyword') !=''){
 			$keyword = array();
-			$data['keyword_array'] = $keyword = $this->getParts($request->input('keyword')); 
-
+			
 			$data['keyword'] =  $request->input('keyword'); //string
-			
-			$res = $this->getSearchData($data);
-			if($res['success'] == true){
-				$results = $res['data'];
-			}else{
-				$results = array();
-			}
-			
-			/* $data['search_category'] = $scat =  $request->input('cat'); //string slug
+			$scat =  $request->input('cat'); //string slug
 			
 			$cat_value = Category::where('status',1)->where('categories.slug',$scat)->first();
 			
 			if($cat_value && $cat_value->count() > 0){	
-				$my_cat_id = $cat_value->categoryId;
-			}		
-		*/	
+				$data['categoryId'] = $cat_value->categoryId;
+			}
+			$merchant_ids = array();
+			$merchantData = array();
+			
+			$res = $this->getSearchData($data);
+
+			if($res['success'] == true){
+				$results = $res['data'];
+				//echo '<pre>';print_r($results);die;
+				foreach($results as $row){
+					if($row['_source']['merchant_id'] != ''){
+						$merchant_ids[] = $row['_source']['merchant_id'];
+					}
+					if($row['_source']['parentcategoryid'] != ''){
+						$cat_ids[] = $row['_source']['parentcategoryid'];
+					}
+					if($row['_source']['brand_id'] != ''){
+						$brands[] = $row['_source']['brand_id'];
+					}
+				}
+			}else{
+				$results = array();
+			}
+			
+			if($merchant_ids){
+				$merchant_ids = array_values(array_unique($merchant_ids));
+				$merchant_data = Merchant::whereIn('id',$merchant_ids)->get();
+				if($merchant_data && $merchant_data->count() > 0){
+					foreach($merchant_data as $mdata){
+						$merchantData[$mdata->id] = $mdata->image;
+					}
+				}
+			}
+			
+
+			$cat_ids = array();
 			$categories = array();
 			$products = array();
 			$brands = array();
+			
+			if($scat == ''){
+				if($cat_ids){ 
+					$cat_ids = array_values(array_unique($cat_ids)); 
+					$categories = Category::whereIn('parentId',$cat_ids)->get();		
+				}
+			}
+			
+			if($brands){ 
+				$brands = array_values(array_unique($brands));
+				
+			}		
+				
 			$data['cat_breadcrumb'] = '';
 			$data['parent_category'] = '';	
 			$data['category'] = '';
@@ -672,62 +717,13 @@ class HomeController extends Controller
 			$data['min_price']	= '';
 			$data['max_price'] = '';
 			$data['brand_id'] = '';
-		/*				
-			$results = Product::select(DB::raw("products.*,merchants.image as merchant_image"))->leftJoin('merchants',function ($join){$join->on('products.merchant_id','=','merchants.id'); })->where('products.status',1);
-			
-			if($my_cat_id!=''){
-					$results = $results->where('products.catID1',$my_cat_id);
-				}
-			
-			if($keyword){
-				$results = $results->where(function ($query) use($keyword) {
-					for($s = 0; $s < count($keyword); $s++){
-						//$query->orWhere('categories.categoryName','like',"%$keyword[$s]%");
-						$query->orWhere('products.title','like',"%$keyword[$s]%");
-					}      
-				});
-			}		
-
-			
-			$results = $results->groupBy('products.itemId');
-			$results = $results->orderBy('products.current_price','asc');
-			$results = $results->limit(10);
-			$results = $results->get();
-			
-			$data['min_price'] = $this->getMinPriceByProductName($keyword);
-			$data['max_price'] = $this->getMaxPriceByProductName($keyword);
-
-			if($my_cat_id != ''){
-				$categories = Category::where('status',1)->where('parentId',$my_cat_id)->get();
-			}
-			
-			if($results && $results->count() > 0){
-				$cat_ids = array();
-				$brands = array();
-				foreach($results as $row){
-					$cat_ids[] = $row->parentCategoryId;
-					$brands[] = $row->brand_id;
-				}
-				
-				if($scat == ''){
-					if($cat_ids){ 
-						$cat_ids = array_values(array_unique($cat_ids)); 
-						$categories = Category::whereIn('parentId',$cat_ids)->get();		
-					}
-				}
-				
-				if($brands){ 
-					$brands = array_values(array_unique($brands));
-					
-				}		
-			}			 */
-			//echo '<Pre>';print_r($brands);die;
-			$data['nav'] = 'terms';
+		
+			$data['nav'] = 'products-by-search';
 			$data['meta_title'] = config('app.name')." :: Search Products";
 			$data['meta_keywords'] = config('app.name')." Search Products";
 			$data['meta_description'] = config('app.name')." Search Products";	
 			
-			return view('search_products/grid_list_search',['data'=>$data,'categories'=>$categories,'products'=>$results,'brands'=>$brands]);		
+			return view('search_products/grid_list_search',['data'=>$data,'categories'=>$categories,'products'=>$results,'brands'=>$brands,'merchantData'=>$merchantData]);		
 				
 		}else{
 			return redirect($base_url);
@@ -738,17 +734,18 @@ class HomeController extends Controller
 
 	public function get_products_search_ajax(Request $request){
 	
-		$keyword = array();
-		$my_cat_id = '';
-		$data['keyword_array'] = $keyword = $this->getParts($request->input('keyword')); //array
+
+		$data['categoryId'] =   '';
+		$data['brand_id'] =   '';
+		$data['parentCategoryId'] =   '';
 		$data['keyword'] =  $request->input('keyword'); //string
-		$data['search_category'] =  $scat = $request->input('cat'); //string
+		$scat = $request->input('cat'); //string
 		$cat_value = Category::where('status',1)->where('categories.slug',$scat)->first();
 		
 		if($cat_value && $cat_value->count() > 0){	
-			$my_cat_id = $cat_value->categoryId;
+			$data['categoryId']  = $cat_value->categoryId;
 		}		
-		$sorting_name = 'products.current_price';
+		$sorting_name = 'current_price';
 		$sorting_p = 'asc';	
 		$brands_array = array();
 		
@@ -758,14 +755,36 @@ class HomeController extends Controller
 		//echo '<pre>'; print_r($brands_array); die;
 		$cat_id = $request->input('cat_id');
 		$pro_name = trim($request->input('pro_name'));
-		$start_price = $request->input('dpriceMin');
-		$end_price = $request->input('dpriceMax');
-		$showing_result = $request->input('showing_result');
-		$offset_val = $request->input('offset_val');
-		$sorting_type = $request->input('sorting_type');
+		$data['min_price'] = $start_price = $request->input('dpriceMin');
+		$data['max_price'] = $end_price = $request->input('dpriceMax');
+		$data['size'] = $showing_result = $request->input('showing_result');
+		$data['from'] = $offset_val = $request->input('offset_val');
+		$data['sorting_type'] = $sorting_type = $request->input('sorting_type');
 	
 		$results = array();
-		$results = Product::select(DB::raw("products.*,merchants.image as merchant_image"))->leftJoin('merchants',function ($join){$join->on('products.merchant_id','=','merchants.id'); })->where('products.status',1);
+		$merchant_ids = array();
+		$merchantData = array();
+			
+		$res = $this->getSearchData($data);
+		if($res['success'] == true){
+			$results = $res['data'];
+			//echo '<pre>';print_r($results);die;
+			foreach($results as $row){
+				$merchant_ids[] = $row['_source']['merchant_id'];
+			}
+		}	
+		
+		if($merchant_ids){
+			$merchant_ids = array_values(array_unique($merchant_ids));
+			$merchant_data = Merchant::whereIn('id',$merchant_ids)->get();
+			if($merchant_data && $merchant_data->count() > 0){
+				foreach($merchant_data as $mdata){
+					$merchantData[$mdata->id] = $mdata->image;
+				}
+			}
+		}
+			
+/* 		$results = Product::select(DB::raw("products.*,merchants.image as merchant_image"))->leftJoin('merchants',function ($join){$join->on('products.merchant_id','=','merchants.id'); })->where('products.status',1);
 		if($my_cat_id != ''){
 			$results = $results->where('products.catID1',$my_cat_id);
 		}
@@ -809,10 +828,10 @@ class HomeController extends Controller
 		}				
 		$results = $results->limit($showing_result);
 		 $results = $results->get();
-
-		if($results && $results->count() > 0){			
-		$count = $results->count();
-			$output =  view('search_products/ajax_grid_list_search',['products'=>$results,'data'=>$data])->render();
+ */
+		if($results){			
+		$count = count($results);
+			$output =  view('search_products/ajax_grid_list_search',['products'=>$results,'data'=>$data,'merchantData'=>$merchantData])->render();
 			echo $count.'|'.$output;
 		}else{
 			$output = '0|';
@@ -1044,11 +1063,52 @@ function getSpecialParts($string){
 
 
 	function getSearchData($data){
+		//echo '<pre>'; print_R($data);die;
+		$requestArray = array();
 		
-		$requestArray = array('query' => array('match' => array('title' =>$data['keyword']))); 
+		$requestArray['from'] = $data['from'];
+		$requestArray['size'] = $data['size'];
+		$requestArray['query'] = array();
+		
+		
+		if($data['sorting_type'] == 1){
+			$requestArray['sort'] = array('current_price'=>array('order'=>'asc'));
+		}elseif($data['sorting_type'] == 2){
+			$requestArray['sort'] = array('current_price'=>array('order'=>'desc'));
+		}elseif($data['sorting_type'] == 3){
+			$requestArray['sort'] = array('created_at'=>array('order'=>'desc'));
+		}else{
+			//nothing
+		}
+		
+		$must = array();
+		
+		if($data['keyword'] !=''){
+			$arr1 = array('match'=>array('title'=>$data['keyword']));
+			array_push($must,$arr1);
+		}
+		if($data['categoryId'] !=''){
+			$arr2 = array('match'=>array('categoryid'=>$data['categoryId']));
+			array_push($must,$arr2);
+		}
+		if($data['brand_id'] !=''){
+			$arr3 = array('match'=>array('brand_id'=>$data['brand_id']));
+			array_push($must,$arr3);
+		}
+		if($data['parentCategoryId'] !=''){
+			$arr4 = array('match'=>array('parentcategoryid'=>$data['parentCategoryId']));
+			array_push($must,$arr4);
+		}
+		if($data['min_price'] !='' && $data['max_price'] !=''){
+			$arr5 = array('range'=>array('current_price'=>array('gte'=>$data['min_price'],'lte'=>$data['max_price'],'boost'=>'2.0')));
+			array_push($must,$arr5);
+		}		
+		
+		$requestArray['query']['bool']['must'] = $must;
 
 		$requestJson = json_encode($requestArray,true);
-
+		
+		//echo $requestJson;die;
 		$curl = curl_init();
 
 		curl_setopt_array($curl, array(
@@ -1078,6 +1138,7 @@ function getSpecialParts($string){
 			$output = array('success'=>false,'data'=>$res);
 		} else {
 			$res =  json_decode($response,true);
+			//echo '<pre>'; print_r($res);die;
 			if($res['hits']['hits']){
 				$res_data = $res['hits']['hits'];
 				$output = array('success'=>true,'data'=>$res_data);
