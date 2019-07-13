@@ -109,7 +109,7 @@ class CronController extends Controller
 				$cat_check = Category::where('categoryId',$input['categoryId'])->first();
 				
 				if($cat_check && $cat_check->count() > 0){
-					Category::where('categoryId',$input['categoryId'])->update($input);		
+					Category::on('mysql2')->where('categoryId',$input['categoryId'])->update($input);		
 				}else{
 					$input['created_at'] =  date('Y-m-d H:i:s');
 					Category::create($input)->id;	
@@ -270,10 +270,10 @@ class CronController extends Controller
 					}
 					
  					if($check && $check->count() > 0){
-						Product::where('itemId',$product->itemId)->update($input);	
+						Product::on('mysql2')->where('itemId',$product->itemId)->update($input);	
 					}else{
 						$input['created_at'] =  date('Y-m-d H:i:s');
-						Product::create($input)->id;	
+						Product::on('mysql2')->create($input)->id;	
 					}  	
 				}
 				
@@ -453,7 +453,7 @@ class CronController extends Controller
 					$slug = $this->check_slug_product($slug);
 					$input = array('slug'=>$slug);
 					//echo '<pre>'; print_r($input);die;
-					Product::where('itemId',$p->itemId)->update($input);
+					Product::on('mysql2')->where('itemId',$p->itemId)->update($input);
 				}
 			}
 		}
@@ -488,7 +488,7 @@ class CronController extends Controller
 	}
 //Live it is working	
 	public function by_category_ebay($pageNo = 1,$perPage = 100, $cat_id = 0 ){
-		EbayCronCategory::where('today_date','<',date('Y-m-d'))->update(array('today_date'=>date('Y-m-d'),'status'=>0));//date checking and updating
+		EbayCronCategory::on('mysql2')->where('today_date','<',date('Y-m-d'))->update(array('today_date'=>date('Y-m-d'),'status'=>0));//date checking and updating
 		
 		if($cat_id == 0){
 			$ebay_category = EbayCronCategory::where('status',0)->where('today_date',date('Y-m-d'))->orderBy('id','asc')->limit(1)->first();
@@ -641,7 +641,7 @@ class CronController extends Controller
 					}
 					
 					if($check && $check->count() > 0){
-						Product::where('itemId',$product->itemId)->update($input);	
+						Product::on('mysql2')->where('itemId',$product->itemId)->update($input);	
 					}else{
 						$input['created_at'] =  date('Y-m-d H:i:s');
 						Product::create($input)->itemId;
@@ -651,7 +651,7 @@ class CronController extends Controller
 				 
 				$ebay_cat = array('status'=>1,'updated_at'=>date('Y-m-d H:i:s'));
 				
-				EbayCronCategory::where('status',0)->where('categoryId',$cat_id)->update($ebay_cat);
+				EbayCronCategory::on('mysql2')->where('status',0)->where('categoryId',$cat_id)->update($ebay_cat);
 				
 				if($pageNo < $totalPages){ // && $pageNo <= 5 for 5 pages only
 					$pageNo++;

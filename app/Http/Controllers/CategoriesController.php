@@ -203,9 +203,9 @@ class CategoriesController extends Controller
 			'updated_at' => date('Y-m-d H:i:s'),
 		);
 		if($id!=''){
-			Category::where('id',$id)->update($input);	
+			Category::on('mysql2')->where('id',$id)->update($input);	
 		}else{
-			$id = Category::create($input)->id;				
+			$id = Category::on('mysql2')->create($input)->id;				
 		}	
 
 		echo "|success";
@@ -217,7 +217,7 @@ class CategoriesController extends Controller
         {
             $req    = $request->all();
 			$deleteIds = explode(',',$req['ids']);
-			Category::whereIn('id',$deleteIds)->delete();
+			Category::on('mysql2')->whereIn('id',$deleteIds)->delete();
 			echo 'success';
 		}
     }	
@@ -277,7 +277,7 @@ class CategoriesController extends Controller
             $req = $request->all();
 			$statusId = $req['id'];
 			$status = $req['value'];
-			Category::where('id',$statusId)->update(array('status'=>$status));
+			Category::on('mysql2')->where('id',$statusId)->update(array('status'=>$status));
 			echo 'success';
 		}
     }
@@ -290,7 +290,7 @@ class CategoriesController extends Controller
 
 			$statusIds = explode(' ,',$req['ids']);
 			$status = $req['status'];
-			Category::whereIn('id',$statusIds)->update(array('status'=>$status));
+			Category::on('mysql2')->whereIn('id',$statusIds)->update(array('status'=>$status));
 			echo 'success';
 		}
     }	

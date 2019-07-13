@@ -141,7 +141,7 @@ class MapCategoriesController extends Controller
 			'updated_at' => date('Y-m-d H:i:s'),
 		);
 		if($id!=''){
-			MapCategory::where('id',$id)->update($input);	
+			MapCategory::on('mysql2')->where('id',$id)->update($input);	
 		}else{
 			$input['created_by'] = Auth::user()->id;
 			$input['created_at'] = date('Y-m-d H:i:s');
@@ -152,7 +152,7 @@ class MapCategoriesController extends Controller
 			if($check->count()>0){
 				$input2['slug'] = "#";
 				$input2['has_child'] = 1;
-				MapCategory::where('id',$check->id)->update($input2);
+				MapCategory::on('mysql2')->where('id',$check->id)->update($input2);
 			}
 		}
 		echo '|success';				
@@ -165,7 +165,7 @@ class MapCategoriesController extends Controller
         {
             $req    = $request->all();
 			$deleteIds = explode(',',$req['ids']);
-			MapCategory::whereIn('id',$deleteIds)->delete();
+			MapCategory::on('mysql2')->whereIn('id',$deleteIds)->delete();
 			echo 'success';
 		}
     }	

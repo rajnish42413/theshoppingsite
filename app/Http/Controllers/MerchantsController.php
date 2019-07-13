@@ -144,10 +144,10 @@ class MerchantsController extends Controller
 			'updated_at' => date('Y-m-d H:i:s'),
 		);
 		if($id!=''){
-			Merchant::where('id',$id)->update($input);	
+			Merchant::on('mysql2')->where('id',$id)->update($input);	
 		}else{
 			$input['created_at'] = date('Y-m-d H:i:s');
-			$id = Merchant::create($input)->id;				
+			$id = Merchant::on('mysql2')->create($input)->id;				
 		}	
 		echo '|success';				
 
@@ -159,7 +159,7 @@ class MerchantsController extends Controller
         {
             $req    = $request->all();
 			$deleteIds = explode(',',$req['ids']);
-			Merchant::whereIn('id',$deleteIds)->delete();
+			Merchant::on('mysql2')->whereIn('id',$deleteIds)->delete();
 			echo 'success';
 		}
     }	

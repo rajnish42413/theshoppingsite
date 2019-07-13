@@ -55,7 +55,7 @@ class UserController extends Controller
 				'updated_at' => date('Y-m-d H:i:s'),
 			);
 			if($id!=''){
-				User::where('id',$id)->update($input);	
+				User::on('mysql2')->where('id',$id)->update($input);	
 			}	
 			echo '|success';				
         }
@@ -78,7 +78,7 @@ class UserController extends Controller
 					echo 'cpass_no_match';
 				}else{
 					$nPassword = Hash::make($npass);
-					User::where('id',Auth::user()->id)->update(array('password'=>$nPassword,'updated_at' => date('Y-m-d H:i:s')));
+					User::on('mysql2')->where('id',Auth::user()->id)->update(array('password'=>$nPassword,'updated_at' => date('Y-m-d H:i:s')));
 					echo 'success';
 				}
 			}	
@@ -106,7 +106,7 @@ class UserController extends Controller
 				'updated_at' => date('Y-m-d H:i:s'),
 			);
 			if($id!=''){
-				User::where('id',$id)->update($input);	
+				User::on('mysql2')->where('id',$id)->update($input);	
 			}	
 			echo '|success';				
         }

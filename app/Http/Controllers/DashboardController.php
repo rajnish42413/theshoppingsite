@@ -90,7 +90,7 @@ class DashboardController extends Controller
 				'updated_at' => date('Y-m-d H:i:s'),
 			);
 			if($id!=''){
-				User::where('id',$id)->update($input);	
+				User::on('mysql2')->where('id',$id)->update($input);	
 			}	
 			echo '|success';			
 		}			
@@ -139,7 +139,7 @@ class DashboardController extends Controller
 				echo 'old_pass_error';
 			}else{
 				$nPassword = Hash::make($npass);
-				User::where('id',Auth::user()->id)->update(array('password'=>$nPassword,'updated_at' => date('Y-m-d H:i:s')));
+				User::on('mysql2')->where('id',Auth::user()->id)->update(array('password'=>$nPassword,'updated_at' => date('Y-m-d H:i:s')));
 				echo 'success';
 				
 			}	
@@ -167,7 +167,7 @@ class DashboardController extends Controller
 				'updated_at' => date('Y-m-d H:i:s'),
 			);
 			if($id!=''){
-				User::where('id',$id)->update($input);	
+				User::on('mysql2')->where('id',$id)->update($input);	
 			}	
 			echo '|success';				
         }
@@ -441,7 +441,7 @@ class DashboardController extends Controller
 				$input3 = array();
 				$input3['booking_status'] = $res_data['BookingStatus'];
 				$input3['status'] = 0;
-				CartItems::where('id',$req['cart_item_id'])->update($input3);
+				CartItems::on('mysql2')->where('id',$req['cart_item_id'])->update($input3);
 				return $input3['booking_status'];
 			}
 		}else{

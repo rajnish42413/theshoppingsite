@@ -241,7 +241,7 @@ $menu_permissions = DetailController::get_menu_permissions();
         </li>
 
 	<?php if(Auth::user()->is_super_admin == 1 || in_array('map_categories',$menu_permissions)){?>		
-        <li class="treeview <?php if($data['nav'] == 'menu_map_categories'){echo 'active';}?>">
+        <li class="hide treeview <?php if($data['nav'] == 'menu_map_categories'){echo 'active';}?>">
           <a href="#">
             <i class="fa fa-tags"></i> <span>Map Categories</span>
             <span class="pull-right-container">

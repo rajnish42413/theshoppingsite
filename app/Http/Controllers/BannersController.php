@@ -142,11 +142,11 @@ class BannersController extends Controller
 			'updated_at' => date('Y-m-d H:i:s'),
 		);
 		if($id!=''){
-			Banner::where('id',$id)->update($input);	
+			Banner::on('mysql2')->where('id',$id)->update($input);	
 		}else{
 			$input['created_by'] = Auth::user()->id;
 			$input['created_at'] = date('Y-m-d H:i:s');
-			$id = Banner::create($input)->id;				
+			$id = Banner::on('mysql2')->create($input)->id;				
 		}	
 
 		echo '|success';				
@@ -156,7 +156,7 @@ class BannersController extends Controller
         if ($request->isMethod('post')){
             $req    = $request->all();
 			$deleteIds = explode(',',$req['ids']);
-			Banner::whereIn('id',$deleteIds)->delete();
+			Banner::on('mysql2')->whereIn('id',$deleteIds)->delete();
 			echo 'success';
 		}
     }	

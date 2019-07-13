@@ -87,7 +87,7 @@ class FrontPagesController extends Controller
 	public function delete_faq_data(Request $request){
 		$req = $request->all();
 		$id = $req['row_id'];
-		$result = FaqData::where('id',$id)->delete();
+		$result = FaqData::on('mysql2')->where('id',$id)->delete();
 		if($result){
 			return "|success"; 
 		}
@@ -175,10 +175,10 @@ class FrontPagesController extends Controller
 			'updated_at'=>date('Y-m-d H:i:s'),
 		);
 		if($id!=''){
-			FrontPageSetting::where('id',$id)->update($input);	
+			FrontPageSetting::on('mysql2')->where('id',$id)->update($input);	
 		}else{
 			$input['created_at'] = date('Y-m-d H:i:s');
-			$id = FrontPageSetting::create($input)->id;				
+			$id = FrontPageSetting::on('mysql2')->create($input)->id;				
 		}	
 			if($req['page_type'] == 'faq'){
 				
@@ -195,11 +195,11 @@ class FrontPagesController extends Controller
 							'updated_at'=>date('Y-m-d H:i:s'),							
 						);
 						if( $row_id[$i]!='0'){
-							FaqData::where('id',$row_id[$i])->update($fdata);
+							FaqData::on('mysql2')->where('id',$row_id[$i])->update($fdata);
 							
 						}else{
 							$data['created_at'] = date('Y-m-d H:i:s');
-							FaqData::create($fdata)->id;
+							FaqData::on('mysql2')->create($fdata)->id;
 						} 
 					}
 					
@@ -214,7 +214,7 @@ class FrontPagesController extends Controller
 				$contact['google_map_src_code'] = $req['google_map_src_code'];
 				$contact_id = $req['contact_id'];
 				
-				ContactInfo::where('id',$contact_id)->update($contact);					
+				ContactInfo::on('mysql2')->where('id',$contact_id)->update($contact);					
 			}
 		echo "|success";
 

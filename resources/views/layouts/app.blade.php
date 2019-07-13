@@ -206,7 +206,7 @@ $parent_categories = DetailController::get_parent_categories();
 					<div class="sh_widgets sh_widgets_link sh_float_width">
 						<h4>useful Links</h4>
 						<ul>
-							<li><a href="{{env('APP_URL')}}about">About</a></li>
+							<li class="hide"><a href="{{env('APP_URL')}}about">About</a></li>
 							<li><a href="{{env('APP_URL')}}contact">Contact</a></li>
 							<li><a href="{{env('APP_URL')}}faq">FAQ</a></li>
 						</ul>
