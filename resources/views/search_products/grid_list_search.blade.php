@@ -42,6 +42,7 @@
 								<input type="hidden" id="showing_result" value="10" name="showing_result" />
 								<input type="hidden" id="parent_cat_id" value="<?php echo $data['parent_cat_id'];?>" name="parent_cat_id" />
 								<input type="hidden" id="cat_id" value="<?php echo $data['cat_id'];?>" name="cat_id" />					
+								<input type="hidden" id="ppc" value="<?php echo $data['ppc'];?>" name="ppc" />					
 
 								<div class="sh_side_widget sh_sidear_cat_price_filter sh_float_width">
 									<h4 class="sh_sidecat_heading">Filter By Price</h4>
@@ -145,10 +146,16 @@
 							}else{
 								$merchant_image = 'default.png';
 							}
+							
+							if($data['ppc'] == '1'){
+								$product_url = $product['viewitemurl'];;
+							}else{
+								$product_url = env('APP_URL')."/product/".$product['slug'];
+							}
 							?>
 						
 							<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 sh_custom_width">
-								<a href="{{ env('APP_URL')}}product/<?php echo $product['slug'];?>">
+								<a href="<?php echo $product_url;?>">
 									<div class="sh_grid_product_section sh_float_width">
 								<?php if($product['quantity']== 0){?>
 										<div class="out_of_stock">

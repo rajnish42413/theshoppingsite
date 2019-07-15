@@ -232,7 +232,7 @@ class HomeController extends Controller
 	}
 	
 	public function search_list(Request $request,$slug, $brand=''){
-				
+		$data['ppc'] =  $request->input('ppc');
 		$starttime = $data['starttime'] = microtime(true); // Top of page
 		$data['search_value'] =  $request->input('search');
 		$categories = array();
@@ -407,9 +407,12 @@ class HomeController extends Controller
 		$sorting_name = 'products.current_price';
 		$sorting_p = 'asc';	
 		$brands_array = array();
+		$data['ppc'] = '';
 		
 		$parent_cat_id = $request->input('parent_cat_id');
 		$brands_array = $request->input('brands');
+		
+		$data['ppc'] = $request->input('ppc');
 		
 		//echo '<pre>'; print_r($brands_array); die;
 		$cat_id = $request->input('cat_id');
@@ -486,7 +489,7 @@ class HomeController extends Controller
 		$results = $results->get();
 		//echo $results;die;
 		if($results && $results->count() > 0){			
-			echo view('search_products/ajax_grid_list',['products'=>$results])->render();				
+			echo view('search_products/ajax_grid_list',['products'=>$results,'data'=>$data])->render();				
 		}else{
 			echo '0';
 		} 		
@@ -644,12 +647,14 @@ class HomeController extends Controller
 		$data['min_price'] = '';
 		$data['max_price'] = '';
 		$data['sorting_type'] = 0;
+		$data['ppc'] = '';
 		
 		if($request->isMethod('get') && $request->input('keyword') !=''){
 			$keyword = array();
 			
 			$data['keyword'] =  $request->input('keyword'); //string
 			$scat =  $request->input('cat'); //string slug
+			$data['ppc'] =  $request->input('ppc'); //ppc
 			
 			$cat_value = Category::where('status',1)->where('categories.slug',$scat)->first();
 			
@@ -738,7 +743,9 @@ class HomeController extends Controller
 		$data['categoryId'] =   '';
 		$data['brand_id'] =   '';
 		$data['parentCategoryId'] =   '';
+		$data['ppc'] = '';
 		$data['keyword'] =  $request->input('keyword'); //string
+		$data['ppc'] =  $request->input('ppc'); //ppc
 		$scat = $request->input('cat'); //string
 		$cat_value = Category::where('status',1)->where('categories.slug',$scat)->first();
 		
@@ -783,52 +790,7 @@ class HomeController extends Controller
 				}
 			}
 		}
-			
-/* 		$results = Product::select(DB::raw("products.*,merchants.image as merchant_image"))->leftJoin('merchants',function ($join){$join->on('products.merchant_id','=','merchants.id'); })->where('products.status',1);
-		if($my_cat_id != ''){
-			$results = $results->where('products.catID1',$my_cat_id);
-		}
-				
-		if($keyword){
-			$results = $results->where(function ($query) use($keyword) {
-				for($s = 0; $s < count($keyword); $s++){
-					//$query->orWhere('categories.categoryName','like',"%$keyword[$s]%");
-					$query->orWhere('products.title','like',"%$keyword[$s]%");
-				}      
-			});
-		}	
 
-		if($start_price!='' && $end_price!=''){
-			$results = $results->where('products.current_price','>=',$start_price);
-			$results = $results->where('products.current_price','<=',$end_price);
-		}
-		
-		if($pro_name !=''){
-			$results = $results->where('products.title','like',"%" .$pro_name. "%");
-		}
-		
-		if($brands_array){
-			$results = $results->whereIn('products.brand_id', $brands_array);
-		}
-		if($sorting_type == '1'){
-			$sorting_name = 'products.current_price';
-			$sorting_p = 'asc';
-		}elseif($sorting_type == '2'){
-			$sorting_name = 'products.current_price';
-			$sorting_p = 'desc';
-		}elseif($sorting_type == '3'){
-			$sorting_name = 'products.itemId';
-			$sorting_p = 'desc';
-		}
-		
-		//$results = $results->groupBy('products.itemId');
-		$results = $results->orderBy($sorting_name,$sorting_p);
-		if($offset_val!='' && $offset_val >= 10){
-			$results = $results->offset($offset_val);
-		}				
-		$results = $results->limit($showing_result);
-		 $results = $results->get();
- */
 		if($results){			
 		$count = count($results);
 			$output =  view('search_products/ajax_grid_list_search',['products'=>$results,'data'=>$data,'merchantData'=>$merchantData])->render();
