@@ -37,7 +37,7 @@
 							{{ csrf_field() }}
 								<input type="hidden" id="keyword" value="<?php echo $data['keyword'];?>" name="keyword" />
 								<input type="hidden" id="search_category" value="<?php echo $data['search_category'];?>" name="cat" />
-								<input type="hidden" id="sorting_type" value="1" name="sorting_type" />
+								<input type="hidden" id="sorting_type" value="0" name="sorting_type" />
 								<input type="hidden" id="offset_val" value="0" name="offset_val" />
 								<input type="hidden" id="showing_result" value="10" name="showing_result" />
 								<input type="hidden" id="parent_cat_id" value="<?php echo $data['parent_cat_id'];?>" name="parent_cat_id" />
