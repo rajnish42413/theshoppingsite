@@ -60,13 +60,13 @@ class ProductsImport implements ToModel, WithBatchInserts, WithChunkReading, Wit
 						'slug' => $this->slugify($merchant),
 						'updated_at' => date('Y-m-d H:i:s'),
 					);
-					$merchant_check = Merchant::where('slug',$input2['slug'])->first();
+					$merchant_check = Merchant::on('mysql2')->where('slug',$input2['slug'])->first();
 					if($merchant_check && $merchant_check->count() > 0){
 						$merchant_id = $merchant_check->id;
-						//Merchant::where('id',$merchant_id)->update($input2);
+						Merchant::on('mysql2')->where('id',$merchant_id)->update($input2);
 					}else{
 						$input2['updated_at'] = date('Y-m-d H:i:s');
-						$merchant_id = Merchant::create($input2)->id;
+						$merchant_id = Merchant::on('mysql2')->create($input2)->id;
 					}
 					
 				}
@@ -78,7 +78,7 @@ class ProductsImport implements ToModel, WithBatchInserts, WithChunkReading, Wit
 				}			
 				
 				
-				$cat_check = Category::where('categoryId',$categoryId)->first();
+				$cat_check = Category::on('mysql2')->where('categoryId',$categoryId)->first();
 				
 				if($categoryId !='' && $cat_check && $cat_check->count() > 0){
 					$cID1 = $catId = $cat_check->categoryId;
@@ -102,7 +102,7 @@ class ProductsImport implements ToModel, WithBatchInserts, WithChunkReading, Wit
 				
 				}else{
 					$cinput = array();
-					$parentId = $other_cat_id = Category::where('is_other',1)->first()->categoryId;
+					$parentId = $other_cat_id = Category::on('mysql2')->where('is_other',1)->first()->categoryId;
 					
 					 if($category!=''){
 						$category_array = explode('>',$category);
@@ -114,7 +114,7 @@ class ProductsImport implements ToModel, WithBatchInserts, WithChunkReading, Wit
 						$cat_slug = $this->slugify($cat);
 							
 						$cat_check2 = array();					
-						$cat_check2 = Category::where('slug',$cat_slug)->where('parentId',$parentId);
+						$cat_check2 = Category::on('mysql2')->where('slug',$cat_slug)->where('parentId',$parentId);
 						
 						if($merchant_id != 0){
 							$cat_check2 = $cat_check2->where('merchant_id',$merchant_id);
@@ -139,7 +139,7 @@ class ProductsImport implements ToModel, WithBatchInserts, WithChunkReading, Wit
 							$cinput['created_at'] =  date('Y-m-d H:i:s');
 							$cinput['updated_at'] =  date('Y-m-d H:i:s');
 							//echo '<pre>';print_r($cinput);die;
-							Category::create($cinput);	//create new category							
+							Category::on('mysql2')->create($cinput);	//create new category							
 						}
 						
 						$catID1 = $parentId;
@@ -163,9 +163,10 @@ class ProductsImport implements ToModel, WithBatchInserts, WithChunkReading, Wit
 					}
 				}
 				
-				$item_check = Product::where('itemId',$itemId)->get();
-
+				$item_check = Product::on('mysql2')->where('itemId',$itemId)->get();
+				//echo '<pre>'; print_r($item_check);die;
 				if($item_check && $item_check->count() > 0){
+					//echo 'update';die;
 					$uinput = array(
 						'merchant_id'     => $merchant_id,				
 						'title'     => $title,
@@ -187,11 +188,13 @@ class ProductsImport implements ToModel, WithBatchInserts, WithChunkReading, Wit
 						'description'    => $description,
 						'updated_at'    => date('Y-m-d H:i:s')				
 					);
-					//Product::where('itemId',$itemId)->update($uinput);
 					
-					return true;
+					Product::on('mysql2')->where('itemId',$itemId)->update($uinput);
+					
+					//return true;
 				}else{
-					return new Product([
+					//echo 'insert';die;
+					$insert_data = array(
 						'merchant_id' => $merchant_id,
 						'itemId'     => $itemId,
 						'title'     => $title,
@@ -213,8 +216,8 @@ class ProductsImport implements ToModel, WithBatchInserts, WithChunkReading, Wit
 						'description'    => $description,
 						'created_at'    => date('Y-m-d H:i:s'),
 						'updated_at'    => date('Y-m-d H:i:s')
-					]);	
-				//	Product::insert($insert_data);	
+					);	
+					Product::on('mysql2')->insert($insert_data);	
 					//return true;	
 				}
 
@@ -232,8 +235,8 @@ class ProductsImport implements ToModel, WithBatchInserts, WithChunkReading, Wit
 					  if ($value == '') {
 						  $onFailure($attribute.' value is required.');
 					  }					 
-					  if (strlen($value) > 20) {
-						   $onFailure($attribute.' value can up to 20 characters long.');
+					  if (strlen($value) > 30) {
+						   $onFailure($attribute.' value can up to 30 characters long.');
 					  }
 				}
               },
@@ -242,7 +245,7 @@ class ProductsImport implements ToModel, WithBatchInserts, WithChunkReading, Wit
 					  if ($value == '') {
 						   $onFailure($attribute.' value is required.');
 					  }						 
-					  if (strlen($value) > 20) {
+					  if (strlen($value) > 30) {
 						   $onFailure($attribute.' value can up to 20 characters long.');
 					  }
 				}
