@@ -474,18 +474,13 @@ class ProductsController extends Controller
 	}
 	
 	public function importProcess(Request $request){
-	Product::truncate();
+	//Product::truncate();
 		if (Input::hasFile('file')){
 			
 			$file = request()->file('file');
 			$ext =  $file->getClientOriginalExtension();
 			$temp =$file->getPathName();
-			$zipName = $file->getClientOriginalName();
-			/*
-			$csvFilePath = realpath('csv_file/20.xlsx');	
-Excel::import(new ProductsImport,$csvFilePath);
-echo 'success';die;	*/	
-			
+			$zipName = $file->getClientOriginalName();		
 			
 			if($ext == 'csv' || $ext == 'xlsx'){				//CSV or Excel
 				Excel::import(new ProductsImport,$file);

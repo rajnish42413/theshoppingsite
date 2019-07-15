@@ -90,7 +90,7 @@ $('.wait_loader').show();
 		cache:false,
 		datatype:"json",
 		success: function(response)
-		{ return false;
+		{ 
 			$("#sub_btn").html('Submit'); 
 			$('.wait_loader').hide();	
 			var result = response.split("|"); 
