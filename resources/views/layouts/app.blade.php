@@ -42,9 +42,8 @@ $parent_categories = DetailController::get_parent_categories();
 </head>
 <body>
 <?php if($data['nav'] != 'products-by-search'){?>
-<div class="preloader">
+<!--div class="preloader">
     <div class="thecube">
-        <!--<div class="loader"></div>-->
         <h4>
             <div class="lodind_img">
                 <img src="{{env('APP_URL')}}assets/images/favicon.png">
@@ -53,7 +52,7 @@ $parent_categories = DetailController::get_parent_categories();
             </div>
         </h4>
     </div>
-</div>
+</div-->
 <?php } ?>
 <?php if($settings){echo $settings->google_analytics2;}?>
 <!-- Header Start -->
@@ -112,6 +111,7 @@ $parent_categories = DetailController::get_parent_categories();
 								<option value="<?php echo $cat->slug;?>" <?php if(isset($data['search_category']) && $data['search_category'] == $cat->slug){ echo 'selected'; }?>><?php echo $cat->categoryName;?></option>
 						<?php } } ?>
 							</select>
+							
 							<button type="submit" id="search_btn">Search <i class="fa fa-spinner fa-spin searchLoader" style="display:none;"></i></button>
 						</form>
 					
@@ -244,10 +244,10 @@ $parent_categories = DetailController::get_parent_categories();
 </footer>
 <?php if($data['nav'] != 'products-by-search'){?>
 <script>
-$(window).on("load", function() {
+/* $(window).on("load", function() {
     var preLoader = $('.preloader');
     preLoader.addClass('loaderout').fadeToggle(500);  
-});
+}); */
 </script>
 <?php } ?>
 <!--Main js file Style--> 
