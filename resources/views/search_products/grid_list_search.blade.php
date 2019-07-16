@@ -42,7 +42,7 @@
 								<input type="hidden" id="showing_result" value="10" name="showing_result" />
 								<input type="hidden" id="parent_cat_id" value="<?php echo $data['parent_cat_id'];?>" name="parent_cat_id" />
 								<input type="hidden" id="cat_id" value="<?php echo $data['cat_id'];?>" name="cat_id" />					
-								<input type="hidden" id="ppc" value="<?php echo $data['ppc'];?>" name="ppc" />					
+								<input type="hidden" id="Lp" value="<?php echo $data['Lp'];?>" name="Lp" />					
 
 								<div class="sh_side_widget sh_sidear_cat_price_filter sh_float_width">
 									<h4 class="sh_sidecat_heading">Filter By Price</h4>
@@ -147,7 +147,7 @@
 								$merchant_image = 'default.png';
 							}
 							
-							if($data['ppc'] == '1'){
+							if($data['Lp'] == '1'){
 								$product_url = $product['viewitemurl'];;
 							}else{
 								$product_url = env('APP_URL')."/product/".$product['slug'];
