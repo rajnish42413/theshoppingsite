@@ -232,7 +232,7 @@ class HomeController extends Controller
 	}
 	
 	public function search_list(Request $request,$slug, $brand=''){
-		$data['ppc'] =  $request->input('ppc');
+		$data['Lp'] =  $request->input('Lp');
 		$starttime = $data['starttime'] = microtime(true); // Top of page
 		$data['search_value'] =  $request->input('search');
 		$categories = array();
@@ -407,12 +407,12 @@ class HomeController extends Controller
 		$sorting_name = 'products.current_price';
 		$sorting_p = 'asc';	
 		$brands_array = array();
-		$data['ppc'] = '';
+		$data['Lp'] = '';
 		
 		$parent_cat_id = $request->input('parent_cat_id');
 		$brands_array = $request->input('brands');
 		
-		$data['ppc'] = $request->input('ppc');
+		$data['Lp'] = $request->input('Lp');
 		
 		//echo '<pre>'; print_r($brands_array); die;
 		$cat_id = $request->input('cat_id');
@@ -647,14 +647,14 @@ class HomeController extends Controller
 		$data['min_price'] = '';
 		$data['max_price'] = '';
 		$data['sorting_type'] = 0;
-		$data['ppc'] = '';
+		$data['Lp'] = '';
 		
 		if($request->isMethod('get') && $request->input('keyword') !=''){
 			$keyword = array();
 			
 			$data['keyword'] =  $request->input('keyword'); //string
 			$scat =  $request->input('cat'); //string slug
-			$data['ppc'] =  $request->input('ppc'); //ppc
+			$data['Lp'] =  $request->input('Lp'); //Lp
 			
 			$cat_value = Category::where('status',1)->where('categories.slug',$scat)->first();
 			
@@ -743,9 +743,9 @@ class HomeController extends Controller
 		$data['categoryId'] =   '';
 		$data['brand_id'] =   '';
 		$data['parentCategoryId'] =   '';
-		$data['ppc'] = '';
+		$data['Lp'] = '';
 		$data['keyword'] =  $request->input('keyword'); //string
-		$data['ppc'] =  $request->input('ppc'); //ppc
+		$data['Lp'] =  $request->input('Lp'); //Lp
 		$scat = $request->input('cat'); //string
 		$cat_value = Category::where('status',1)->where('categories.slug',$scat)->first();
 		
