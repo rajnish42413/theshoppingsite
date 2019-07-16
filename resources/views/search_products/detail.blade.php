@@ -5,6 +5,12 @@ $settings = DetailController::get_settings();
 @extends('layouts.app')
 
 @section('content')
+
+<?php
+	include('grid_list_search.blade.php');
+	$sh_product = $sh_prod;	
+?>
+
 <?php
 
 $gallery_images = array();
@@ -983,12 +989,49 @@ if($product->Variations != ''){
 	<div class="sh_related_product sh_category_wrapper sh_float_width">
 		<div class="container">
 			<div class="row">
-				<div class="col-lg-6 col-md-8 col-sm-12 col-xs-12 col-lg-offset-3 col-md-offset-2">
+				
+				<!-- Ads Section -->
+				<div class="sh_ads_wrapper sh_float_width">
+					<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+						<div class="sh_add_section sh_float_width">
+							<div class="aligncenter sh_add_section">
+								<script type="text/javascript">
+									
+									var phpVar1 = '<?php echo $sh_product ; ?>';
+									
+									var phpVar2 = '<?php echo $data['keyword'] ; ?>';
+									
+									console.log('phpVar2');
+									console.log(phpVar2);
+									console.log(phpVar1);
+									
+									amzn_assoc_placement = "adunit0";
+									amzn_assoc_tracking_id = "theshoppi0545-20";
+									amzn_assoc_ad_mode = "search";
+									amzn_assoc_ad_type = "smart";
+									amzn_assoc_marketplace = "amazon";
+									amzn_assoc_region = "US";
+									amzn_assoc_default_search_phrase = phpVar1;
+									amzn_assoc_default_category = "All";
+									amzn_assoc_linkid = "0a5fbb1412301fb7ded18ab7d863f79a";
+									amzn_assoc_search_bar = "false";
+									amzn_assoc_title = "Shop Related Products";
+									</script>
+									<script src="//z-na.amazon-adsystem.com/widgets/onejs?MarketPlace=US"></script>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			
+			<!---/* 
+			
+			<div class="col-lg-6 col-md-8 col-sm-12 col-xs-12 col-lg-offset-3 col-md-offset-2">
 					<div class="sh_heading">
 						<h2>You May Also Love</h2>
 					</div>
 				</div>
-			</div>
 			<div class="row">
 				<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
 					<div class="sh_top_category_section sh_float_width">
@@ -1022,14 +1065,9 @@ if($product->Variations != ''){
 						</div>
 					</div>
 				</div>
-			</div>
+			</div> */ --->
 		</div>
 	</div>
-	
-	
-	
-	
-	
 	
 </div>	
 
