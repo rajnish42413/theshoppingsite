@@ -1007,7 +1007,7 @@ if($product->Variations != ''){
 										amzn_assoc_title = "";
 										
 										amzn_assoc_default_search_phrase = '<?php if($data["keyword_k"] != ""){ echo $data["keyword_k"];}else{ echo $data["keyword_c"];}?>';
-										amzn_assoc_default_category = '<?php if($data["keyword_c"] != ""){ echo $data["keyword_c"];}else{ echo "All";}?>';
+										amzn_assoc_default_category = 'All';
 										amzn_assoc_linkid = "c07e0039f3c54b5c9e151aec6aaba029";
 										amzn_assoc_rows = "2";
 									</script>

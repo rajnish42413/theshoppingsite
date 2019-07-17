@@ -207,7 +207,7 @@
 										amzn_assoc_region = "US";
 										amzn_assoc_title = "Shop Related Products";
 										amzn_assoc_default_search_phrase = phpVar;
-										amzn_assoc_default_category = phpVar;
+										amzn_assoc_default_category = 'All';
 										amzn_assoc_linkid = "c07e0039f3c54b5c9e151aec6aaba029";
 										amzn_assoc_rows = "2";
 									</script>
