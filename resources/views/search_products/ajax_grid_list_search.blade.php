@@ -18,7 +18,7 @@
 								$merchant_image = 'default.png';
 							}
 
-							if($data['ppc'] == '1'){
+							if($data['Lp'] == '1'){
 								$product_url = $product['viewitemurl'];;
 							}else{
 								$product_url = env('APP_URL')."/product/".$product['slug'];
@@ -27,7 +27,7 @@
 							?>
 						
 							<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 sh_custom_width">
-								<a href="<?php echo $product_url;?>">
+								<a href="<?php echo $product_url;?>" target="_blank">
 									<div class="sh_grid_product_section sh_float_width">
 								<?php if($product['quantity']== 0){?>
 										<div class="out_of_stock">
