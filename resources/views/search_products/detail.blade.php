@@ -991,40 +991,31 @@ if($product->Variations != ''){
 					</div>
 				</div>
 			</div>
-			<div class="row">
-				<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-					<div class="sh_top_category_section sh_float_width">
-						<img src="{{env('APP_URL')}}assets/images/grid/product2.jpg">
-						<div class="sh_cat_name">
-							<h4>Mackbook 9.2</h4>
+					<!-- Search Ads Section -->
+					<div class="sh_ads_wrapper sh_float_width">
+						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+							<div class="sh_add_section sh_float_width">
+								<div class="aligncenter sh_add_section">
+									<script type="text/javascript">
+										amzn_assoc_placement = "adunit0";
+										amzn_assoc_search_bar = "false";
+										amzn_assoc_tracking_id = "theshoppi0545-20";
+										amzn_assoc_ad_mode = "search";
+										amzn_assoc_ad_type = "smart";
+										amzn_assoc_marketplace = "amazon";
+										amzn_assoc_region = "US";
+										amzn_assoc_title = "";
+										
+										amzn_assoc_default_search_phrase = '<?php if($data["keyword_k"] != ""){ echo $data["keyword_k"];}else{ echo $data["keyword_c"];}?>';
+										amzn_assoc_default_category = '<?php if($data["keyword_c"] != ""){ echo $data["keyword_c"];}else{ echo "All";}?>';
+										amzn_assoc_linkid = "c07e0039f3c54b5c9e151aec6aaba029";
+										amzn_assoc_rows = "2";
+									</script>
+									<script src="//z-na.amazon-adsystem.com/widgets/onejs?MarketPlace=US"></script>
+								</div>
+							</div>
 						</div>
 					</div>
-				</div>
-				<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-					<div class="sh_top_category_section sh_float_width">
-						<img src="{{env('APP_URL')}}assets/images/grid/product6.jpg">
-						<div class="sh_cat_name">
-							<h4>Samsung galaxy</h4>
-						</div>
-					</div>
-				</div>
-				<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-					<div class="sh_top_category_section sh_float_width">
-						<img src="{{env('APP_URL')}}assets/images/grid/product5.jpg">
-						<div class="sh_cat_name">
-							<h4>Mackbook Note</h4>
-						</div>
-					</div>
-				</div>
-				<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-					<div class="sh_top_category_section sh_float_width">
-						<img src="{{env('APP_URL')}}assets/images/grid/product1.jpg">
-						<div class="sh_cat_name">
-							<h4>IPAD</h4>
-						</div>
-					</div>
-				</div>
-			</div> 
 		</div>
 	</div>
 	

@@ -145,7 +145,7 @@
 							if($data['Lp'] == '1'){
 								$product_url = $product->viewItemURL;
 							}else{
-								$product_url = env('APP_URL')."product/".$product->slug;
+								$product_url = env('APP_URL')."product/".$product->slug.'?c='.rawurlencode($category_data->categoryName);
 							}							
 							?>
 						
@@ -190,6 +190,33 @@
 						</div>
 					<?php } ?>
 					</div>
+					
+					<!-- Search Ads Section -->
+					<div class="sh_ads_wrapper sh_float_width">
+						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+							<div class="sh_add_section sh_float_width">
+								<div class="aligncenter sh_add_section">
+									<script type="text/javascript">
+										var phpVar = '<?php echo $category_data->categoryName ; ?>';
+										amzn_assoc_placement = "adunit0";
+										amzn_assoc_search_bar = "false";
+										amzn_assoc_tracking_id = "theshoppi0545-20";
+										amzn_assoc_ad_mode = "search";
+										amzn_assoc_ad_type = "smart";
+										amzn_assoc_marketplace = "amazon";
+										amzn_assoc_region = "US";
+										amzn_assoc_title = "Shop Related Products";
+										amzn_assoc_default_search_phrase = phpVar;
+										amzn_assoc_default_category = phpVar;
+										amzn_assoc_linkid = "c07e0039f3c54b5c9e151aec6aaba029";
+										amzn_assoc_rows = "2";
+									</script>
+									<script src="//z-na.amazon-adsystem.com/widgets/onejs?MarketPlace=US"></script>
+								</div>
+							</div>
+						</div>
+					</div>
+					
 				</div>
 				
 			</div>	
