@@ -38,7 +38,7 @@
 									<input type="hidden" id="offset_val" value="" name="offset_val" />
 									<input type="hidden" id="parent_cat_id" value="<?php echo $data['parent_cat_id'];?>" name="parent_cat_id" />
 									<input type="hidden" id="cat_id" value="<?php echo $data['cat_id'];?>" name="cat_id" />
-									<input type="hidden" id="ppc" value="<?php echo $data['ppc'];?>" name="ppc" />
+									<input type="hidden" id="Lp" value="<?php echo $data['Lp'];?>" name="Lp" />
 									<div class="sh_side_widget sh_cat_search_form sh_float_width">
 									<h4 class="sh_sidecat_heading">Filter By Name</h4>
 											<input type="text" class="form-control" id="pro_name" name="pro_name" placeholder="Search" value="" oninput="get_product_name(this)">
@@ -142,7 +142,7 @@
 								$merchant_image = 'default.png';
 							}							
 							
-							if($data['ppc'] == '1'){
+							if($data['Lp'] == '1'){
 								$product_url = $product->viewItemURL;
 							}else{
 								$product_url = env('APP_URL')."/product/".$product->slug;
@@ -150,7 +150,7 @@
 							?>
 						
 							<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 sh_custom_width">
-								<a href="<?php echo $product_url;?>">
+								<a href="<?php echo $product_url;?>" target="_blank">
 									<div class="sh_grid_product_section sh_float_width">
 									<?php if($product->Quantity == 0){?>
 										<div class="out_of_stock">
