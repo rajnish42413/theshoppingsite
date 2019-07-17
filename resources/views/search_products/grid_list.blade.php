@@ -145,7 +145,7 @@
 							if($data['Lp'] == '1'){
 								$product_url = $product->viewItemURL;
 							}else{
-								$product_url = env('APP_URL')."/product/".$product->slug;
+								$product_url = env('APP_URL')."product/".$product->slug;
 							}							
 							?>
 						
