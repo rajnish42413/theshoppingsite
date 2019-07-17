@@ -3,10 +3,6 @@
 
 @section('content')
 
-<?php
-	$sh_prod = $data['keyword'];
-?>
-
 <!--Main Wrapper Start-->
 <div class="sh_main_wrap sh_float_width">
 	<!--Breadcurm Start-->
