@@ -304,13 +304,22 @@ class HomeController extends Controller
 		$data['meta_keywords'] = config('app.name')." Search Products";
 		$data['meta_description'] = config('app.name')." Search Products";	
 
-        return view('search_products/grid_list',['data'=>$data,'categories'=>$categories,'products'=>$products,'brands'=>$brands]);		
+        return view('search_products/grid_list',['data'=>$data,'categories'=>$categories,'products'=>$products,'brands'=>$brands,'category_data'=>$res]);		
 	}
 	
 	//search_by_brands
 	
 	public function product_detail(Request $request,$slug){
 		
+		$data['keyword_k'] = '';
+		$data['keyword_c'] = '';
+		
+		if($request->input('k')){
+			$data['keyword_k'] = rawurldecode($request->input('k'));
+		}elseif($request->input('c')){
+			$data['keyword_c'] = rawurldecode($request->input('c'));
+		}
+		 
 		$data['nav'] = 'product-detail';
 		$data['meta_title'] = config('app.name')." :: Product Detail";
 		$data['meta_keywords'] = config('app.name')." Product Detail";
@@ -1091,6 +1100,7 @@ function getSpecialParts($string){
 		));
 
 		$response = curl_exec($curl);
+		
 		$err = curl_error($curl);
 
 		curl_close($curl);
@@ -1100,7 +1110,7 @@ function getSpecialParts($string){
 			$output = array('success'=>false,'data'=>$res);
 		} else {
 			$res =  json_decode($response,true);
-			//echo '<pre>'; print_r($res);die;
+			
 			if($res['hits']['hits']){
 				$res_data = $res['hits']['hits'];
 				$output = array('success'=>true,'data'=>$res_data);
