@@ -69,10 +69,10 @@ class ProductsController extends Controller
         $order      = $this->getDTsort($req);
         $srch       = $this->getDTsearch($req);
        
-	    $order[0] = 'updated_at';
+	    $order[0] = 'products.updated_at';
 	    $order[1] = 'desc';
 
-        $qry = Product::select(DB::raw("products.*, categories.categoryName as catName1, c2.categoryName as catName2, c3.categoryName as catName3, c4.categoryName as catName4, categories.categoryId as catID1, c2.categoryId as catID2, c3.categoryId as catID3, c4.categoryId as catID4,merchants.name as merchant_name"))->leftJoin('categories',function ($join){$join->on('categories.categoryId','=','products.categoryId'); })->leftJoin('categories as c2',function ($join){$join->on('c2.categoryId','=','products.parentCategoryId'); })->leftJoin('categories as c3',function ($join){$join->on('c3.categoryId','=','products.catID3'); })->leftJoin('categories as c4',function ($join){$join->on('c4.categoryId','=','products.catID4'); })->leftJoin('merchants',function ($join){$join->on('merchants.id','=','products.merchant_id'); });
+        $qry = Product::select(DB::raw("products.itemId, products.title, products.current_price, products.current_price_currency,  products.status, products.viewItemURL as viewItemURL, categories.categoryName as catName1, c2.categoryName as catName2, products.catID3 as catName3, products.catID4 as catName4, categories.categoryId as catID1, c2.categoryId as catID2, merchants.name as merchant_name"))->leftJoin('categories',function ($join){$join->on('categories.categoryId','=','products.categoryId'); })->leftJoin('categories as c2',function ($join){$join->on('c2.categoryId','=','products.parentCategoryId'); })->leftJoin('merchants',function ($join){$join->on('merchants.id','=','products.merchant_id'); });
 		
         if(isset($srch['title']))
         {
@@ -104,7 +104,6 @@ class ProductsController extends Controller
             $qry->where('products.catID4',$srch['catName4']);
         }		
 		
-		$qry->groupBy('products.itemId');
         
 		if($order[0] == 'list_create'){
 			$order[0] = 'products.created_at';
