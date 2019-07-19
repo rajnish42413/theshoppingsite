@@ -105,7 +105,7 @@ class ProductsImport implements ToModel, WithBatchInserts, WithChunkReading, Wit
 					$parentId = $other_cat_id = Category::on('mysql2')->where('is_other',1)->first()->categoryId;
 					
 					 if($category!=''){
-						$category_array = explode('>',$category);
+						$category_array = explode('›',$category);
 					}
 					//echo '<pre>';print_r($category_array);die;
 					$cat_count = count($category_array);
