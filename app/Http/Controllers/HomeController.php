@@ -41,20 +41,25 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    { 
-
+	public function index(){ 
+		$deals=$top_products=$top_categories=array();
 		$data['nav'] = 'home';
 		$row = FrontPageSetting ::where('page_type','home')->first();
+		
 		$data['meta_title'] = $row->page_title;
 		$data['meta_keywords']= $row->meta_keywords;
 		$data['meta_description'] = $row->meta_description;
+		
 		$banners = Banner::where('section_name','home_slider')->orderBy('id','asc')->limit(4)->get();
-		$deals = Product::where('is_deal_of_the_day',1)->where('status',1)->orderBy('updated_at','desc')->limit(8)->get();
-		$top_products = Product::where('is_top_product',1)->where('status',1)->orderBy('updated_at','desc')->limit(8)->get();
+		
+		$deals = Product::where('is_deal_of_the_day',1)->where('status',1)->distinct('itemId')->limit(8)->get();
+		
+		$top_products = Product::where('is_top_product',1)->where('status',1)->distinct('itemId')->limit(8)->get();
+		
 		$top_categories = Category::where('is_top_category',1)->where('status',1)->orderBy('id','asc')->limit(8)->get();
+
 		return view('home',['data'=>$data,'banners'=>$banners,'deals'=>$deals,'top_categories'=>$top_categories,'top_products'=>$top_products]);
-    }
+	}
 	
 	public function about(){
 		$data['nav'] = 'about-us';
