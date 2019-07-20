@@ -11,7 +11,7 @@ $settings = DetailController::get_settings();
 
 $gallery_images = array();
 if($product->gallery_images != ''){
-	$gallery_images = explode(',',$product->gallery_images);
+	$gallery_images = json_decode($product->gallery_images);
 }else{
 	if($product->product_image != ''){
 		$gallery_images[0] = $product->product_image;
@@ -62,7 +62,7 @@ if($merchant && $merchant->count() > 0){
 					</div>
 				</div>
 				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 sh_padding0">
-					<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+					<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6" style="display:none;">
 						<div class="sh_product_view_rating sh_float_width">
 							<ul class="list-inline">
 								<li><span>Rating :</span></li>
@@ -97,7 +97,10 @@ if($merchant && $merchant->count() > 0){
 								<div class="slider-nav">
 								<?php 
 								if($gallery_images){
-								foreach($gallery_images as $pic){?>
+								foreach($gallery_images as $pic){
+									
+									
+									?>
 									<div class="slider-nav__item">
 										<img src="<?php echo $pic; ?>" alt="" />
 									</div>
@@ -173,8 +176,8 @@ if($merchant && $merchant->count() > 0){
 							<ul id="myTabs" class="nav nav-pills nav-justified" role="tablist" data-tabs="tabs">
 								<li class="active"><a href="#sh_comapre_price" data-toggle="tab">Comapre Price</a></li>
 								<li><a href="#sh_product_deatail" data-toggle="tab">Product Detail</a></li>
-								<li><a href="#sh_riview" data-toggle="tab">Reviews</a></li>
-								<li><a href="#sh_faq" data-toggle="tab">FAQ's</a></li>
+								<li><a href="#sh_riview" data-toggle="tab" style="display:none;">Reviews</a></li>
+								<li><a href="#sh_faq" data-toggle="tab" style="display:none;">FAQ's</a></li>
 							</ul>
 						</div>
 						<div class="tab-content">
