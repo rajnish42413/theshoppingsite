@@ -139,7 +139,7 @@ $("#addForm").submit(function(e){
   if (input.files && input.files[0]) {
 	var file = input.files[0];
 	var imagefile = file.type;
-	var match =  ["image/jpeg","image/png","image/jpg"];
+	var match =  ["image/jpeg","image/png","image/jpg","image/gif"];
 	if(!((imagefile==match[0]) || (imagefile==match[1]) || (imagefile==match[2]))){
 		$.notify({
 		  message: 'Image format is wrong. Only JPG/PNG formats are allowed.' 
