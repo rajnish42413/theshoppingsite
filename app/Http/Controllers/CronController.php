@@ -15,6 +15,8 @@ use App\Category;
 use App\EbayCronCategory;
 use App\Brand;
 use App\ApiSetting;
+use App\Mail\ApiError;
+use Mail;
 
 class CronController extends Controller
 {
@@ -151,8 +153,8 @@ class CronController extends Controller
         }
     }
 
-    function getProductsByCategory_live(Request $request,$cat_id) { //not use now
-	die("not used");
+    function getProductsByCategory_live(Request $request,$cat_id) { 
+		//not used
 		if($cat_id == ''){
 			echo 'error. category not found';
 			exit;
@@ -182,7 +184,8 @@ class CronController extends Controller
 		//echo $json = json_encode($response.true);die;
         // Output the response from the API.
         if ($response->ack !== 'Success') {
-            echo 'no data found';
+            Mail::send($response);
+			exit;
         } else {
             $products = $response->searchResult->item;
 			echo '<pre>'; print_r($products);die;
@@ -394,7 +397,11 @@ class CronController extends Controller
 			}
 			//echo '<pre>';print_R($detail);die;
 			return $detail;
-        } 
+        }else{
+			Mail::send(new ApiError($results));
+			echo 'Ebay API Error Occured.';
+			exit;
+		} 
     }
 	
 	public static function slugify($text){
@@ -484,19 +491,19 @@ class CronController extends Controller
 		//$request->sortOrder = 'CurrentPriceLowest';
 	
 		$response = $service->findItemsByProduct($request);
-	echo '<pre>';print_r($response);die;
+	//echo '<pre>';print_r($response);die;
 	}
 //Live it is working	
 	public function by_category_ebay($pageNo = 1,$perPage = 100, $cat_id = 0 ){
-		EbayCronCategory::on('mysql2')->where('today_date','<',date('Y-m-d'))->update(array('today_date'=>date('Y-m-d'),'status'=>0));//date checking and updating
+	 	EbayCronCategory::on('mysql2')->where('today_date','<',date('Y-m-d'))->update(array('today_date'=>date('Y-m-d'),'status'=>0));//date checking and updating
 		
 		if($cat_id == 0){
 			$ebay_category = EbayCronCategory::where('status',0)->where('today_date',date('Y-m-d'))->orderBy('id','asc')->limit(1)->first();
 			if($ebay_category && $ebay_category->count() > 0){
 				$cat_id = (string)$ebay_category->categoryId;			
 			}			
-		}
-
+		} 
+		//$cat_id = '20081';
 		$search = array();
 		$search[] = $cat_id; //parent category id
 		$parent_id = $cat_id;
@@ -518,11 +525,13 @@ class CronController extends Controller
 		$request->sortOrder = 'CurrentPriceLowest';
 	
 		$response = $service->findItemsByCategory($request);
-			
+		
 		//echo $json = json_encode($response.true);die;
 		// Output the response from the API.
 		if($response->ack !== 'Success') {
-			echo 'no data found';
+			Mail::send(new ApiError($response));
+			echo 'Ebay API Error Occured.';
+			exit;
 		}else{
 			$pageNo = $response->paginationOutput->pageNumber;
 			$totalPages = $response->paginationOutput->totalPages;

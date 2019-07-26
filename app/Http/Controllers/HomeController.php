@@ -336,7 +336,8 @@ class HomeController extends Controller
 		$categories = array();
 		if($slug != ''){
 
-			$product = Product::select(DB::raw("products.*"))->where('products.slug',$slug)->where('products.status',1)->first();
+			$product = Product::select(DB::raw("products.*"))->where('products.slug',$slug)->where('products.status',1)->first($product);
+			
 			if($product && $product->count() > 0){
 				
 				$category = Category::where('categoryId',$product->categoryId)->first();
@@ -357,10 +358,10 @@ class HomeController extends Controller
 				$merchant = Merchant::where('id',$product->merchant_id)->first();
 				
 				return view('search_products/detail',['data'=>$data,'product'=>$product,'merchant'=>$merchant]);				
-			}else{
+			}else{ 
 			return redirect(env('APP_URL'));
 		}
-		}else{
+		}else{ 
 			return redirect(env('APP_URL'));
 		}
 		
@@ -650,7 +651,7 @@ class HomeController extends Controller
 	}	
 	
 	public function search_data(Request $request){ //get form submit
-	
+	 
 		$base_url= env('APP_URL');
 		$data['search_category'] = '';
 		$data['categoryId'] = '';
@@ -1078,7 +1079,10 @@ function getSpecialParts($string){
 		if($data['min_price'] !='' && $data['max_price'] !=''){
 			$arr5 = array('range'=>array('current_price'=>array('gte'=>$data['min_price'],'lte'=>$data['max_price'],'boost'=>'2.0')));
 			array_push($must,$arr5);
-		}		
+		}	
+
+		$arr6 = array('match'=>array('status'=>true));
+		array_push($must,$arr6);
 		
 		$requestArray['query']['bool']['must'] = $must;
 
@@ -1115,7 +1119,7 @@ function getSpecialParts($string){
 			$output = array('success'=>false,'data'=>$res);
 		} else {
 			$res =  json_decode($response,true);
-			
+			//echo '<pre>';print_R($res);die;
 			if($res['hits']['hits']){
 				$res_data = $res['hits']['hits'];
 				$output = array('success'=>true,'data'=>$res_data);
