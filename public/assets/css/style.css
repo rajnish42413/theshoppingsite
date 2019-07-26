@@ -2415,3 +2415,30 @@ h4.sh_prod_name b {
 .sh_add_section {
 	text-align: center;
 }
+
+
+
+
+
+
+/******* 26 july 2019 product img #22***********/
+@media (min-width: 768px){
+	.sh_grid_product_section .grid_prd {
+		min-height: 100px;
+	}
+	.sh_custom_width .sh_grid_product_section {
+		min-height: 260px;
+	}
+}
+
+@media (max-width: 767px){
+	.sh_grid_product_section .grid_prd {
+		min-height: 75px;
+	}
+	
+	.sh_custom_width .sh_grid_product_section {
+		min-height: 205px;
+	}
+}
+/******* 26 july 2019 product img #22***********/
+
