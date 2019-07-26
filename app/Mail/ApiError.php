@@ -38,7 +38,7 @@ class ApiError extends Mailable
 		}else{
 			$site_name = env('APP_NAME');
 		}
-        return $this->to('shopergy_admin@yopmail.com')->subject($site_name . ' - Ebay API Error')->view('emails.ebay_api_error');
+        return $this->to('theshoppingsitefeeds@gmail.com')->subject($site_name . ' - Ebay API Error')->view('emails.ebay_api_error');
 		
     }
 }
