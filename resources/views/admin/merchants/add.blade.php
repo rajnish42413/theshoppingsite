@@ -68,6 +68,7 @@
 <script>
 
 var surl = '<?php echo route('merchants-list');?>'; 
+
 $("#addForm").submit(function(e){
 	$('.wait_loader').show();	
 	$('.admin_errors.alert-danger').hide();
