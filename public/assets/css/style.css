@@ -2428,6 +2428,7 @@ h4.sh_prod_name b {
 	}
 	.sh_custom_width .sh_grid_product_section {
 		min-height: 260px;
+		height: 260px;
 	}
 }
 
@@ -2438,6 +2439,7 @@ h4.sh_prod_name b {
 	
 	.sh_custom_width .sh_grid_product_section {
 		min-height: 205px;
+		height: 205px;
 	}
 }
 /******* 26 july 2019 product img #22***********/
