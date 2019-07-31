@@ -14,6 +14,7 @@ before_script:
 
 deploy_staging:
   type: deploy
+  stage: deploy_staging
   environment:
     name: staging
     url: theshoppingsite.com
@@ -24,6 +25,7 @@ deploy_staging:
 
 deploy_production:
   type: deploy
+  stage: deploy_production
   environment:
     name: production
     url: theshoppingsite.com
