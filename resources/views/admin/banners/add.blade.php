@@ -58,6 +58,10 @@
 					<input type="file" data-id="<?php if($row){echo $row->id;}?>" id="file" class="dropify" <?php if($row && !empty($row->display_image)){}else{ echo ' ';} ?>  name="file" data-default-file="<?php if($row){if(!empty($row->display_image)){  echo env("APP_URL").'/banner_files/'.$row->display_image;} }?>" />				  
                   <input type="hidden" id="file_name" name="file_name" value="<?php if($row){ echo $row->display_image; }?>">
                 </div>
+                <div class="form-group">
+                  <label for="url_link">URL</label>
+                  <input type="text" class="form-control" id="url_link" name="url_link" placeholder="URL" value="<?php if($row){ echo $row->url_link; }?>" >
+                </div>				
               </div>
               <!-- /.box-body -->
 

@@ -2442,3 +2442,19 @@ h4.sh_prod_name b {
 }
 /******* 26 july 2019 product img #22***********/
 
+
+
+a.btn.see_all_list {
+    float: right;
+    margin-bottom: 10px;
+    display: inline-block;
+    background-color: #245349;
+    border-radius: 0;
+    position: relative;
+    top: -5px;
+    padding: 3px 10px;
+    color: #fff;
+}
+a.btn.see_all_list:hover {
+    background-color: #000;
+}

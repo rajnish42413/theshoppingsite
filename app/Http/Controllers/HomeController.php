@@ -42,6 +42,7 @@ class HomeController extends Controller
      * @return \Illuminate\Http\Response
      */
 	public function index(){ 
+	
 		$deals=$top_products=$top_categories=array();
 		$data['nav'] = 'home';
 		$row = FrontPageSetting ::where('page_type','home')->first();
