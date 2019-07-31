@@ -107,12 +107,14 @@ class BannersController extends Controller
              'heading_title' => 'required',			 		 
              'description' => 'required',			 		 
              'section_name' => 'required',	
+             'url_link' => 'nullable|url',	
 		], 
 			$messages = [
 			'name.required' => 'Name is required',
 			'heading_title.required' => 'Heading Title is required',
 			'description.required' => 'Description is required',
-			'section.required' => 'Section is required',
+			'section_name.required' => 'Section is required',
+			'url_link.url' => 'Please enter a valid url',
 		]);
 
 		$req   = $request->all();
@@ -137,6 +139,7 @@ class BannersController extends Controller
 			'description' => addslashes($req['description']),
 			'heading_title' => $req['heading_title'],
 			'section_name' => $req['section_name'],
+			'url_link' => trim($req['url_link']),
 			'display_image' => $pre_fileName,
 			'updated_by' => Auth::user()->id,
 			'updated_at' => date('Y-m-d H:i:s'),

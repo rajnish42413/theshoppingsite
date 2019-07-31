@@ -498,10 +498,11 @@ class CronController extends Controller
 	 	EbayCronCategory::on('mysql2')->where('today_date','<',date('Y-m-d'))->update(array('today_date'=>date('Y-m-d'),'status'=>0));//date checking and updating
 		
 		if($cat_id == 0){
-			$ebay_category = EbayCronCategory::where('status',0)->where('today_date',date('Y-m-d'))->orderBy('id','asc')->limit(1)->first();
+			$ebay_category = EbayCronCategory::where('status',0)->orderBy('id','asc')->limit(1)->first();
 			if($ebay_category && $ebay_category->count() > 0){
 				$cat_id = (string)$ebay_category->categoryId;			
-			}			
+			}
+	
 		} 
 		//$cat_id = '20081';
 		$search = array();

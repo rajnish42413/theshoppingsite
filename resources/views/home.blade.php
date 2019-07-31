@@ -14,11 +14,15 @@
 						$no = 1;?>
 						<div class="bookmarks">
 							<ul class="test">
-							<?php foreach($banners as $banner){?>
+							<?php foreach($banners as $banner){
+								
+								?>
 								<li class="bookmark<?php echo $no;?> active" data="<?php echo $no-1;?>">
 									<div class="nav_text">
 										<h4><?php echo $banner->heading_title;?></h4>
 										<p><?php echo $banner->description;?></p>
+										<?php if($banner->url_link != ''){?><a href="javascript:void(0)" class="btn see_all_list" onclick="goToUrl('<?php echo $banner->url_link;?>')" target="_blank">See All</a>
+										<?php  } ?>
 									</div>
 								</li>
 							<?php $no++; } ?>
@@ -215,5 +219,9 @@
 	</div>
 	<div class="clearfix"></div>
 </div>	
- 
+ <script>
+ function goToUrl(url){
+	window.open(url, '_blank');
+ }
+ </script>
 @endsection
