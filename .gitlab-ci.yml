@@ -30,6 +30,6 @@ deploy_production:
     name: production
     url: theshoppingsite.com
   script:
-    - ssh -v ubuntu@ec2-18-188-246-187.us-east-2.compute.amazonaws.com "echo production;    exit"
+    - ssh -v ubuntu@ec2-18-188-246-187.us-east-2.compute.amazonaws.com "cd /var/www/html/shopergy_latest && git pull && exit"
   only:
     - master
