@@ -13,7 +13,6 @@ use GuzzleHttp\Client;
 use App\Product;
 use App\Category;
 use App\EbayCronCategory;
-use App\Brand;
 use App\ApiSetting;
 use App\Mail\ApiError;
 use Mail;
@@ -433,7 +432,7 @@ class CronController extends Controller
 	
 	function check_slug($slug){
 		$rand = time().rand(10,99);
-		$slug_check = Category::where('slug',$slug)->first();
+		$slug_check = Category::on('mysql2')->where('slug',$slug)->first();
 		if($slug_check && $slug_check->count() > 0){
 			$slug = $slug_check->slug.'-'.$rand;
 			return $slug;
@@ -443,7 +442,7 @@ class CronController extends Controller
 	
 	function check_slug_product($slug){
 		$rand = time().rand(10,99);
-		$slug_check = Product::where('slug',$slug)->first();
+		$slug_check = Product::on('mysql2')->where('slug',$slug)->first();
 		if($slug_check && $slug_check->count() > 0){
 			$slug = $slug_check->slug.'-'.$rand;
 			return $slug;
@@ -452,7 +451,7 @@ class CronController extends Controller
 	}	
 	
 	public function create_product_slug(){
-		$products = Product::where('status',1)->where('slug','')->orderBy('updated_at','desc')->get();
+		$products = Product::on('mysql2')->where('status',1)->where('slug','')->orderBy('updated_at','desc')->get();
 		if($products && $products->count() > 0){
 			foreach($products as $p){
 				if($p->title !=''){
@@ -495,23 +494,34 @@ class CronController extends Controller
 	}
 //Live it is working	
 	public function by_category_ebay($pageNo = 1,$perPage = 100, $cat_id = 0 ){
+		
 	 	EbayCronCategory::on('mysql2')->where('today_date','<',date('Y-m-d'))->update(array('today_date'=>date('Y-m-d'),'status'=>0));//date checking and updating
 		
 		if($cat_id == 0){
-			$ebay_category = EbayCronCategory::where('status',0)->orderBy('id','asc')->limit(1)->first();
+			
+			$ebay_category = EbayCronCategory::on('mysql2')->where('status',0)->orderBy('id','asc')->limit(1)->first();
+			
+		
 			if($ebay_category && $ebay_category->count() > 0){
-				$cat_id = (string)$ebay_category->categoryId;			
+				$cat_id = $ebay_category->categoryId;
+				
+				$ebay_cat = array('status'=>1,'updated_at'=>date('Y-m-d H:i:s'));
+				
+				EbayCronCategory::on('mysql2')->where('status',0)->where('categoryId',$cat_id)->update($ebay_cat);
+				
 			}
 	
 		} 
 		//$cat_id = '20081';
 		$search = array();
+		$cat_id = (string)$cat_id;	
+		//echo $cat_id;die;		
 		$search[] = $cat_id; //parent category id
 		$parent_id = $cat_id;
 		$ebay_service = new EbayServices();
 		//echo '<pre>';print_r($ebay_service);die;
 		$service = $ebay_service->createFinding();
-	//	echo '<pre>';print_r($service);die;
+
 		// Assign the keywords.
 		$request = new Types\FindItemsByCategoryRequest();
 		
@@ -524,9 +534,9 @@ class CronController extends Controller
 
 		// Ask for the results to be sorted from high to low price.
 		$request->sortOrder = 'CurrentPriceLowest';
-	
+		//echo '<pre>';print_r($request);die;
 		$response = $service->findItemsByCategory($request);
-		
+		//echo '<pre>';print_r($response);die;
 		//echo $json = json_encode($response.true);die;
 		// Output the response from the API.
 		if($response->ack !== 'Success') {
@@ -545,7 +555,7 @@ class CronController extends Controller
  				foreach($products as $product){
 
 					$check = array();					
-					$check = Product::where('itemId',$product->itemId)->first(); 
+					$check = Product::on('mysql2')->where('itemId',$product->itemId)->first(); 
 					
 					if($check && $check->count() > 0){
 						$exp_date = date('Y-m-d H:i:s',strtotime(' + 2 day', strtotime($check->updated_at)));
@@ -632,36 +642,20 @@ class CronController extends Controller
 						$input['Variations'] = $item_detail['Variations']; //json
 												
 						if($item_detail['Brand'] != ''){
-							$input3['name'] = $item_detail['Brand'];
-							$input3['slug'] = $this->slugify($item_detail['Brand']);
-							$input3['updated_at'] =  date('Y-m-d H:i:s');
-							
-							$brand_check = Brand::where('slug',$input3['slug'])->first();
-							
-							if($brand_check && $brand_check->count() > 0){
-								
-								Brand::where('id',$brand_check['id'])->update($input3);	
-								$input['brand_id'] = $brand_check['id'];
-							}else{
-								$input3['created_at'] =  date('Y-m-d H:i:s');
-								$input['brand_id'] = Brand::create($input3)->id;
-							}
+							$input['brand_id']= $item_detail['Brand'];
 						}
 						//echo 'ss';die;
 					}
-					
+					//echo '<pre>';print_r($input);die;
 					if($check && $check->count() > 0){
 						Product::on('mysql2')->where('itemId',$product->itemId)->update($input);	
 					}else{
 						$input['created_at'] =  date('Y-m-d H:i:s');
-						Product::create($input)->itemId;
+						Product::on('mysql2')->create($input)->itemId;
 					
 					}  	
 				}
 				 
-				$ebay_cat = array('status'=>1,'updated_at'=>date('Y-m-d H:i:s'));
-				
-				EbayCronCategory::on('mysql2')->where('status',0)->where('categoryId',$cat_id)->update($ebay_cat);
 				
 				if($pageNo < $totalPages){ // && $pageNo <= 5 for 5 pages only
 					$pageNo++;
