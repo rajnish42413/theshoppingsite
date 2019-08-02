@@ -41,20 +41,26 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    { 
-
+	public function index(){ 
+	
+		$deals=$top_products=$top_categories=array();
 		$data['nav'] = 'home';
 		$row = FrontPageSetting ::where('page_type','home')->first();
+		
 		$data['meta_title'] = $row->page_title;
 		$data['meta_keywords']= $row->meta_keywords;
 		$data['meta_description'] = $row->meta_description;
+		
 		$banners = Banner::where('section_name','home_slider')->orderBy('id','asc')->limit(4)->get();
-		$deals = Product::where('is_deal_of_the_day',1)->where('status',1)->orderBy('updated_at','desc')->limit(8)->get();
-		$top_products = Product::where('is_top_product',1)->where('status',1)->orderBy('updated_at','desc')->limit(8)->get();
+		
+		$deals = Product::where('is_deal_of_the_day',1)->where('status',1)->distinct('itemId')->limit(8)->get();
+		
+		$top_products = Product::where('is_top_product',1)->where('status',1)->distinct('itemId')->limit(8)->get();
+		
 		$top_categories = Category::where('is_top_category',1)->where('status',1)->orderBy('id','asc')->limit(8)->get();
+
 		return view('home',['data'=>$data,'banners'=>$banners,'deals'=>$deals,'top_categories'=>$top_categories,'top_products'=>$top_products]);
-    }
+	}
 	
 	public function about(){
 		$data['nav'] = 'about-us';
@@ -304,13 +310,22 @@ class HomeController extends Controller
 		$data['meta_keywords'] = config('app.name')." Search Products";
 		$data['meta_description'] = config('app.name')." Search Products";	
 
-        return view('search_products/grid_list',['data'=>$data,'categories'=>$categories,'products'=>$products,'brands'=>$brands]);		
+        return view('search_products/grid_list',['data'=>$data,'categories'=>$categories,'products'=>$products,'brands'=>$brands,'category_data'=>$res]);		
 	}
 	
 	//search_by_brands
 	
 	public function product_detail(Request $request,$slug){
 		
+		$data['keyword_k'] = '';
+		$data['keyword_c'] = '';
+		
+		if($request->input('k')){
+			$data['keyword_k'] = rawurldecode($request->input('k'));
+		}elseif($request->input('c')){
+			$data['keyword_c'] = rawurldecode($request->input('c'));
+		}
+		 
 		$data['nav'] = 'product-detail';
 		$data['meta_title'] = config('app.name')." :: Product Detail";
 		$data['meta_keywords'] = config('app.name')." Product Detail";
@@ -322,7 +337,8 @@ class HomeController extends Controller
 		$categories = array();
 		if($slug != ''){
 
-			$product = Product::select(DB::raw("products.*"))->where('products.slug',$slug)->where('products.status',1)->first();
+			$product = Product::select(DB::raw("products.*"))->where('products.slug',$slug)->where('products.status',1)->first($product);
+			
 			if($product && $product->count() > 0){
 				
 				$category = Category::where('categoryId',$product->categoryId)->first();
@@ -343,10 +359,10 @@ class HomeController extends Controller
 				$merchant = Merchant::where('id',$product->merchant_id)->first();
 				
 				return view('search_products/detail',['data'=>$data,'product'=>$product,'merchant'=>$merchant]);				
-			}else{
+			}else{ 
 			return redirect(env('APP_URL'));
 		}
-		}else{
+		}else{ 
 			return redirect(env('APP_URL'));
 		}
 		
@@ -636,7 +652,7 @@ class HomeController extends Controller
 	}	
 	
 	public function search_data(Request $request){ //get form submit
-	
+	 
 		$base_url= env('APP_URL');
 		$data['search_category'] = '';
 		$data['categoryId'] = '';
@@ -1064,7 +1080,10 @@ function getSpecialParts($string){
 		if($data['min_price'] !='' && $data['max_price'] !=''){
 			$arr5 = array('range'=>array('current_price'=>array('gte'=>$data['min_price'],'lte'=>$data['max_price'],'boost'=>'2.0')));
 			array_push($must,$arr5);
-		}		
+		}	
+
+		$arr6 = array('match'=>array('status'=>true));
+		array_push($must,$arr6);
 		
 		$requestArray['query']['bool']['must'] = $must;
 
@@ -1091,6 +1110,7 @@ function getSpecialParts($string){
 		));
 
 		$response = curl_exec($curl);
+		
 		$err = curl_error($curl);
 
 		curl_close($curl);
@@ -1100,7 +1120,7 @@ function getSpecialParts($string){
 			$output = array('success'=>false,'data'=>$res);
 		} else {
 			$res =  json_decode($response,true);
-			//echo '<pre>'; print_r($res);die;
+			//echo '<pre>';print_R($res);die;
 			if($res['hits']['hits']){
 				$res_data = $res['hits']['hits'];
 				$output = array('success'=>true,'data'=>$res_data);

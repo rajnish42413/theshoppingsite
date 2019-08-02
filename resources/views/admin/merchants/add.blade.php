@@ -68,6 +68,7 @@
 <script>
 
 var surl = '<?php echo route('merchants-list');?>'; 
+
 $("#addForm").submit(function(e){
 	$('.wait_loader').show();	
 	$('.admin_errors.alert-danger').hide();
@@ -139,8 +140,8 @@ $("#addForm").submit(function(e){
   if (input.files && input.files[0]) {
 	var file = input.files[0];
 	var imagefile = file.type;
-	var match =  ["image/jpeg","image/png","image/jpg"];
-	if(!((imagefile==match[0]) || (imagefile==match[1]) || (imagefile==match[2]))){
+	var match =  ["image/jpeg","image/png","image/jpg","image/gif"];
+	if(!((imagefile==match[0]) || (imagefile==match[1]) || (imagefile==match[2]) || (imagefile==match[3]))){
 		$.notify({
 		  message: 'Image format is wrong. Only JPG/PNG formats are allowed.' 
 		 },{ element: 'body', type: "danger", allow_dismiss: true, offset: { x: 20, y: 60 }, delay: 500 

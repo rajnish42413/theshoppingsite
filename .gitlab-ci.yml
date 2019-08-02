@@ -1,0 +1,43 @@
+stages:
+  - deploy_staging
+  - deploy_production
+before_script:
+  - apt-get update -qq
+  - apt-get install -qq git
+  # Setup SSH deploy keys
+  - 'which ssh-agent || ( apt-get install -qq openssh-client )'
+  - eval $(ssh-agent -s)
+  - ssh-add <(echo "$SSH_PRIVATE_KEY" | base64 --decode)
+  - mkdir -p ~/.ssh
+  - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+  - echo "$SSH_PRIVATE_KEY"
+
+deploy_staging:
+  type: deploy
+  stage: deploy_staging
+  environment:
+    name: staging
+    url: theshoppingsite.com/staging
+  script:
+    - ssh -v ubuntu@ec2-18-188-246-187.us-east-2.compute.amazonaws.com "cd /var/www/html/staging && if find . -mindepth 1 | read;then cd shopergy_latest; git pull;git checkout staging;else git clone git@gitlab.com:theshopingsite/shopergy_latest.git; cd shopergy_latest; git checkout staging; cp ../../.env .;fi"
+    - echo "curl"
+    - > 
+       curl -X POST https://hooks.slack.com/services/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 -H 'Content-Type: application/json' -d '{"channel": "#deployment", "username": "GitLab", "text": "<@UHE74Q18T> build deployed on staging you can test on theshoppingsite.com/staging", "icon_emoji": ":beers:"}'
+    - exit
+  only:
+    - staging
+
+deploy_production:
+  type: deploy
+  stage: deploy_production
+  environment:
+    name: production
+    url: theshoppingsite.com
+  script:
+    - ssh -v ubuntu@ec2-18-188-246-187.us-east-2.compute.amazonaws.com "cd /var/www/html/staging && if find . -mindepth 1 | read;then cd shopergy_latest; git pull;git checkout staging;else git clone git@gitlab.com:theshopingsite/shopergy_latest.git; cd shopergy_latest; git checkout staging; cp ../../.env .;fi"
+    - echo "curl"
+    - > 
+       curl -X POST https://hooks.slack.com/services/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 -H 'Content-Type: application/json' -d '{"channel": "#deployment", "username": "GitLab", "text": "<@UHE74Q18T> build deployed and live check on theshoppingsite.com", "icon_emoji": ":beers:"}'
+    - exit  
+  only:
+    - master

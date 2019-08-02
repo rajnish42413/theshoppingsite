@@ -1,5 +1,5 @@
 <?php
-
+URL::forceScheme('https'); 
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -31,6 +31,8 @@ Route::any('/cron/category-live','CronController@getCategory_live')->name('cron/
 Route::any('/cron/by-category-live/{id}','CronController@getProductsByCategory_live')->name('cron/by-category-live');
 Route::any('/cron/single-item-live/{id}','CronController@getSingleItem_live')->name('cron/single-item-live');
 Route::any('/cron/product-by-category-ebay','CronController@by_category_ebay')->name('cron/product-by-category-ebay');
+
+Route::any('/cron/get-api-info','CronController@get_api_info')->name('cron/get-api-info');
 
 
 Route::get('/user/verify/{token}', 'Auth\RegisterController@verifyUser');

@@ -1,7 +1,0 @@
-item_id,category_id,parent_category_id,title,price,currency,brand,item_url,payment_method,quantity,description
-3323242,4324,123,I phone X,1200,USD,Apple,http://something.com,Paypal,5,I phone X is duplicate
-3543234,23432,123,I phone X max,1500,USD,Apple,http://something.com,Paypal,5,I phone X max is duplicate
-4234233,432423,124,T shirt,200,USD,Being Human,http://something.com,Paypal,10,Being Human t shirts
-3242343,4234,125,Maravel Comic,1200,USD,Marvel,http://something.com,Paypal,2,I phone X is duplicate
-7865655,324324,123,I phone Xaa,1200,USD,Apple,http://something.com,Paypal,3,I phone X is duplicate
-3244370,3343,123,I phone Xyz,1200,USD,Yuvraj,http://something.com,Paypal,1,I phone X is duplicate
