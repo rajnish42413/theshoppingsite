@@ -86,7 +86,7 @@ class CronController extends Controller
         ]);
 
         $categories = simplexml_load_string($response->getBody(),'SimpleXMLElement',LIBXML_NOCDATA);
-		echo '<Pre>'; print_r($categories);die;
+		//echo '<Pre>'; print_r($categories);die;
 		$x=0;
         if ($categories->Ack == 'Success'){
             foreach($categories->CategoryArray->Category as $category){
@@ -187,7 +187,7 @@ class CronController extends Controller
 			exit;
         } else {
             $products = $response->searchResult->item;
-			echo '<pre>'; print_r($products);die;
+			//echo '<pre>'; print_r($products);die;
  			if($products){
 				foreach($products as $product){
 
@@ -494,8 +494,10 @@ class CronController extends Controller
 	}
 //Live it is working	
 	public function by_category_ebay($pageNo = 1,$perPage = 100, $cat_id = 0 ){
-		
-	 	EbayCronCategory::on('mysql2')->where('today_date','<',date('Y-m-d'))->update(array('today_date'=>date('Y-m-d'),'status'=>0));//date checking and updating
+		//echo date('Y-m-d H:i:s');die;
+		if($pageNo == 1){
+			EbayCronCategory::on('mysql2')->where('today_date','<',date('Y-m-d'))->update(array('today_date'=>date('Y-m-d'),'status'=>0));//date checking and updating
+		}
 		
 		if($cat_id == 0){
 			
@@ -671,5 +673,31 @@ class CronController extends Controller
 		}
 	}
 	
+	public function get_api_info(){
+        $headers =  array(
+            'cache-control' => 'no-cache',
+            'X-EBAY-API-COMPATIBILITY-LEVEL' => '861',
+            'X-EBAY-API-SITEID' => '0',
+            'X-EBAY-API-DEV-NAME' => $this->DEV_ID,
+            'X-EBAY-API-CERT-NAME' => $this->CERT_ID,
+            'X-EBAY-API-APP-NAME' => $this->APP_ID,
+            'X-EBAY-API-CALL-NAME' => 'GetApiAccessRules',
+            'Content-Type' => 'application/xml'
+        );
+        $client = new Client([ 'headers' => $headers]);
+		
+        $body = '<?xml version="1.0" encoding="utf-8"?>
+				<GetApiAccessRulesRequest xmlns="urn:ebay:apis:eBLBaseComponents">
+				  <RequesterCredentials>
+					 <eBayAuthToken>'.$this->TOKEN.'</eBayAuthToken>
+				  </RequesterCredentials>
+				</GetApiAccessRulesRequest>';
+        $response = $client->request('POST', 'https://api.ebay.com/ws/api.dll', [
+            'body' => $body
+        ]);
+        $results = simplexml_load_string($response->getBody(),'SimpleXMLElement',LIBXML_NOCDATA);
+		
+		echo '<pre>'; print_r($results); die;
+	}
 	
 }
