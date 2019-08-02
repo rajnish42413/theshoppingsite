@@ -17,9 +17,13 @@ deploy_staging:
   stage: deploy_staging
   environment:
     name: staging
-    url: theshoppingsite.com
+    url: theshoppingsite.com/staging
   script:
-    - ssh -v ubuntu@ec2-18-188-246-187.us-east-2.compute.amazonaws.com "cd /var/www/html/staging && if [ $(ls -A .) ];then git pull;git checkout staging;else git clone git@gitlab.com:theshopingsite/shopergy_latest.git; git checkout staging; cp ../.env .;fi; exit"
+    - ssh -v ubuntu@ec2-18-188-246-187.us-east-2.compute.amazonaws.com "cd /var/www/html/staging && if find . -mindepth 1 | read;then cd shopergy_latest; git pull;git checkout staging;else git clone git@gitlab.com:theshopingsite/shopergy_latest.git; cd shopergy_latest; git checkout staging; cp ../../.env .;fi"
+    - echo "curl"
+    - > 
+       curl -X POST https://hooks.slack.com/services/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 -H 'Content-Type: application/json' -d '{"channel": "#deployment", "username": "GitLab", "text": "<@UHE74Q18T> build deployed on staging you can test on theshoppingsite.com/staging", "icon_emoji": ":beers:"}'
+    - exit
   only:
     - staging
 
@@ -30,6 +34,10 @@ deploy_production:
     name: production
     url: theshoppingsite.com
   script:
-    - ssh -v ubuntu@ec2-18-188-246-187.us-east-2.compute.amazonaws.com "cd /var/www/html/shopergy_latest && git pull && exit"
+    - ssh -v ubuntu@ec2-18-188-246-187.us-east-2.compute.amazonaws.com "cd /var/www/html/staging && if find . -mindepth 1 | read;then cd shopergy_latest; git pull;git checkout staging;else git clone git@gitlab.com:theshopingsite/shopergy_latest.git; cd shopergy_latest; git checkout staging; cp ../../.env .;fi"
+    - echo "curl"
+    - > 
+       curl -X POST https://hooks.slack.com/services/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 -H 'Content-Type: application/json' -d '{"channel": "#deployment", "username": "GitLab", "text": "<@UHE74Q18T> build deployed and live check on theshoppingsite.com", "icon_emoji": ":beers:"}'
+    - exit  
   only:
     - master
