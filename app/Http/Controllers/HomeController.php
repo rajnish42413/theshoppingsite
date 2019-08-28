@@ -1133,6 +1133,15 @@ function getSpecialParts($string){
 		
 		return $output;
 	}
+	
+	
+	public function blogdetail(){
+		$data['nav'] = 'blog';
+		$data['meta_title'] = '';
+		$data['meta_keywords']= '';
+		$data['meta_description'] ='';		
+		return view('blogdetail',['data'=>$data]);
+	}
 }
 
 
