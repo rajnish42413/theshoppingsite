@@ -19,6 +19,7 @@ Route::get('/cron/product-slug','CronController@create_product_slug')->name('cro
 
 
 Route::get('/home','HomeController@index')->name('home');
+Route::get('/blog_detail','HomeController@blogdetail')->name('blog_detail');
 
 Route::any('/all-categories','HomeController@all_categories')->name('all-categories');
 Route::any('/all-categories-ajax','HomeController@get_all_categories_ajax')->name('all-categories-ajax');

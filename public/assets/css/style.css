@@ -2460,3 +2460,42 @@ a.btn.see_all_list {
 a.btn.see_all_list:hover {
     background-color: #000;
 }
+
+/*Ajay */
+
+/************new css added 28/08***************/
+.ProductDetails ,.ProductDetails  p{
+    float: left;
+    width: 100%;
+}
+.ProductDetails p {
+    font-size: 14px;
+    text-align: justify;
+    margin: 0px 0 10px 0;
+    padding: 4px 15px;
+}
+.sh_product_view_img .slick-slide img {
+    height: 370px;
+    margin: 0 auto;
+}
+#BlogPage .sh_top_deals_name {
+    text-align: center;
+}
+.SocialShareIcon .sh_header_social_links ul li a {
+    padding: 5px;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    font-size: 14px;
+    border: 1px solid #e8e8e8;
+    border-radius: 4px;
+}
+.SocialShareIcon .sh_header_social_links ul li {
+    display: inline-block;
+    margin-right: 4px;
+}
+
+.SocialShareIcon ul {
+    padding: 15px 0;
+}
+
