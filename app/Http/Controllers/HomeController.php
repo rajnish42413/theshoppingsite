@@ -19,6 +19,7 @@ use App\FaqData;
 use App\ContactInfo;
 use App\Setting;
 use App\Merchant;
+use App\TrandingProducts;
 
 use App\Contracts\EnquiryServiceContract;
 use App\Mail\EnquiryNew;
@@ -237,7 +238,7 @@ class HomeController extends Controller
 		return view('all_categories_ajax',['cat_data'=>$cat_data])->render();
 	}
 	
-	public function search_list(Request $request,$slug, $brand=''){
+	public function search_list(Request $request,$slug, $brand=''){ 
 		$data['Lp'] =  $request->input('Lp');
 		$starttime = $data['starttime'] = microtime(true); // Top of page
 		$data['search_value'] =  $request->input('search');
@@ -254,6 +255,7 @@ class HomeController extends Controller
 		$data['min_price']	= '';
 		$data['max_price'] = '';
 		$data['brand_id'] = '';
+		$data['slug'] =$slug;
 
 				
 		if($slug != ''){
@@ -305,6 +307,7 @@ class HomeController extends Controller
 				}				
 			}
 		}
+		//echo '<pre>';print_r($data);die;
 		$data['nav'] = 'products-by-category';
 		$data['meta_title'] = config('app.name')." :: Search Products";
 		$data['meta_keywords'] = config('app.name')." Search Products";
@@ -1135,12 +1138,28 @@ function getSpecialParts($string){
 	}
 	
 	
-	public function blogdetail(){
-		$data['nav'] = 'blog';
+	public function details($slug=''){
+		$is_valid=0;
+	if($slug !=''){
+		$data['detail'] = TrandingProducts::where('slug',$slug)->first();
+		
+		if(!$data['detail']){
+			$base_url= env('APP_URL');
+			return redirect($base_url);
+		}
+		$is_valid=1;
+	}			
+	
+		$data['nav'] = 'Trending Products';
 		$data['meta_title'] = '';
 		$data['meta_keywords']= '';
-		$data['meta_description'] ='';		
-		return view('blogdetail',['data'=>$data]);
+		$data['meta_description'] ='';	
+		if($slug!='' AND $is_valid==1){
+			//echo '<pre>';print_r($data);die;
+			return view('blogdetail_valid',['data'=>$data]);
+		}else{
+			return view('blogdetail',['data'=>$data]);
+		}
 	}
 }
 

@@ -65,7 +65,7 @@
 				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 					<div class="sh_top_deals_wrap owl-carousel sh_float_width">
 						<div class="item">
-						<a href="<?php echo env('APP_URL')?>blog_detail">
+						<a href="<?php echo env('APP_URL')?>details">
 							<div class="sh_top_deals_section sh_float_width">
 								<!-- <div class="sh_deal_offer">
 									<span>-28%</span>
@@ -80,7 +80,7 @@
 							</a>
 						</div>
 						<div class="item">
-						<a href="<?php echo env('APP_URL')?>blog_detail">
+						<a href="<?php echo env('APP_URL')?>details">
 							<div class="sh_top_deals_section sh_float_width">
 								<!-- <div class="sh_deal_offer">
 									<span>-24%</span>
@@ -95,7 +95,7 @@
 							</a>
 						</div>
 						<div class="item">
-						<a href="<?php echo env('APP_URL')?>blog_detail">
+						<a href="<?php echo env('APP_URL')?>details">
 							<div class="sh_top_deals_section sh_float_width">
 								<!-- <div class="sh_deal_offer">
 									<span>-22%</span>
@@ -110,7 +110,7 @@
 							</a>
 						</div>
 						<div class="item">
-						<a href="<?php echo env('APP_URL')?>blog_detail">
+						<a href="<?php echo env('APP_URL')?>details">
 							<div class="sh_top_deals_section sh_float_width">
 								<!-- <div class="sh_deal_offer">
 									<span>-18%</span>
@@ -125,7 +125,7 @@
 							</a>
 						</div>
 						<div class="item">
-						<a href="<?php echo env('APP_URL')?>blog_detail">
+						<a href="<?php echo env('APP_URL')?>details">
 							<div class="sh_top_deals_section sh_float_width">
 								<!-- <div class="sh_deal_offer">
 									<span>-5%</span>
