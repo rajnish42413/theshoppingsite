@@ -8,6 +8,4 @@ class TrandingProducts extends Model
 {
 	 protected $table = "tranding_products";
     public $timestamps = false;
-    protected $guarded = [];	
-
 }
