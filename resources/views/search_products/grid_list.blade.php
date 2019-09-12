@@ -20,6 +20,86 @@
 		</div>	
 	</div>	
 	<!-- Search Grid Start-->
+	
+<?php if($data['slug'] == 'smart-watches'){ ?>	
+<style>
+#BlogPage .owl-carousel .owl-item img {
+    height: 200px;
+    transform-style: preserve-3d;
+    width: auto;
+    margin: auto;
+}
+
+#BlogPage .owl-stage{
+	margin:auto;
+}
+</style>
+<div class="sh_deals_wrapper sh_float_width " id="BlogPage" style="padding-top:20px;">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12  ">
+					<div class="sh_heading">
+						<h2>The Shopping Site Recommendations</h2>
+						<p>Expert reviews and product details for Trending Products</p>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+					<div class="sh_top_deals_wrap owl-carousel sh_float_width">
+						<div class="item">
+						<a href="<?php echo env('APP_URL')?>details/apple-watch-series-3-gps-38mm">
+							<div class="sh_top_deals_section sh_float_width">
+								<!-- <div class="sh_deal_offer">
+									<span>-28%</span>
+								</div> -->
+								<img src="https://www.apple.com/v/apple-watch-series-3/j/images/meta/gps-lte/og__p4e2hkfg68qm.png?201809080718">
+								<div class="sh_top_deals_name">
+									<h2><span>From</span>$258.99</h2>
+									<h4>Apple Watch Series 3 - GPS, 38mm</h4>
+									<h6>Walmart</h6>
+								</div>
+							</div>
+							</a>
+						</div>
+						<div class="item">
+						<a href="<?php echo env('APP_URL')?>details/apple-watch-series-4-gps-44mm">
+							<div class="sh_top_deals_section sh_float_width">
+								<!-- <div class="sh_deal_offer">
+									<span>-24%</span>
+								</div> -->
+								<img src="https://images-na.ssl-images-amazon.com/images/I/512O6Fw5dTL._SL1024_.jpg">
+								<div class="sh_top_deals_name">
+									<h2><span>From</span>$419.99</h2>
+									<h4>Apple Watch Series 4 - GPS, 44mm</h4>
+									<h6>Amazon</h6>
+								</div>
+							</div>
+							</a>
+						</div>
+						<div class="item">
+						<a href="<?php echo env('APP_URL')?>details/fitbit-versa-smart-watch-black-black-aluminium">
+							<div class="sh_top_deals_section sh_float_width">
+								<!-- <div class="sh_deal_offer">
+									<span>-22%</span>
+								</div> -->
+								<img src="https://images-na.ssl-images-amazon.com/images/I/51oRClVQwBL._SL1000_.jpg">
+								<div class="sh_top_deals_name">
+									<h2><span>From</span>$168.95</h2>
+									<h4>Fitbit Versa Smart Watch, Black/Black Aluminium</h4>
+									<h6>Amazon</h6>
+								</div>
+							</div>
+							</a>
+						</div>
+						
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+<?php } ?>	
+	
 	<div class="sh_search_grid_wrap sh_float_width">
 		<div class="container">
 			<div class="row productListing">
