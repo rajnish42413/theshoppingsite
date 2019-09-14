@@ -1,5 +1,4 @@
 <?php 
-
 use \App\Http\Controllers\DetailController;
 $nav_menus = DetailController::get_main_nav_menus();
 $settings = DetailController::get_settings();
@@ -75,8 +74,10 @@ $parent_categories = DetailController::get_parent_categories();
 								<a><?php echo $nav['nav_menu_name'];?></a>
 								<?php if($nav['categories']){?>
 									   <ul>
-											<?php foreach($nav['categories'] as $cat){?>
-												<li class="parent">
+											<?php foreach($nav['categories'] as $cat){
+												
+												?>
+												<li class="parent tt">
 													<a href="{{env('APP_URL')}}category/<?php echo $cat['slug'];?>"><?php echo $cat['name'];?></a>
 													<?php if($cat['sub_categories']){
 																$x=1;?>
@@ -88,7 +89,7 @@ $parent_categories = DetailController::get_parent_categories();
 														</ul>
 													<?php } ?>
 												</li>
-											<?php } ?>
+												<?php } ?>
 
 										 </ul>
 									<?php }?>
@@ -136,7 +137,9 @@ $parent_categories = DetailController::get_parent_categories();
                             <a class="dropdown-toggle active" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><?php echo $nav['nav_menu_name'];?> <span class="fa fa-caret-right float-right"></span></a>
 							<?php if($nav['categories']){?>
                                    <ul class="dropdown-menu second_ul dropdown-content">
-								<?php foreach($nav['categories'] as $cat){?>
+								<?php foreach($nav['categories'] as $cat){
+									
+									?>
                                         <li class="dropdown3a"><a href="{{env('APP_URL')}}category/<?php echo $cat['slug'];?>"><?php echo $cat['name'];?> <span class="fa fa-caret-right float-right"></span></a>
 										<?php if($cat['sub_categories']){
 													$x=1;?>

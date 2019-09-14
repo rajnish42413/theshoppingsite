@@ -144,9 +144,11 @@ class HomeController extends Controller
 		$data['meta_keywords']= "All Categories";
 		$data['meta_description'] = "All Categories";;		
 		$cat_data = array();
-		$categories_list = Category :: where('parentId',0)->where('status',1)->get();
-		$categories = Category :: where('parentId',0)->where('status',1)->limit(1)->get();
- 		if($categories && $categories->count() > 0){
+		$categories_list = Category::select('categories.*', DB::raw("count(products.catID1) as count"))->join('products', 'categories.categoryId', '=', 'products.catID1')->where('categories.parentId',0)->where('categories.status',1)->groupBy('products.catID1')->orderBy('id','asc')->havingRaw('count > 0')->get();
+		
+		$categories = Category::select('categories.*', DB::raw("count(products.catID1) as count"))->join('products', 'categories.categoryId', '=', 'products.catID1')->where('categories.parentId',0)->where('categories.status',1)->groupBy('products.catID1')->orderBy('id','asc')->havingRaw('count > 0')->limit(1)->get();
+		
+		if($categories && $categories->count() > 0){
 			$i=0;
 			foreach($categories as $cat){
 						$cat_data[$i]['parent_cat_name'] = $cat->categoryName;
@@ -193,7 +195,10 @@ class HomeController extends Controller
 	public function get_all_categories_ajax(Request $request){
 		$cat_id = $request->input('cat_id');
 		$cat_data = array();
-		$categories = Category :: where('categoryId',$cat_id)->where('parentId',0)->where('status',1)->limit(1)->get();
+		//$categories = Category :: where('categoryId',$cat_id)->where('parentId',0)->where('status',1)->limit(1)->get();
+		
+		$categories=Category::select('categories.*', DB::raw("count(products.catID1) as count"))->join('products', 'categories.categoryId', '=', 'products.catID1')->where('categories.categoryId',$cat_id)->where('categories.parentId',0)->where('categories.status',1)->groupBy('products.catID1')->orderBy('id','asc')->havingRaw('count > 0')->limit(1)->get();
+		
  		if($categories && $categories->count() > 0){
 			$i=0;
 			foreach($categories as $cat){
@@ -1161,6 +1166,8 @@ function getSpecialParts($string){
 			return view('blogdetail',['data'=>$data]);
 		}
 	}
+	
+	
 }
 
 
