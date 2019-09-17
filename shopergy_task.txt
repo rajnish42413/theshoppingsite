@@ -1,0 +1,57 @@
+Shopergy
+
+Task : THE SHOPPING SITE RECOMMENDATIONS
+
+Discription :
+
+Admin side :
+functionality: Add/Edit/List/Delete
+
+Add form :
+> Title
+> Category, sub category
+> Discription
+> Image
+> Gellary Images
+> Meta tags
+> Total Review count
+> Status (active/inactive)
+> Show in Home page (checkbox)
+> Merchant links
+
+
+
+Front side :
+
+> Show selected home page itemsin slider
+> Details page with social links and comment box
+
+
+
+itna hi part krna h ?
+	
+	
+	
+	$2y$10$K5shTreVfxdBBjzrnc0FwOhjurmeQ0Oaw52mvHq2sM1xrrsXoojdS
+	
+	
+	INSERT INTO `menu_permissions` (`id`, `key_name`, `display_name`, `description`, `status`, `created_at`, `updated_at`) VALUES (NULL, 'trending products', 'Trending products', 'User can add/edit/delete/list of trending products', '1', '2019-09-16 16:24:00', '2019-05-25 16:24:00');
+	
+	
+	//ALTER TABLE `tranding_products` ADD `sub_category_id` INT(11) NOT NULL AFTER `category_id`;
+	
+	
+	//ALTER TABLE `tranding_products` ADD `status` TINYINT(1) NOT NULL DEFAULT '0' AFTER `link3`;
+	
+	
+-Add this in categories
+https://theshoppingsite.com/category/tv-video
+https://theshoppingsite.com/category/headphones
+https://theshoppingsite.com/category/men-s-shoes
+https://theshoppingsite.com/category/women-s-clothing
+https://theshoppingsite.com/category/women-s-shoes
+https://theshoppingsite.com/category/yard-garden-outdoor-living
+https://theshoppingsite.com/category/smart-watches
+https://theshoppingsite.com/category/security-cameras
+https://theshoppingsite.com/category/tv-video
+https://theshoppingsite.com/category/headphones

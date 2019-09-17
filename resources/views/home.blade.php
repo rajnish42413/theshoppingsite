@@ -50,7 +50,7 @@
 			</div>
 		</div>
 	</div>
-
+<?php if($trending_products && $trending_products->count() > 0){?>
 <div class="sh_deals_wrapper sh_float_width " id="BlogPage">
 		<div class="container">
 			<div class="row">
@@ -64,87 +64,32 @@
 			<div class="row">
 				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 					<div class="sh_top_deals_wrap owl-carousel sh_float_width">
+						<?php foreach($trending_products as $trending_product) { ?>
 						<div class="item">
-						<a href="<?php echo env('APP_URL')?>details">
+						<a href="<?php echo env('APP_URL')?>details/<?php echo $trending_product->slug; ?>">
 							<div class="sh_top_deals_section sh_float_width">
 								<!-- <div class="sh_deal_offer">
 									<span>-28%</span>
 								</div> -->
-								<img src="<?php echo env('APP_URL')?>assets/top_prod/5.jpg">
+								<img src="<?php echo env('APP_URL')?>trending_products_files/<?php echo $trending_product->image; ?>">
 								<div class="sh_top_deals_name">
-									<h2><span>From</span>$199.00</h2>
-									<h4>Nike Blazer Mid '77 Vintage</h4>
-									<h6>Retro Trainers</h6>
+									<h2><span>From</span><?php echo $trending_product->price1; ?></h2>
+									
+									<h4><?php echo $trending_product->title; ?></h4>
+									<h6><?php echo $trending_product->merchant1;?></h6>
 								</div>
 							</div>
 							</a>
 						</div>
-						<div class="item">
-						<a href="<?php echo env('APP_URL')?>details">
-							<div class="sh_top_deals_section sh_float_width">
-								<!-- <div class="sh_deal_offer">
-									<span>-24%</span>
-								</div> -->
-								<img src="<?php echo env('APP_URL')?>assets/top_prod/6.jpg">
-								<div class="sh_top_deals_name">
-									<h2><span>From</span>$199.00</h2>
-									<h4>Nike Blazer Mid '77 Vintage</h4>
-									<h6>Retro Trainers</h6>
-								</div>
-							</div>
-							</a>
-						</div>
-						<div class="item">
-						<a href="<?php echo env('APP_URL')?>details">
-							<div class="sh_top_deals_section sh_float_width">
-								<!-- <div class="sh_deal_offer">
-									<span>-22%</span>
-								</div> -->
-								<img src="<?php echo env('APP_URL')?>assets/top_prod/7.jpg">
-								<div class="sh_top_deals_name">
-									<h2><span>From</span>$199.00</h2>
-									<h4>Nike Blazer Mid '77 Vintage</h4>
-									<h6>Retro Trainers</h6>
-								</div>
-							</div>
-							</a>
-						</div>
-						<div class="item">
-						<a href="<?php echo env('APP_URL')?>details">
-							<div class="sh_top_deals_section sh_float_width">
-								<!-- <div class="sh_deal_offer">
-									<span>-18%</span>
-								</div> -->
-								<img src="<?php echo env('APP_URL')?>assets/top_prod/8.jpg">
-								<div class="sh_top_deals_name">
-									<h2><span>From</span>$199.00</h2>
-									<h4>Nike Blazer Mid '77 Vintage</h4>
-									<h6>Retro Trainers</h6>
-								</div>
-							</div>
-							</a>
-						</div>
-						<div class="item">
-						<a href="<?php echo env('APP_URL')?>details">
-							<div class="sh_top_deals_section sh_float_width">
-								<!-- <div class="sh_deal_offer">
-									<span>-5%</span>
-								</div> -->
-								<img src="<?php echo env('APP_URL')?>assets/top_prod/shoe.jpg">
-								<div class="sh_top_deals_name">
-									<h2><span>From</span>$199.00</h2>
-									<h4>Nike Blazer Mid '77 Vintage</h4>
-									<h6>Retro Trainers</h6>
-								</div>
-							</div>
-							</a>
-						</div>
+					<?php } ?>
+						
+					
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-	
+<?php } ?>	
 	
 <?php if($top_categories && $top_categories->count() > 0){?>
 	<!-- Top Category -->
