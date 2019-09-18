@@ -2499,3 +2499,12 @@ a.btn.see_all_list:hover {
     padding: 15px 0;
 }
 
+#BlogPage .owl-carousel .owl-item img {
+    height: 200px;
+    width: auto;
+    margin: auto;
+}
+
+#BlogPage .owl-stage{
+	margin:auto;
+}

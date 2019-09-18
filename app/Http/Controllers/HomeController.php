@@ -59,8 +59,9 @@ class HomeController extends Controller
 		$top_products = Product::where('is_top_product',1)->where('status',1)->distinct('itemId')->limit(8)->get();
 		
 		$top_categories = Category::where('is_top_category',1)->where('status',1)->orderBy('id','asc')->limit(8)->get();
-
-		return view('home',['data'=>$data,'banners'=>$banners,'deals'=>$deals,'top_categories'=>$top_categories,'top_products'=>$top_products]);
+		$trending_products = TrandingProducts::orderBy('id','asc')->limit(8)->get();
+		//echo "<pre>";print_R($trending_products);die;
+		return view('home',['data'=>$data,'banners'=>$banners,'deals'=>$deals,'top_categories'=>$top_categories,'top_products'=>$top_products,'trending_products'=>$trending_products]);
 	}
 	
 	public function about(){
@@ -261,12 +262,12 @@ class HomeController extends Controller
 		$data['max_price'] = '';
 		$data['brand_id'] = '';
 		$data['slug'] =$slug;
-
+		$trending_products=array();
 				
 		if($slug != ''){
 			
 			$res = Category::where('slug',$slug)->where('status',1)->first();	
-
+			$categoryId = $res->categoryId;
 					
 			if($res && $res->count() > 0){
 				$data['cat_breadcrumb'] = $this->getCatBredcrumb($res);
@@ -311,14 +312,17 @@ class HomeController extends Controller
 					}
 				}				
 			}
+			
+		$trending_products = TrandingProducts::where('category_id',$categoryId)->get();	
 		}
-		//echo '<pre>';print_r($data);die;
+		
+		//echo '<pre>';print_r($data['trending_products']);die;
 		$data['nav'] = 'products-by-category';
 		$data['meta_title'] = config('app.name')." :: Search Products";
 		$data['meta_keywords'] = config('app.name')." Search Products";
 		$data['meta_description'] = config('app.name')." Search Products";	
 
-        return view('search_products/grid_list',['data'=>$data,'categories'=>$categories,'products'=>$products,'brands'=>$brands,'category_data'=>$res]);		
+        return view('search_products/grid_list',['data'=>$data,'categories'=>$categories,'products'=>$products,'brands'=>$brands,'category_data'=>$res,'trending_products'=>$trending_products]);		
 	}
 	
 	//search_by_brands
@@ -1147,24 +1151,20 @@ function getSpecialParts($string){
 		$is_valid=0;
 	if($slug !=''){
 		$data['detail'] = TrandingProducts::where('slug',$slug)->first();
-		
-		if(!$data['detail']){
-			$base_url= env('APP_URL');
-			return redirect($base_url);
-		}
-		$is_valid=1;
-	}			
-	
+		if($data['detail']){
 		$data['nav'] = 'Trending Products';
 		$data['meta_title'] = '';
 		$data['meta_keywords']= '';
 		$data['meta_description'] ='';	
-		if($slug!='' AND $is_valid==1){
-			//echo '<pre>';print_r($data);die;
-			return view('blogdetail_valid',['data'=>$data]);
-		}else{
 			return view('blogdetail',['data'=>$data]);
+		}else{
+			return redirect(env('APP_URL'));
+			
 		}
+		}else{
+			return redirect(env('APP_URL'));
+		}
+	
 	}
 	
 	

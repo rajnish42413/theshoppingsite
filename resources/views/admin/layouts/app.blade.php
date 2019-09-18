@@ -330,7 +330,23 @@ $menu_permissions = DetailController::get_menu_permissions();
             <li class="<?php if($data['sub_nav'] == 'menu_settings_add'){echo 'active';}?>"><a href="{{ route('settings-edit') }}"><i class="fa fa-pencil"></i> Edit</a></li>
           </ul>
         </li>         
-<?php } ?>		
+<?php } ?>	
+
+ <li class="treeview <?php if($data['nav'] == 'menu_trending_products'){echo 'active';}?>">
+          <a href="#">
+            <i class="fa fa-tags"></i> <span>Trending Products</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li class="<?php if($data['sub_nav'] == 'menu_trending_products_add'){echo 'active';}?>"><a href="{{ route('trending-products-add') }}"><i class="fa fa-plus"></i> Add</a></li>
+            <li class="<?php if($data['sub_nav'] == 'menu_trending_products_list'){echo 'active';}?>"><a href="{{ route('trending-products-list') }}"><i class="fa fa-list"></i> List</a></li>
+          </ul>
+        </li>
+	
+       
+	
       </ul>
     </section>
     <!-- /.sidebar -->

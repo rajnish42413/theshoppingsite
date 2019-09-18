@@ -1,5 +1,5 @@
 <?php
-URL::forceScheme('https'); 
+//URL::forceScheme('https'); 
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -178,6 +178,15 @@ Route::group(['middleware'=>['Admin']],function(){
 	Route::any('users-save', 'UsersController@save_data')->name('users-save');	
 	Route::any('users-delete', 'UsersController@delete_data')->name('users-delete'); 
 	Route::any('users-status', 'UsersController@status_update')->name('users-status');
-	Route::any('users-status-multiple', 'UsersController@status_multiple_update')->name('users-status-multiple');	
+	Route::any('users-status-multiple', 'UsersController@status_multiple_update')->name('users-status-multiple');
+
+
+// trending 
+ 	Route::get('trending-products-list', 'TrendingProductsController@index')->name('trending-products-list');	
+	Route::get('searchajaxtrendingproducts', 'TrendingProductsController@ajax_list')->name('searchajaxtrendingproducts');	
+	Route::any('trending-products-add', 'TrendingProductsController@add')->name('trending-products-add');	
+	Route::any('trending-products-edit/{id?}', 'TrendingProductsController@add');	
+	Route::any('trending-products-save', 'TrendingProductsController@save_data')->name('trending-products-save');	
+	Route::any('trending-products-delete', 'TrendingProductsController@delete_data')->name('trending-products-delete');		
 		
 });

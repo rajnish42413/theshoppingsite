@@ -1,7 +1,11 @@
 @extends('layouts.app')
 
 @section('content')
- 
+ <style>
+ .ProductDetails a,.ProductDetails  a:hover,.ProductDetails  a:focus {
+    color: #ff0000;
+ }
+ </style>
 <div class="sh_main_wrap sh_float_width">
 	<!--Breadcurm Start-->
 	<div class="sh_breadcurm_wrap sh_float_width">
@@ -10,8 +14,9 @@
 				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 					<div class="sh_breadcurm sh_float_width">
 						<ul>
-							<li><a href="javacript:void(0)">Blog</a></li>
-							<li><strong>Mackbook</strong></li>
+							<li><a href="javacript:void(0)">Cell Phones & Accessories</a></li>
+							<li><a href="javacript:void(0)">Smart Watches</a></li>
+							<li><strong><?php echo $data['detail']['title'];?></strong></li>
 						</ul>
 					</div>
 				</div>
@@ -26,8 +31,8 @@
 					<div class="sh_product_view_img sh_float_width">
 						<div class="slider-wrapper">
 							<div class="slider-for">
-								<div class="slider-for__item ex1" data-src="<?php echo env('APP_URL')?>assets/product_zoom/ipad_big.jpg">
-									<img src="<?php echo env('APP_URL')?>assets/product_zoom/ipad_big.jpg" alt="" />
+								<div class="slider-for__item ex1" data-src="<?php echo env("APP_URL").'/trending_products_files/'.$data['detail']['image'];?>">
+									<img src="<?php echo env("APP_URL").'/trending_products_files/'.$data['detail']['image'];?>" alt="" />
 								</div>
 
 							</div>
@@ -36,9 +41,9 @@
 					</div>
 				</div>
 				<div class="col-lg-7 col-md-7 col-sm-6 col-xs-12">
-					<div class="col-lg-8 col-md-8 col-sm-7 col-xs-12">
+					<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 					<div class="sh_product_view_name sh_float_width">
-						<h2>Apple iPad Air 2</h2>
+						<h2 style="font-size: 26px;margin-bottom: 10px !important;"><?php echo $data['detail']['title'];?></h2>
 						<div class="sh_product_view_rating sh_float_width">
 							<ul class="list-inline">
 								<li><span>Rating :</span></li>
@@ -52,13 +57,10 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-lg-4 col-md-4 col-sm-5 col-xs-12 text-right">
-					<div class="sh_product_view_name sh_float_width">
-						<h6>Updated On: 22 april 2019</h6>
-					</div>
-				</div>
+				
 				<div class="col-sm-12 SocialShareIcon">
 				<div class="">
+				<div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
 					<div class="sh_header_social_links sh_float_width">
 						<ul>
 							<li><a href="javacript:void(0)"><span class="fa fa-facebook"></span></a></li>
@@ -72,12 +74,16 @@
 							<button class="sh_menu_btn"><span class="fa fa-bars"></span></button>
 						</div>
 					</div>
+					</div>
+					<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 text-right">
+					<div class="sh_product_view_name sh_float_width">
+						<h6>Updated On: <?php echo date('j M Y',strtotime($data['detail']['updated_at']));?></h6>
+					</div>
+				</div>
 				</div>
 				</div>
 				<div class="ProductDetails">
-				<p>Apple iPad Air 2 (Wi-Fi/16GB/4G) Specification and features are mentioned below. </p>
-				<p>The specification are from the 7 seller(s) and other reliable sources Apple iPad Air 2 (Wi-Fi/16GB/4G) Specification and features are mentioned below.</p>
-				<p>The specification are from the 7 seller(s) and other reliable sourcesApple iPad Air 2 (Wi-Fi/16GB/4G) Specification and features are mentioned below.</p><p> The specification are from the 7 seller(s) and other reliable sources.</p>
+				<?php echo $data['detail']['description'];?>
 				</div>
 				</div>
 			</div>	
@@ -115,133 +121,92 @@
 												
 												<tr>
 													<td>
-														<div class="sh_tab_compare_img">
-															<img src="<?php echo env('APP_URL')?>assets/comapre_store/saturn.png">
-															<p>Now Yet Rated</p>
+														<div class="sh_tab_compare_img sh_tab_compare_info">
+															<b><?php echo $data['detail']['merchant1'];?></b>
 														</div>
 													</td>
 													<td>
 														<div class="sh_tab_compare_des">
-															<p>Sony K4 LED TV, Black</p>
+															<p>-</p>
 														</div>
 													</td>
 													<td>
 														<div class="sh_tab_compare_info">
-															<p>1-2 Work-day</p>
 															<span>New</span>
 														</div>
 													</td>
 													<td>
 														<div class="sh_tab_compare_price">
-															<h6>$ 7999.00</h6>
+															<h6>$ <?php echo $data['detail']['price1'];?></h6>
 															<p>Price</p>
 															<p>Free Delivery</p>
 														</div>
 													</td>
 													<td>
 														<div class="sh_tab_compare_total_price">
-															<h4>$ 7999,00</h4>
-															<a class="sh_shop_btn" href="javacript:void(0)">Shop Now <i class="icofont-rounded-right"></i></a>
+															<h4>$ <?php echo $data['detail']['price1'];?></h4>
+															<a target="_blank" class="sh_shop_btn" href="<?php echo $data['detail']['link1'];?>">Shop Now <i class="icofont-rounded-right"></i></a>
 														</div>
 													</td>
 												</tr>
 												<tr>
 													<td>
-														<div class="sh_tab_compare_img">
-															<img src="<?php echo env('APP_URL')?>assets/comapre_store/ebay.png">
-															<p>555 Reviews</p>
+														<div class="sh_tab_compare_img sh_tab_compare_info">
+															<b><?php echo $data['detail']['merchant2'];?></b>
 														</div>
 													</td>
 													<td>
 														<div class="sh_tab_compare_des">
-															<p>Sony K4 LED TV, Black</p>
+															<p>-</p>
 														</div>
 													</td>
 													<td>
 														<div class="sh_tab_compare_info">
-															<p>1-2 Work-day</p>
 															<span>New</span>
 														</div>
 													</td>
 													<td>
 														<div class="sh_tab_compare_price">
-															<h6>$ 7999.00</h6>
+															<h6>$ <?php echo $data['detail']['price2'];?></h6>
 															<p>Price</p>
 															<p>Free Delivery</p>
 														</div>
 													</td>
 													<td>
 														<div class="sh_tab_compare_total_price">
-															<h4>$ 7999,00</h4>
-															<a class="sh_shop_btn" href="javacript:void(0)">Shop Now <i class="icofont-rounded-right"></i></a>
+															<h4>$ <?php echo $data['detail']['price2'];?></h4>
+															<a target="_blank" class="sh_shop_btn" href="<?php echo $data['detail']['link2'];?>">Shop Now <i class="icofont-rounded-right"></i></a>
 														</div>
 													</td>
 												</tr>
+												
 												<tr>
 													<td>
-														<div class="sh_tab_compare_img">
-															<img src="<?php echo env('APP_URL')?>assets/comapre_store/galaxus.png">
-															<p>555 Reviews</p>
+														<div class="sh_tab_compare_img sh_tab_compare_info">
+															<b><?php echo $data['detail']['merchant3'];?></b>
 														</div>
 													</td>
 													<td>
 														<div class="sh_tab_compare_des">
-															<p>Sony K4 LED TV, Black</p>
+															<p>-</p>
 														</div>
 													</td>
 													<td>
 														<div class="sh_tab_compare_info">
-															<p>1-2 Work-day</p>
 															<span>New</span>
 														</div>
 													</td>
 													<td>
 														<div class="sh_tab_compare_price">
-															<h6>$ 7999.00</h6>
+															<h6>$ <?php echo $data['detail']['price3'];?></h6>
 															<p>Price</p>
 															<p>Free Delivery</p>
 														</div>
 													</td>
 													<td>
 														<div class="sh_tab_compare_total_price">
-															<h4>$ 7999,00</h4>
-															<a class="sh_shop_btn" href="javacript:void(0)">Shop Now <i class="icofont-rounded-right"></i></a>
-														</div>
-													</td>
-												</tr>
-												
-												
-												
-												<tr>
-													<td>
-														<div class="sh_tab_compare_img">
-															<img src="<?php echo env('APP_URL')?>assets/comapre_store/otto.png">
-															<p>555 Reviews</p>
-														</div>
-													</td>
-													<td>
-														<div class="sh_tab_compare_des">
-															<p>Sony K4 LED TV, Black</p>
-														</div>
-													</td>
-													<td>
-														<div class="sh_tab_compare_info">
-															<p>1-2 Work-day</p>
-															<span>New</span>
-														</div>
-													</td>
-													<td>
-														<div class="sh_tab_compare_price">
-															<h6>$ 7999.00</h6>
-															<p class="sh_green">Price</p>
-															<p>$ 29.00</p>
-															<p class="sh_green">Shipping</p>
-														</div>
-													</td>
-													<td>
-														<div class="sh_tab_compare_total_price">
-															<h4>$ 7999,00</h4>
-															<a class="sh_shop_more_btn" href="javacript:void(0)">To The Shop <i class="icofont-rounded-right"></i></a>
+															<h4>$ <?php echo $data['detail']['price3'];?></h4>
+															<a target="_blank" class="sh_shop_btn" href="<?php echo $data['detail']['link3'];?>">Shop Now <i class="icofont-rounded-right"></i></a>
 														</div>
 													</td>
 												</tr>

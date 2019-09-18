@@ -323,6 +323,109 @@ $(document).ready(function() {
 	
 	/* ./ bannersTable */
 	
+	/*  trendingproductsTable */
+	
+    window.trendingproductsTable = $('#trendingproductsTable').DataTable({
+      "processing": true,
+	  "language": {
+            "processing": "<div class='pageloader'></div>"
+        },	  
+      "serverSide": true,
+       "ordering": true,
+      "dom": 'lrtip',
+        "ajax": 'searchajaxtrendingproducts',
+
+        "columns": [
+            { "data": "id","orderable":false,"render": function(data, type, row, meta){ 
+			return '<input type="checkbox" name="id[]" value="'+ $('<div/>').text(data).html() + ' " >';
+			}},
+			{ "data": "title" },
+			{ "data": "categoryName"},
+            { "data": "created_at"},	
+		   { "data": "id","orderable":false,"render": function(data, type, row, meta){ 
+			   return '<a href="trending-products-edit/'+data+'"  class="btn btn-sm btn-info">Edit</a>&nbsp;&nbsp;<button type="button" onclick="delete_single_row('+data+',\'trendingproductsTable\',\'trending-products-delete\')" class="btn btn-sm btn-danger">Delete</button>';
+
+		   }},	
+        ]
+		,"columnDefs": [ 
+		{
+		'targets': 0,
+         'searchable': false,
+         'orderable': false,
+		},
+		
+		],
+		'rowCallback': function(row, data, dataIndex){
+			var strVale = $('#checked_ids').val();
+			var rowId = data.id;
+			var arr = strVale.split(',');
+			arr = arr.map(Number);
+			//alert(rowId);
+           if($.inArray(rowId,arr) !== -1){
+			  $(row).find('input[type="checkbox"]').prop('checked', true);
+			}
+      }
+    });
+
+     $('#trendingproductsTable tbody').on('click', 'input[type="checkbox"]', function(e){ 
+        updateDataTableSelectAllCtrl(trendingproductsTable);
+		e.stopPropagation();
+		var ids = $('#checked_ids').val();
+		var nids = '';
+		
+		 if(this.checked){ 
+			if(ids.length == 0){
+				nids = $(this).val();
+			}else{
+				nids = $(this).val()+','+ids;
+			}
+			$('#checked_ids').val(nids);
+		}else{
+			var nlist = removeValue(ids,$(this).val());
+			$('#checked_ids').val(nlist);
+		}
+		var cvals = $('#checked_ids').val();
+		var arr = cvals.split(',');
+		if(cvals.length == 0){ 
+			$('#selected_count').hide();
+		}else{
+			$('#selected_count').html('Selected Count : '+arr.length);
+			$('#selected_count').show();
+		}
+    });
+   
+    $('#trendingproductsTable').on('click', 'tbody td, thead th:first-child', function(e){ 
+      $(this).parent().find('input[type="checkbox"]').trigger('click');
+	});
+   
+   $('#trendingproductsTable thead input[name="select_all"]', trendingproductsTable.table().container()).on('click', function(e){
+      if(this.checked){ 
+	  	  
+		$('#trendingproductsTable tbody input[type="checkbox"]:not(:checked)').trigger('click');
+      } else { 
+			$('#trendingproductsTable tbody input[type="checkbox"]:checked').trigger('click');
+	 }
+	e.stopPropagation();
+   });
+
+   // Handle table draw event
+   trendingproductsTable.on('draw', function(){
+      updateDataTableSelectAllCtrl(trendingproductsTable);
+   });
+	
+	
+	$("#trendingproductsfrm #filter_submit").on('click', function () {
+		$('#checked_ids').val('');
+		$('#selected_count').hide();
+        var name = $("#trendingproductsfrm #name").val();
+		window.trendingproductsTable.column(1).search(name).draw();      
+    });
+	
+	/* ./ trendingproductsTable */
+	
+	
+	
+	
 	/*  merchantsTable */
 	
     window.merchantsTable = $('#merchantsTable').DataTable({
@@ -1075,6 +1178,9 @@ function delete_single_row(id,content,action){
 			}			
 			if(content == 'enquiriesTable'){
 				window.enquiriesTable.draw();
+			}
+			if(content == 'trendingproductsTable'){
+				window.trendingproductsTable.draw();
 			}
 			$('#selected_count').hide();	
 		}
