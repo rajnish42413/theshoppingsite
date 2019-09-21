@@ -88,6 +88,8 @@
 									
 									<h4><?php echo $trending_product->title; ?></h4>
 									<h6><?php echo $trending_product->merchant1;?></h6>
+									<br>
+									<a class="btn btn-info btn-sm" href="<?php echo env('APP_URL')?>details/<?php echo $trending_product->slug; ?>">Read full review</a>
 								</div>
 							</div>
 							</a>
