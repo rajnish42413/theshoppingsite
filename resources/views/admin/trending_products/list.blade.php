@@ -22,10 +22,10 @@
     <form action="searchajaxtrendingproducts" method="post" id="trendingproductsfrm">
       {{csrf_field()}}
 	<div class="row">
-	   <div class="col-lg-3 col-xs-6">
+	   <div class="col-lg-3 col-xs-3">
             <input id="name" name="name" value="" placeholder="Name" data-column="6" class="form-control"/>
         </div>       
-        <div class="col-lg-3 col-xs-6">
+        <div class="col-lg-3 col-xs-3">
 		<button type="button" id="filter_submit" name="filter_submit" class="btn btn-primary btn-block">Filter</button>
         </div>
     </div>
@@ -34,7 +34,7 @@
         <div class="col-lg-2 col-lg-offset-9 col-xs-6 text-center">
 		<span class="badge label label-primary" id="selected_count" style="display:none;"></span>		
 		</div>
-        <div class="col-lg-1 col-xs-6 text-center">
+        <div class="col-lg-1 col-xs-6 text-right">
 		<a id="top_hotel_delete_btn" class="btn btn-danger btn-sm"  onclick="delete_row('trendingproductsTable','trending-products-delete')" ><i class="fa fa-trash"></i> Delete</a>			
 		</div>		
 	  </div>

@@ -44,7 +44,18 @@
 								</div> -->
 								<img src="<?php echo env('APP_URL')?>trending_products_files/<?php echo $trending_product->image; ?>">
 								<div class="sh_top_deals_name">
-									<h2><span>From</span><?php echo $trending_product->price1; ?></h2>
+									<h2><span>From</span>
+									<?php 
+									echo '$';
+										if($trending_product->price1 !='0.00'){
+											echo $trending_product->price1;
+										}elseif($trending_product->price2 !='0.00'){
+											echo $trending_product->price2;
+										}else{
+											echo $trending_product->price3;
+										}
+										?>
+									</h2>
 									
 									<h4><?php echo $trending_product->title; ?></h4>
 									<h6><?php echo $trending_product->merchant1;?></h6>

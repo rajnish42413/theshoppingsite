@@ -106,41 +106,66 @@ class TrendingProductsController extends Controller
     }	
 	
 	public function save_data(Request $request){ 
-
+		$req   = $request->all();
 		$validator = $request->validate([
              'pro_title' => 'required',			 		 		 
              'category' => 'required',	
-             'merchant_name1'=>	'required',		 		 
-             'merchant_name2'=>	'required',		 		 
-             'merchant_name3'=>	'required',		 		 
-             'merchant_price1'=>'required',		 		 
-             'merchant_price2'=>'required',		 		 
-             'merchant_price3'=>'required',		 		 
-             'merchant_link1' => 'required|url',	
-             'merchant_link2' => 'required|url',	
-             'merchant_link3' => 'required|url',	
              'description' => 'required',	
-             
-		], 
+        ], 
 		 
-		
-			$messages = [
+		$messages = [
 			'pro_title.required' => 'Title is required',
 			'category.required' => 'Category is required',
-			'merchant_name1.required' => 'Merchant name is required',
-			'merchant_name2.required' => 'Merchant name is required',
-			'merchant_name3.required' => 'Merchant name is required',
-			'merchant_price1.required' => 'Product price is required',
-			'merchant_price2.required' => 'Product price is required',
-			'merchant_price3.required' => 'Product price is required',
-			'merchant_link1.url' => 'Please enter a valid url',
-			'merchant_link2.url' => 'Please enter a valid url',
-			'merchant_link3.url' => 'Please enter a valid url',
 			'description.required' => 'Description is required',
-			
 		]);
+		
+		if($req['merchant_name1'] !=''){
+			$validator = $request->validate([
+             'merchant_name1'=>	'required',		 		 
+             'merchant_price1'=>'required',		 		 
+             'merchant_link1' => 'required|url',	
+        ], 
+		 
+		$messages = [
+			'merchant_name1.required' => 'Merchant name is required',
+			'merchant_price1.required' => 'Product price is required',
+			'merchant_link1.url' => 'Please enter a valid url',
+		]);
+			
+		}
+		
+		
+		if($req['merchant_name2'] !=''){
+			$validator = $request->validate([
+             'merchant_name2'=>	'required',		 		 
+             'merchant_price2'=>'required',		 		 
+             'merchant_link2' => 'required|url',	
+        ], 
+		 
+		$messages = [
+			'merchant_name2.required' => 'Merchant name is required',
+			'merchant_price2.required' => 'Product price is required',
+			'merchant_link2.url' => 'Please enter a valid url',
+		]);
+			
+		}
+		
+		if($req['merchant_name3'] !=''){
+			$validator = $request->validate([
+             'merchant_name3'=>	'required',		 		 
+             'merchant_price3'=>'required',		 		 
+             'merchant_link3' => 'required|url',	
+        ], 
+		 
+		$messages = [
+			'merchant_name3.required' => 'Merchant name is required',
+			'merchant_price3.required' => 'Product price is required',
+			'merchant_link3.url' => 'Please enter a valid url',
+		]);
+			
+		}
 
-		$req   = $request->all();
+		
 		$id = $req['id'];
 		$pre_fileName   ='';
 		if(isset($req['file'])){	

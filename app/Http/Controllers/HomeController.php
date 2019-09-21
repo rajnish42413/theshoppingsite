@@ -47,19 +47,22 @@ class HomeController extends Controller
 		$deals=$top_products=$top_categories=array();
 		$data['nav'] = 'home';
 		$row = FrontPageSetting ::where('page_type','home')->first();
-		
+	
 		$data['meta_title'] = $row->page_title;
 		$data['meta_keywords']= $row->meta_keywords;
 		$data['meta_description'] = $row->meta_description;
 		
 		$banners = Banner::where('section_name','home_slider')->orderBy('id','asc')->limit(4)->get();
 		
-		$deals = Product::where('is_deal_of_the_day',1)->where('status',1)->distinct('itemId')->limit(8)->get();
+		//$deals = Product::where('is_deal_of_the_day',1)->where('status',1)->distinct('itemId')->limit(8)->get();
 		
-		$top_products = Product::where('is_top_product',1)->where('status',1)->distinct('itemId')->limit(8)->get();
-		
+		//$top_products = Product::where('is_top_product',1)->where('status',1)->distinct('itemId')->limit(8)->get();
+			
 		$top_categories = Category::where('is_top_category',1)->where('status',1)->orderBy('id','asc')->limit(8)->get();
+		
 		$trending_products = TrandingProducts::orderBy('id','asc')->limit(8)->get();
+		
+		//$trending_products=array();
 		//echo "<pre>";print_R($trending_products);die;
 		return view('home',['data'=>$data,'banners'=>$banners,'deals'=>$deals,'top_categories'=>$top_categories,'top_products'=>$top_products,'trending_products'=>$trending_products]);
 	}
@@ -1149,8 +1152,13 @@ function getSpecialParts($string){
 	
 	public function details($slug=''){
 		$is_valid=0;
-	if($slug !=''){
+		if($slug !=''){
+			
 		$data['detail'] = TrandingProducts::where('slug',$slug)->first();
+		$res = Category::where('categoryId',$data['detail']->category_id)->first();
+		$categoryId = $res->categoryId;
+			$data['cat_breadcrumb'] = $this->getCatBredcrumb($res);
+		
 		if($data['detail']){
 		$data['nav'] = 'Trending Products';
 		$data['meta_title'] = '';

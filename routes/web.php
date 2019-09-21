@@ -1,5 +1,5 @@
 <?php
-//URL::forceScheme('https'); 
+URL::forceScheme('https'); 
 /*
 |--------------------------------------------------------------------------
 | Web Routes

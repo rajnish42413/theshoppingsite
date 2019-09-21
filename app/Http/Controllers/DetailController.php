@@ -45,7 +45,7 @@ class DetailController extends Controller
 	
 	
 	public static function get_parent_categories(){
-		$row = Category::select('categories.*', DB::raw("count(products.catID1) as count"))->join('products', 'categories.categoryId', '=', 'products.catID1')->where('categories.parentId',0)->where('categories.status',1)->groupBy('products.catID1')->orderBy('id','asc')->havingRaw('count > 0')->get();
+		$row = Category::where('status',1)->where('parentId',0)->get();
 		return $row;
 	}
 	
@@ -108,11 +108,10 @@ class DetailController extends Controller
 				$nav_menus[$i]['categories'] = array(); //array
 				
 				$menu_id = $row->id;
-				$categories = Category::select('categories.*', DB::raw("count(products.catID1) as count"))->join('products', 'categories.categoryId', '=', 'products.catID1')->where('categories.nav_menu_id',$menu_id)->where('categories.parentId',0)->where('categories.status',1)->groupBy('products.catID1')->orderBy('id','asc')->havingRaw('count > 0')->get();
+				$categories = Category::where('nav_menu_id',$menu_id)->where('parentId',0)->where('status',1)->orderBy('id','asc')->get();
 				
 				//echo $categories;die;
 				
-				$nav_menus[$i]['menu_count']=0;
 				if($categories && $categories->count() > 0){
 					$j=0;
 					foreach($categories as $cat){
@@ -124,10 +123,7 @@ class DetailController extends Controller
 						$nav_menus[$i]['categories'][$j]['sub_categories'] = array();//array
 						$nav_menus[$i]['categories'][$j]['sub_cat_count'] = 0; //string
 						//echo $parentId;die;
-						$sub_categories = Category::select('categories.*', DB::raw("count(products.catID2) as count2"))->join('products', 'categories.categoryId', '=', 'products.catID2')->where('categories.parentId',$parentId)->where('categories.status',1)->groupBy('products.catID2')->orderBy('id','asc')->havingRaw('count2 > 0')->get();
-						
-						//echo $sub_categories;die;
-						//$sub_categories = Category::where('parentId',$parentId)->where('status',1)->orderBy('id','asc')->get();
+						$sub_categories = Category::where('parentId',$parentId)->where('status',1)->orderBy('id','asc')->get();
 						if($sub_categories && $sub_categories->count() > 0){
 							$k=0;
 							foreach($sub_categories as $sub){
@@ -149,12 +145,7 @@ class DetailController extends Controller
 				$i++;
 			}
 		}
-		$total_nav = count($nav_menus);
-		for($v=0;$v<$total_nav;$v++){
-			if($nav_menus[$v]['menu_count'] == 0){
-				unset($nav_menus[$v]);
-			}
-		}
+		
 		return $nav_menus;
 	}
 
@@ -183,16 +174,5 @@ class DetailController extends Controller
 		
 	}
 	
-	public function get_product_count($cat_id){
-		
-		/*
-		$cat = Category::where('categoryId',$cat_id)->first();
-		$pcount = Product::where('catID'.$cat->catLevel,$cat_id)->count(); 
-		if($pcount > 0){
-			return true;
-		}else{
-			return false;
-		}
-		*/	
-	}
+	
 }
