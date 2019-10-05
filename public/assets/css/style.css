@@ -411,13 +411,13 @@ a.sh_logo {
 	font-weight: 500;
 }
 .sh_top_deals_section h4 {
-font-size: 16px;
-font-weight: 600;
-overflow: hidden;
-display: -webkit-box;
--webkit-line-clamp: 2;
--webkit-box-orient: vertical;
-height: 50px;
+    font-size: 16px;
+    font-weight: 600;
+	overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    height: 50px;
 }
 .sh_top_deals_wrap.owl-carousel .owl-nav {
     position: absolute;
@@ -2512,4 +2512,30 @@ a.btn.see_all_list:hover {
 
 #BlogPage .owl-stage{
 	margin:auto;
+}
+
+#BlogPage .sh_top_deals_section h2 {
+   margin: 0 0 5px 0;
+ }
+ 
+ #BlogPage .sh_top_deals_section h4{
+   margin: 0 0 5px 0;
+ }
+ 
+ div.catpage {
+    padding-top: 8px;
+}
+
+ div.catpage .sh_heading{
+	 text-align:left;
+	 margin-bottom: 20px;
+ }
+div.catpage  .sh_heading h2:before{
+ bottom: -14px;
+ right: unset;
+ width: 580px;
+}
+div.catpage .sh_heading h2 {
+    position: relative;
+    margin-bottom: 25px;
 }

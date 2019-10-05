@@ -73,7 +73,7 @@
 								</div> -->
 								<img src="<?php echo env('APP_URL')?>trending_products_files/<?php echo $trending_product->image; ?>">
 								<div class="sh_top_deals_name">
-									<h2><span>From</span>
+									<h2 class="mb-2"><span>From</span>
 									<?php 
 									echo '$';
 										if($trending_product->price1 !='0.00'){
@@ -87,8 +87,6 @@
 									</h2>
 									
 									<h4><?php echo $trending_product->title; ?></h4>
-									<h6><?php echo $trending_product->merchant1;?></h6>
-									<br>
 									<a class="btn btn-info btn-sm" href="<?php echo env('APP_URL')?>details/<?php echo $trending_product->slug; ?>">Read full review</a>
 								</div>
 							</div>
