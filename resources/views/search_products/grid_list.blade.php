@@ -22,7 +22,7 @@
 	<!-- Search Grid Start-->
 	
 <?php if($trending_products && $trending_products->count() > 0){?>
-<div class="sh_deals_wrapper sh_float_width " id="BlogPage">
+<div class="sh_deals_wrapper sh_float_width catpage" id="BlogPage">
 		<div class="container">
 			<div class="row">
 				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12  ">
@@ -58,8 +58,6 @@
 									</h2>
 									
 									<h4><?php echo $trending_product->title; ?></h4>
-									<h6><?php echo $trending_product->merchant1;?></h6>
-									<br>
 									<a class="btn btn-info btn-sm" href="<?php echo env('APP_URL')?>details/<?php echo $trending_product->slug; ?>">Read full review</a>
 								</div>
 							</div>
